@@ -1,0 +1,78 @@
+<html>
+<head>
+<script language="Cache" runat="Server">
+Set tHeader = "Riches - Ledger"
+If ($Data(%request.Data("iAccount",1))) {
+	Set iAccount = %request.Data("iAccount",1)
+}
+If ($Get(iAccount) '= "") {
+	Set objAccount = ##class(Riches.Account).%OpenId(iAccount)
+	If $IsObject(objAccount) {
+		Set tNickname = objAccount.Nickname
+		Set tStartBalance = objAccount.StartBalance
+		Set tCurrBalance = objAccount.CurrBalance
+		Set tHeader = "Riches - "_tNickname_" Ledger"
+	}
+}
+</script>
+<script language="JavaScript">
+function onloadHandler()
+{
+}
+function tableClickHandler(id)
+{
+	updateLogicalDisplay(id);
+}
+function updateLogicalDisplay(id)
+{
+}
+</script>
+<title>#(tHeader)#</title>
+</head>
+<body onload="onloadHandler();">
+<h2>#(tHeader)#</h2>
+
+<table border=1>
+<tr>
+<td>Starting Balance</td>
+<td>#($Get(tStartBalance))#</td>
+</tr>
+<script language="Cache" runat="Server">
+</script>
+</table>
+<table border=1>
+<script language="Cache" runat="Server">
+Set tClassname = "Riches.Transact"
+Set pWhere = ""
+If $Data(objAccount),$IsObject(objAccount) {
+	Do ##class(Riches.Util).DebugTEST("Ledger.csp objAccount = "_objAccount)
+
+	Set pWhere = "Account = "_objAccount.%Id()
+	Set pTrClick = "javascript:tableClickHandler('#');"
+	Set pMaxRows = -1
+	Set tSC = $CLASSMETHOD(tClassname,"OutputTableData",pWhere,pTrClick,pMaxRows)
+}
+Write "</table>",!
+/*
+Write "<textarea id='debug' name='debug' rows='5' cols='50'>",!
+Set tDebug = ""
+Set tRow = ""
+For {
+	If ($Data(^TESTunit) = 0) { Quit }
+	Set tDebug = $Order(^TESTunit(tDebug))
+	If (tDebug = "") { Quit }
+	Write $Get(^TESTunit(tDebug)),!
+	If ($Increment(tRow) > 4) { Quit }
+}
+Write "</textarea>","<br>",!
+Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>"
+*/
+</script>
+<table border=1>
+<tr>
+<td>Current Balance</td>
+<td>#($Get(tCurrBalance))#</td>
+</tr>
+
+</body>
+</html>
