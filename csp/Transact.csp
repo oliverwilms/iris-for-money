@@ -70,9 +70,11 @@ If $Data(objAccount),$IsObject(objAccount) { Write objAccount.Nickname }
 Write "</td></tr></table>",!
 */
 </script>
-
-<table border=1>
-<tr><td>
+<!-- Main Table -->
+<table border=1><tr><td>
+<!-- Left Table -->
+<table border=1><tr><td>
+<!-- Transact Form -->
 <form>
 <table border=1>
 <tr><th>Form</th><th>Display</th><td><button type="button" onclick="clearForm()">Clear</button></td></tr>
@@ -92,14 +94,20 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 </table>
 <input type="submit" value="Submit">
 </form>
-</td><td>
-<iframe id="iframe_account" name="iframe_split" src="" title="Split" width="650" height="500" style=""></iframe>
 </td></tr>
 <tr><td>
 <iframe id="iframe_chooser" name="iframe_chooser" src="chooser.csp" title="Chooser" width="650" height="300" style=""></iframe>
-</td><td>
+</td></tr></table>
+</td>
+<td>
+<!-- Right Table -->
+<table border=1><tr><td>
+<iframe id="iframe_split" name="iframe_split" src="riches.csp" title="Split" width="650" height="500" style=""></iframe>
+</td></tr>
+<tr><td>
 <iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" width="650" height="300" style=""></iframe>
 </td></tr>
 </table>
+</td></tr></table>
 </body>
 </html>
