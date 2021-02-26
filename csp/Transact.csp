@@ -1,0 +1,105 @@
+<html>
+<head>
+<script language="Cache" runat="Server">
+Set tHeader = "Riches - Transact"
+Merge pRequestData = %request.Data
+Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Transact.csp")
+If $$$ISOK(tSC) Set tSC = ##class(Riches.Transact).SubmitFormData(.pRequestData,.pAction,.pId)
+/* Extract iAccount from %request.Data */
+If ($Data(%request.Data("iAccount",1))) {
+	Set iAccount = %request.Data("iAccount",1)
+}
+/* Retrieve other data only when Submit failed */
+If $$$ISERR(tSC) {
+	If ($Data(%request.Data("iAmountCredit",1))) {
+		Set iAmountCredit = %request.Data("iAmountCredit",1)
+	}
+	If ($Data(%request.Data("iAmountDebit",1))) {
+		Set iAmountDebit = %request.Data("iAmountDebit",1)
+	}
+	If ($Data(%request.Data("iCategory",1))) {
+		Set iCategory = %request.Data("iCategory",1)
+	}
+	If ($Data(%request.Data("iMerchant",1))) {
+		Set iMerchant = %request.Data("iMerchant",1)
+	}
+}
+</script>
+<script language="JavaScript">
+function clearForm()
+{
+	document.getElementById("iAmountCredit").value = '';
+	document.getElementById("iAmountDebit").value = '';
+}
+function onloadHandler()
+{
+	var iAccount = document.getElementById("iAccount").value;
+	document.getElementById("iframe_ledger").src = 'Ledger.csp?iAccount='+iAccount;
+}
+</script>
+<title>#(tHeader)#</title>
+</head>
+
+<body onload="onloadHandler();">
+<h1>#(tHeader)#</h1>
+
+<script language="Cache" runat="Server">
+/*
+Write "<table>",!
+//Do ##class(Riches.Account).OutputTableData()
+Write "</table>",!
+Write "<textarea id='debug' name='debug' rows='5' cols='50'>",!
+Set tDebug = ""
+Set tRow = ""
+For {
+	If ($Data(^TESTunit) = 0) { Quit }
+	Set tDebug = $Order(^TESTunit(tDebug))
+	If (tDebug = "") { Quit }
+	Write $Get(^TESTunit(tDebug)),!
+	If ($Increment(tRow) > 4) { Quit }
+}
+Write "</textarea>","<br>",!
+Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>"
+Write "Hidden",!
+Write "<table border=1><tr><td>",!
+If ($Data(%request.Data("iAccount",1))) {
+	Set iAccount = %request.Data("iAccount",1)
+	Set objAccount = ##class(Riches.Account).%OpenId(iAccount)
+}
+If $Data(objAccount),$IsObject(objAccount) { Write objAccount.Nickname }
+Write "</td></tr></table>",!
+*/
+</script>
+
+<table border=1>
+<tr><td>
+<form>
+<table border=1>
+<tr><th>Form</th><th>Display</th><td><button type="button" onclick="clearForm()">Clear</button></td></tr>
+<script language="Cache" runat="Server">
+Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
+Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
+Do ##class(Riches.Transact).OutputFormField("TranTime","Time",$Get(iTranTime,$Piece($Horolog,",",2)))
+Do ##class(Riches.Transact).OutputFormField("CheckNumber","Check",$Get(iCheckNumber))
+Do ##class(Riches.Transact).OutputFormField("Merchant","Merchant",$Get(iMerchant))
+Do ##class(Riches.Transact).OutputFormField("AmountDebit","Amount Debit",$Get(iAmountDebit))
+Do ##class(Riches.Transact).OutputFormField("AmountCredit","Amount Credit",$Get(iAmountCredit))
+Do ##class(Riches.Transact).OutputFormField("Category","Category",$Get(iCategory))
+Do ##class(Riches.Transact).OutputFormField("SubCategory","SubCategory",$Get(iSubCategory))
+Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
+</script>
+<tr><th colspan="3">#(##class(Riches.Util).GetStatusText(tSC))#</th></tr>
+</table>
+<input type="submit" value="Submit">
+</form>
+</td><td>
+<iframe id="iframe_account" name="iframe_split" src="" title="Split" width="650" height="500" style=""></iframe>
+</td></tr>
+<tr><td>
+<iframe id="iframe_chooser" name="iframe_chooser" src="chooser.csp" title="Chooser" width="650" height="300" style=""></iframe>
+</td><td>
+<iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" width="650" height="300" style=""></iframe>
+</td></tr>
+</table>
+</body>
+</html>
