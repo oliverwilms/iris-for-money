@@ -1,0 +1,101 @@
+<html>
+<head>
+<script language="Cache" runat="Server">
+Set tHeader = "Riches - Chooser"
+If ($Data(%request.Data("iChoose",1))) {
+	Set iChoose = %request.Data("iChoose",1)
+	Set tHeader = "Riches - "_iChoose_" Chooser"
+}
+Set tChoose = $ZCONVERT($Get(iChoose),"U")
+Do ##class(Riches.Util).DebugTEST("<head> tChoose = "_tChoose)
+If (tChoose = "ACCOUNT") {
+	Set tClassname = "Riches.Account"
+	Set tElement = "Account" 
+}
+If (tChoose = "CATEGORY") {
+	Set tClassname = "Riches.Category"
+	Set tElement = "Category"
+}
+If (tChoose = "MERCHANT") {
+	Set tClassname = "Riches.Merchant"
+	Set tElement = "Merchant"
+}
+Set pLogicalDisplay = ##class(%CSP.Page).QuoteJS("")
+If ($Get(tClassname) '= "") {
+	Merge pRequestData = %request.Data
+	Set tSC = $CLASSMETHOD(tClassname,"SubmitFormData",.pRequestData,.pAction,.pLogicalDisplay)
+}
+Set tAction = $ZCONVERT($Get(pAction),"U")
+Do ##class(Riches.Util).DebugTEST("<head> tAction = "_tAction)
+</script>
+<script language="JavaScript">
+function onloadHandler()
+{
+	var tAction = '#($Get(tAction,""))#';
+	var tLogicalDisplay = #($Get(pLogicalDisplay,""))#;
+	if (tAction != '') {
+		updateLogicalDisplay(tLogicalDisplay);
+	}
+}
+function tableClickHandler(id)
+{
+	updateLogicalDisplay(id);
+}
+function updateLogicalDisplay(id)
+{
+	var delim = '^';
+	var arr = id.split(delim);
+	var tElement = '#($Get(tElement,""))#';
+	var tDisplay = 'd' + tElement;
+	var tLogical = 'i' + tElement;
+	parent.document.getElementById(tLogical).value = arr[1];
+	parent.document.getElementById(tDisplay).value = arr[2];
+	if (tElement == 'Account') {
+		parent.document.getElementById("iframe_ledger").src = 'Ledger.csp?iAccount=' + arr[1];
+	}
+}
+</script>
+<title>#(tHeader)#</title>
+</head>
+<body onload="onloadHandler();">
+<h2>#(tHeader)#</h2>
+<form>
+<script language="Cache" runat="Server">
+Do ##class(Riches.Util).DebugTEST("<form> tChoose = "_tChoose)
+If (tChoose = "ACCOUNT") { Set tClassname = "Riches.Account" }
+If (tChoose = "CATEGORY") { Set tClassname = "Riches.Category" }
+If (tChoose = "MERCHANT") {	Set tClassname = "Riches.Merchant" }
+If ($Get(tClassname) '= "") Set tSC = $CLASSMETHOD(tClassname,"OutputFormData")
+</script>
+</form>
+
+<table border=1>
+<script language="Cache" runat="Server">
+If (tChoose = "ACCOUNT") { Set tClassname = "Riches.Account" }
+If (tChoose = "CATEGORY") { Set tClassname = "Riches.Category" }
+If (tChoose = "MERCHANT") {	Set tClassname = "Riches.Merchant" }
+If ($Get(tClassname) '= "") {
+	Set pWhere = ""
+	Set pTrClick = "javascript:tableClickHandler(#);"
+	Set pMaxRows = -1
+	Set tSC = $CLASSMETHOD(tClassname,"OutputTableData",pWhere,pTrClick,pMaxRows)
+}
+Write "</table>",!
+/*
+Write "<textarea id='debug' name='debug' rows='5' cols='50'>",!
+Set tDebug = ""
+Set tRow = ""
+For {
+	If ($Data(^TESTunit) = 0) { Quit }
+	Set tDebug = $Order(^TESTunit(tDebug))
+	If (tDebug = "") { Quit }
+	Write $Get(^TESTunit(tDebug)),!
+	If ($Increment(tRow) > 4) { Quit }
+}
+Write "</textarea>","<br>",!
+Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>"
+*/
+</script>
+
+</body>
+</html>
