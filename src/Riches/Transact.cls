@@ -31,6 +31,7 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 		Set prefixD = "dd"
 		Set prefixI = "ii"
 		Set tSize = 5
+		Write "<td>",!
 	} Else {
 		Set prefixD = "d"
 		Set prefixI = "i"
@@ -73,7 +74,11 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 		Write "</tr><tr>",!
 	}
 	Write "<td><a href=",qHref," target=",qTarget,">Choose</a></td>",!
-	If (split = 0) Write "</tr>",!
+	If split {
+		Write "</tr></table></td>",!
+	} Else {
+		Write "</tr>",!
+	}
 	Quit $$$OK
 }
 
