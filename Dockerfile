@@ -13,7 +13,7 @@ USER root
 WORKDIR /opt/irisapp
 COPY csp csp
 RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp /opt/irisapp/csp /opt/irisapp/csp/*
-RUN chmod 775 /opt/irisapp/csp/*
+RUN chmod 775 /opt/irisapp/csp /opt/irisapp/csp/*
 
 USER irisowner
 
