@@ -4,11 +4,11 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    init: true
     restart: always
     ports: 
-      - 51773
-      - 52773:52773
+      - 32769:51773
+      - 32768:52773
       - 53773
     volumes:
-      - ~/iris.key:/usr/irissys/mgr/iris.key
-      - ./:/irisdev/app
+      - riches:/opt/irisapp/data
