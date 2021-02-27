@@ -85,8 +85,8 @@ Write "</td></tr></table>",!
 <!-- Transact Form -->
 <form>
 <table border=1>
-<tr><th>Form</th><th>Display</th><td><button type="button" onclick="goSplit()">Split</button></td></tr>
 <script language="Cache" runat="Server">
+Do ##class(Riches.Transact).OutputFormHead(0)
 Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
 Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
 Do ##class(Riches.Transact).OutputFormField("TranTime","Time",$Get(iTranTime,$Piece($Horolog,",",2)))
@@ -105,7 +105,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 </form>
 </td></tr>
 <tr><td>
-<iframe id="iframe_chooser" name="iframe_chooser" src="chooser.csp" title="Chooser" style=""></iframe>
+<iframe id="iframe_chooser" name="iframe_chooser" src="Chooser.csp" title="Chooser" style=""></iframe>
 </td></tr></table>
 </td>
 <td>
@@ -115,9 +115,9 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 <!-- Split Form -->
 <form>
 <table border=1>
-<tr><th>Form</th><th>Display</th><td><button type="button" onclick="goSplit()">Split</button></td></tr>
 <script language="Cache" runat="Server">
 Set split = 1
+Do ##class(Riches.Transact).OutputFormHead(split)
 /*
 Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
 Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
@@ -139,7 +139,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iiMemo),split)
 </div>
 </td></tr>
 <tr><td>
-<iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" style=""></iframe>
+<iframe id="iframe_ledger" name="iframe_ledger" src="Ledger.csp" title="Ledger" style=""></iframe>
 </td></tr>
 </table>
 </td></tr></table>
