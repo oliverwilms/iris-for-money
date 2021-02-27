@@ -30,6 +30,14 @@ function clearForm()
 {
 	document.getElementById("iAmountCredit").value = '';
 	document.getElementById("iAmountDebit").value = '';
+	document.getElementById("iCategory").value = '';
+	document.getElementById("dCategory").value = '';
+	document.getElementById("iCheckNumber").value = '';
+}
+function goSplit()
+{
+	document.getElementById("div_split").style="height:400px; width:450px; color:#000000; background:#CCC";
+	document.getElementById("iframe_ledger").height = '500';
 }
 function onloadHandler()
 {
@@ -77,7 +85,7 @@ Write "</td></tr></table>",!
 <!-- Transact Form -->
 <form>
 <table border=1>
-<tr><th>Form</th><th>Display</th><td><button type="button" onclick="clearForm()">Clear</button></td></tr>
+<tr><th>Form</th><th>Display</th><td><button type="button" onclick="goSplit()">Split</button></td></tr>
 <script language="Cache" runat="Server">
 Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
 Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
@@ -93,6 +101,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 <tr><th colspan="3">#(##class(Riches.Util).GetStatusText(tSC))#</th></tr>
 </table>
 <input type="submit" value="Submit">
+<button type="button" onclick="clearForm()">Clear</button>
 </form>
 </td></tr>
 <tr><td>
@@ -102,10 +111,35 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 <td>
 <!-- Right Table -->
 <table border=1><tr><td>
-<iframe id="iframe_split" name="iframe_split" src="riches.csp" title="Split" width="650" height="500" style=""></iframe>
+<div id="div_split" style="display:none">
+<!-- Split Form -->
+<form>
+<table border=1>
+<tr><th>Form</th><th>Display</th><td><button type="button" onclick="goSplit()">Split</button></td></tr>
+<script language="Cache" runat="Server">
+Set split = 1
+/*
+Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
+Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
+Do ##class(Riches.Transact).OutputFormField("TranTime","Time",$Get(iTranTime,$Piece($Horolog,",",2)))
+Do ##class(Riches.Transact).OutputFormField("CheckNumber","Check",$Get(iCheckNumber))
+Do ##class(Riches.Transact).OutputFormField("Merchant","Merchant",$Get(iMerchant))
+*/
+Do ##class(Riches.Transact).OutputFormField("Category","Category",$Get(iCategory),split)
+Do ##class(Riches.Transact).OutputFormField("SubCategory","SubCategory",$Get(iSubCategory),split)
+Do ##class(Riches.Transact).OutputFormField("AmountDebit","Amount Debit",$Get(iAmountDebit),split)
+Do ##class(Riches.Transact).OutputFormField("AmountCredit","Amount Credit",$Get(iAmountCredit),split)
+Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo),split)
+</script>
+<tr><th colspan="3">#(##class(Riches.Util).GetStatusText(tSC))#</th></tr>
+</table>
+<input type="submit" value="Submit">
+<button type="button" onclick="clearForm()">Clear</button>
+</form>
+</div>
 </td></tr>
 <tr><td>
-<iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" width="650" height="300" style=""></iframe>
+<iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" width="650" height="800" style=""></iframe>
 </td></tr>
 </table>
 </td></tr></table>
