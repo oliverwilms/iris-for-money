@@ -38,9 +38,6 @@ ClassMethod GetStatusText(pStatus As %Status) As %String
 
 ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
 {
-	Do ..DebugTEST("Riches.Util - EncodeLogicalDisplay")
-	Do ..DebugTEST("pLogical = "_pLogical)
-	Do ..DebugTEST("pDisplay = "_pDisplay)
 	Set delim = "^"
 	If (pLogical [ delim) {
 		Set pLogical = $Replace(pLogical,delim,"?")
@@ -49,10 +46,7 @@ ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String =
 		Set pDisplay = $Replace(pDisplay,delim,"?")
 	}
 	Set tLogicalDisplay = delim_pLogical_delim_pDisplay
-	Do ..DebugTEST("tLogicalDisplay = "_tLogicalDisplay)
-	Set tQuoteJS = ##class(%CSP.Page).QuoteJS(tLogicalDisplay)
-	Do ..DebugTEST("tQuoteJS = "_tQuoteJS)
-	Quit tQuoteJS
+	Quit tLogicalDisplay
 }
 
 ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As %Status
