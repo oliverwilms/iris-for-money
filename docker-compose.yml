@@ -12,3 +12,6 @@ services:
       - 53773
     volumes:
       - riches:/opt/irisapp/data
+
+volumes:
+  riches:
