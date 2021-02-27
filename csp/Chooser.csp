@@ -20,7 +20,6 @@ If (tChoose = "MERCHANT") {
 	Set tClassname = "Riches.Merchant"
 	Set tElement = "Merchant"
 }
-Set pLogicalDisplay = ##class(%CSP.Page).QuoteJS("")
 If ($Get(tClassname) '= "") {
 	Merge pRequestData = %request.Data
 	Set tSC = $CLASSMETHOD(tClassname,"SubmitFormData",.pRequestData,.pAction,.pLogicalDisplay)
@@ -32,7 +31,7 @@ Do ##class(Riches.Util).DebugTEST("<head> tAction = "_tAction)
 function onloadHandler()
 {
 	var tAction = '#($Get(tAction,""))#';
-	var tLogicalDisplay = #($Get(pLogicalDisplay,""))#;
+	var tLogicalDisplay = #(##class(%CSP.Page).QuoteJS($Get(pLogicalDisplay,"")))#;
 	if (tAction != '') {
 		updateLogicalDisplay(tLogicalDisplay);
 	}
