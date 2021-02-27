@@ -9,7 +9,7 @@ XData setup
 
   <Namespace Name="${Namespace}" Code="${Namespace}" Data="${Namespace}" Create="yes" Ensemble="no">
     <Configuration>
-      <Database Name="${Namespace}" Dir="/opt/irisapp/dat" Create="yes"/>
+      <Database Name="${Namespace}" Dir="/voldata/irisdb/feeder" Create="yes"/>
     </Configuration>
     <Import File="${SourceDir}" Flags="ck" Recurse="1"/>
   </Namespace>
