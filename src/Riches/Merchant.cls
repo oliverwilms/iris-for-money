@@ -82,7 +82,7 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 		Do ##class(Util).DebugStatus(tSC)
 		If $$$ISOK(tSC) {
 			Set pAction = "ADD"
-		 	Set pId = ##class(Util).EncodeLogicalDisplay(objMerchant.%Id(),objMerchant.Nickname)
+		 	Set pId = ##class(Util).QuoteJSLogicalDisplay(objMerchant.%Id(),objMerchant.Nickname)
 		}
 	}
 	Quit tSC
