@@ -64,7 +64,7 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "windo
 	ELSEIF (tResult.%SQLCODE=-361) { /*WRITE !,"Query exists: ",tResult.%Message*/ }
 	ELSE { /*WRITE !,"CREATE QUERY error: ",tResult.%SQLCODE," ",tResult.%Message*/ QUIT tSC}
  	While tResult.%Next() {
-	 	Set tValue = ##class(Util).EncodeLogicalDisplay(tResult.ID,tResult.Nickname)
+	 	Set tValue = ##class(Util).QuoteJSLogicalDisplay(tResult.ID,tResult.Nickname)
 		Write !,"<tr onclick=",tQuote,$Replace(pTrClick,"#",tValue),tQuote,">"
 		Write !,"<td>",tResult.Nickname,"</td>"
 		Write !,"<td>",tResult.Type,"</td>"
