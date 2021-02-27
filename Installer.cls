@@ -38,7 +38,7 @@ ClassMethod CreateWebApp(pVars,pLogLevel,tInstaller) As %Status
     Set cspProperties("AutheEnabled") = $$$AutheCache // Password
   }
   Set cspName = "/irisapp"
-  Set cspProperties("NameSpace") = "IRISAPP"
+  Set cspProperties("NameSpace") = $Get(Namespace,"IRISAPP")
   Set cspProperties("Enabled") = 1
   Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
   Set cspProperties("DeepSeeEnabled") = 1
@@ -65,7 +65,7 @@ ClassMethod CreateWebAppREST(pVars,pLogLevel,tInstaller) As %Status
     Set cspProperties("AutheEnabled") = $$$AutheCache // Password
   }
   Set cspName = "/restapi"
-  Set cspProperties("NameSpace") = $Get(Namespace,"FEEDER")
+  Set cspProperties("NameSpace") = $Get(Namespace,"IRISAPP")
   Set cspProperties("Enabled") = 1
   Set cspProperties("DeepSeeEnabled") = 1
   Set cspProperties("iKnowEnabled") = 0
