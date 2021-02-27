@@ -30,9 +30,11 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	If split {
 		Set prefixD = "dd"
 		Set prefixI = "ii"
+		Set tSize = 5
 	} Else {
 		Set prefixD = "d"
 		Set prefixI = "i"
+		Set tSize = 25
 		Write "<tr>",!
 	}
 	Set q = """"
@@ -42,7 +44,7 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	//Do ##class(Util).DebugTEST("qHref = "_qHref)
 	Set qID = q_prefixI_pField_q
 	Set qIDD = q_prefixD_pField_q
-	Set qSize = q_"25"_q
+	Set qSize = q_tSize_q
 	Set qTarget = q_"iframe_chooser"_q
 	Set qText = q_"text"_q
 	Set qHide = q_"hidden"_q
@@ -54,7 +56,7 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	If (pField [ "Date") Set tDisplay = $ZDATE(pValue)
 	If (pField [ "Time") Set tDisplay = $ZTIME(pValue)
 	Set qDisplay = q_$Get(tDisplay,pValue)_q
-	Write "<td><label for=",qID,">",pCaption,":</label></td>",!
+	If (split = 0) Write "<td><label for=",qID,">",pCaption,":</label></td>",!
 	Write "<td>",!
 	If $Data(tDisplay) {
 		Write "<input type=",qText," id=",qIDD," size=",qSize," value=",qDisplay,$Get(onChange),">",!
