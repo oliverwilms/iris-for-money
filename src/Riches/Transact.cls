@@ -56,7 +56,11 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	If (pField [ "Date") Set tDisplay = $ZDATE(pValue)
 	If (pField [ "Time") Set tDisplay = $ZTIME(pValue)
 	Set qDisplay = q_$Get(tDisplay,pValue)_q
-	If (split = 0) Write "<td><label for=",qID,">",pCaption,":</label></td>",!
+	If split {
+		Write "<table><tr>"
+	} Else {
+		Write "<td><label for=",qID,">",pCaption,":</label></td>",!
+	}
 	Write "<td>",!
 	If $Data(tDisplay) {
 		Write "<input type=",qText," id=",qIDD," size=",qSize," value=",qDisplay,$Get(onChange),">",!
@@ -65,8 +69,24 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 		Write "<input type=",qText," id=",qID," name=",qID," size=",qSize," value=",qValue,">",!
 	}
 	Write "</td>",!
+	If split {
 	Write "<td><a href=",qHref," target=",qTarget,">Choose</a></td>",!
 	If (split = 0) Write "</tr>",!
+	Quit $$$OK
+}
+
+ClassMethod OutputFormHead(split As %Boolean = 0) As %Status
+{
+	Set q = """"
+	Set qClick = q_"goSplit()"_q
+	Set qType = q_"button"_q
+	Write "<tr>",!
+	If split {
+		Write "<th>Category</th><th>SubCategory</th><th>Debit</th><th>Credit</th><th>Memo</th>",!
+	} Else {
+		Write "<th>Form</th><th>Display</th><th><button type=",qType," onclick=",qClick,">Split</button></th>",!
+	}
+	Write "</tr>",!
 	Quit $$$OK
 }
 
