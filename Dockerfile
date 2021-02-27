@@ -12,7 +12,8 @@ USER root
 
 WORKDIR /opt/irisapp
 COPY csp csp
-RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp /opt/irisapp/csp /opt/irisapp/csp/*
+RUN mkdir /ghostdb/ && mkdir /voldata/ && mkdir /voldata/irisdb
+RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp /opt/irisapp/csp /opt/irisapp/csp/* /ghostdb/ /voldata/ /voldata/irisdb/
 RUN chmod 775 /opt/irisapp/csp /opt/irisapp/csp/*
 
 USER irisowner
@@ -41,4 +42,10 @@ RUN \
 
 # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
+
+USER root
+COPY vcopy.sh vcopy.sh
+RUN rm -f $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log $ISC_PACKAGE_INSTALLDIR/mgr/IRIS.WIJ $ISC_PACKAGE_INSTALLDIR/mgr/journal/* && cp -Rpf /voldata/* /ghostdb/ && rm -fr /voldata/* \
+  && chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp/vcopy.sh && chmod +x /opt/irisapp/vcopy.sh
+
 CMD [ "-l", "/usr/irissys/mgr/messages.log" ]
