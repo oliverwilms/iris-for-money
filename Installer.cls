@@ -27,10 +27,10 @@ XData setup
 
 ClassMethod CreateWebApp(pVars,pLogLevel,tInstaller) As %Status
 {
-	If $IsObject($Get(tInstaller)) {
+  If $IsObject($Get(tInstaller)) {
     Set Namespace = tInstaller.Evaluate("${Namespace}")
     Do tInstaller.PushNS("%SYS")
-	}
+  }
   Do ##class(Security.System).GetInstallationSecuritySetting(.security)
   If (security="None") {
     Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated
@@ -38,7 +38,7 @@ ClassMethod CreateWebApp(pVars,pLogLevel,tInstaller) As %Status
     Set cspProperties("AutheEnabled") = $$$AutheCache // Password
   }
   Set cspName = "/irisapp"
-  Set cspProperties("NameSpace") = $Get(Namespace,"IRISAPP")
+  Set cspProperties("NameSpace") = "IRISAPP"
   Set cspProperties("Enabled") = 1
   Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
   Set cspProperties("DeepSeeEnabled") = 1
@@ -47,9 +47,9 @@ ClassMethod CreateWebApp(pVars,pLogLevel,tInstaller) As %Status
   Set cspProperties("Resource") = ""
   Set cspProperties("ServeFiles") = 1
   Set tSC = ##class(Security.Applications).Create(cspName,.cspProperties)
-	If $IsObject($Get(tInstaller)) {
+    If $IsObject($Get(tInstaller)) {
     Do tInstaller.PopNS()
-	}
+  }
   If $$$ISERR(tSC) Throw ##class(%Installer.Exception).CreateFromStatus(tSC)
   Quit $$$OK
 }
