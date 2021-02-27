@@ -5,15 +5,15 @@ XData setup
 {
 <Manifest>
   <Default Name="SourceDir" Value="#{$system.Process.CurrentDirectory()}src"/>
+  <Default Name="Namespace" Value="IRISAPP"/>
 
-  <Namespace Name="IRISAPP" Code="IRISAPP" Data="IRISAPP" Create="yes" Ensemble="no">
-
+  <Namespace Name="${Namespace}" Code="${Namespace}" Data="${Namespace}" Create="yes" Ensemble="no">
     <Configuration>
-      <Database Name="IRISAPP" Dir="/opt/irisapp/data" Create="yes"/>
-
-      <Import File="${SourceDir}" Flags="ck" Recurse="1"/>
+      <Database Name="${Namespace}" Dir="/opt/irisapp/dat" Create="yes"/>
     </Configuration>
+    <Import File="${SourceDir}" Flags="ck" Recurse="1"/>
   </Namespace>
+
   <If Condition='(##class(Security.Applications).Exists("/irisapp")=0)'>
     <Log Text="Creating web application /irisapp" Level="0"/>
     <RunInstall Class="App.Installer" Method="CreateWebApp"/>
