@@ -23,12 +23,25 @@ Property Memo As %String;
 
 Property OtherSide As Transact;
 
-ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String = "", pValue As %String = "") As %Status
+ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String = "", pValue As %String = "", split As %Boolean = 0) As %Status
 {
+	Do ##class(Util).DebugTEST("Riches.Transact - OutputFormField")
+	Do ##class(Util).DebugTEST("pField = "_pField)
+	If split {
+		Set prefixD = "dd"
+		Set prefixI = "ii"
+	} Else {
+		Set prefixD = "d"
+		Set prefixI = "i"
+		Write "<tr>",!
+	}
 	Set q = """"
-	Set qHref = q_"Chooser.csp?iChoose="_pField_q
-	Set qID = q_"i"_pField_q
-	Set qIDD = q_"d"_pField_q
+	Set qHref = "Chooser.csp?iChoose="_pField_"&iSplit="_split
+	Do ##class(Util).DebugTEST("tURL = "_qHref)
+	//Set qHref = q_##class(%CSP.Page).EscapeURL(tURL)_q
+	//Do ##class(Util).DebugTEST("qHref = "_qHref)
+	Set qID = q_prefixI_pField_q
+	Set qIDD = q_prefixD_pField_q
 	Set qSize = q_"25"_q
 	Set qTarget = q_"iframe_chooser"_q
 	Set qText = q_"text"_q
@@ -41,7 +54,7 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	If (pField [ "Date") Set tDisplay = $ZDATE(pValue)
 	If (pField [ "Time") Set tDisplay = $ZTIME(pValue)
 	Set qDisplay = q_$Get(tDisplay,pValue)_q
-	Write "<tr><td><label for=",qID,">",pCaption,":</label></td>",!
+	Write "<td><label for=",qID,">",pCaption,":</label></td>",!
 	Write "<td>",!
 	If $Data(tDisplay) {
 		Write "<input type=",qText," id=",qIDD," size=",qSize," value=",qDisplay,$Get(onChange),">",!
@@ -51,7 +64,25 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	}
 	Write "</td>",!
 	Write "<td><a href=",qHref," target=",qTarget,">Choose</a></td>",!
-	Write "</tr>",!
+	If (split = 0) Write "</tr>",!
+	Quit $$$OK
+}
+
+ClassMethod OutputFormSplit() As %Status
+{
+	Set split = 1
+	/*
+	Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
+	Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
+	Do ##class(Riches.Transact).OutputFormField("TranTime","Time",$Get(iTranTime,$Piece($Horolog,",",2)))
+	Do ##class(Riches.Transact).OutputFormField("CheckNumber","Check",$Get(iCheckNumber))
+	Do ##class(Riches.Transact).OutputFormField("Merchant","Merchant",$Get(iMerchant))
+	*/
+	Do ##class(Riches.Transact).OutputFormField("Category","Category",$Get(iiCategory),split)
+	Do ##class(Riches.Transact).OutputFormField("SubCategory","SubCategory",$Get(iiSubCategory),split)
+	Do ##class(Riches.Transact).OutputFormField("AmountDebit","Amount Debit",$Get(iiAmountDebit),split)
+	Do ##class(Riches.Transact).OutputFormField("AmountCredit","Amount Credit",$Get(iiAmountCredit),split)
+	Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iiMemo),split)
 	Quit $$$OK
 }
 
