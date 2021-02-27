@@ -11,12 +11,13 @@ FROM $IMAGE
 USER root
 
 WORKDIR /opt/irisapp
-RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp
+COPY csp csp
+RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp /opt/irisapp/csp /opt/irisapp/csp/*
+RUN chmod 775 /opt/irisapp/csp/*
 
 USER irisowner
 
 COPY  Installer.cls .
-COPY  csp csp
 COPY  src src
 COPY irissession.sh /
 SHELL ["/irissession.sh"]
