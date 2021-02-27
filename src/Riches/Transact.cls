@@ -70,6 +70,8 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	}
 	Write "</td>",!
 	If split {
+		Write "</tr><tr>",!
+	}
 	Write "<td><a href=",qHref," target=",qTarget,">Choose</a></td>",!
 	If (split = 0) Write "</tr>",!
 	Quit $$$OK
