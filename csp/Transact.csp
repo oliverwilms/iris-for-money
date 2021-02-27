@@ -105,7 +105,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 </form>
 </td></tr>
 <tr><td>
-<iframe id="iframe_chooser" name="iframe_chooser" src="chooser.csp" title="Chooser" width="650" height="300" style=""></iframe>
+<iframe id="iframe_chooser" name="iframe_chooser" src="chooser.csp" title="Chooser" style=""></iframe>
 </td></tr></table>
 </td>
 <td>
@@ -139,7 +139,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iiMemo),split)
 </div>
 </td></tr>
 <tr><td>
-<iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" width="650" height="800" style=""></iframe>
+<iframe id="iframe_ledger" name="iframe_ledger" src="ledger.csp" title="Ledger" style=""></iframe>
 </td></tr>
 </table>
 </td></tr></table>
