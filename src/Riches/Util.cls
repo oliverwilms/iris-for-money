@@ -79,4 +79,10 @@ ClassMethod OutputRadio(pName As %String = "", pID As %String = "", pCaption As 
 	Quit $$$OK
 }
 
+ClassMethod QuoteJSLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
+{
+	Set tLogicalDisplay = ..EncodeLogicalDisplay(pLogical,pDisplay)
+	Quit ##class(%CSP.Page).QuoteJS(tLogicalDisplay)
+}
+
 }
