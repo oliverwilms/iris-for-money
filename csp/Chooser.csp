@@ -8,6 +8,11 @@ If ($Data(%request.Data("iChoose",1))) {
 }
 Set tChoose = $ZCONVERT($Get(iChoose),"U")
 Do ##class(Riches.Util).DebugTEST("<head> tChoose = "_tChoose)
+If ($Data(%request.Data("iSplit",1))) {
+	Set iSplit = %request.Data("iSplit",1)
+}
+Set tSplit = $Get(iSplit,0)
+Do ##class(Riches.Util).DebugTEST("<head> tSplit = "_tSplit)
 If (tChoose = "ACCOUNT") {
 	Set tClassname = "Riches.Account"
 	Set tElement = "Account" 
@@ -21,11 +26,19 @@ If (tChoose = "MERCHANT") {
 	Set tElement = "Merchant"
 }
 If ($Get(tClassname) '= "") {
+	If tSplit {
+		Set tDisplay = "dd"_tElement
+		Set tLogical = "ii"_tElement
+	} Else {
+		Set tDisplay = "d"_tElement
+		Set tLogical = "i"_tElement
+	}
 	Merge pRequestData = %request.Data
 	Set tSC = $CLASSMETHOD(tClassname,"SubmitFormData",.pRequestData,.pAction,.pLogicalDisplay)
 }
 Set tAction = $ZCONVERT($Get(pAction),"U")
 Do ##class(Riches.Util).DebugTEST("<head> tAction = "_tAction)
+Do ##class(Riches.Util).DebugTEST("<head> pLogicalDisplay = "_$Get(pLogicalDisplay))
 </script>
 <script language="JavaScript">
 function onloadHandler()
@@ -44,9 +57,9 @@ function updateLogicalDisplay(id)
 {
 	var delim = '^';
 	var arr = id.split(delim);
+	var tDisplay = '#($Get(tDisplay,""))#';
+	var tLogical = '#($Get(tLogical,""))#';
 	var tElement = '#($Get(tElement,""))#';
-	var tDisplay = 'd' + tElement;
-	var tLogical = 'i' + tElement;
 	parent.document.getElementById(tLogical).value = arr[1];
 	parent.document.getElementById(tDisplay).value = arr[2];
 	if (tElement == 'Account') {
