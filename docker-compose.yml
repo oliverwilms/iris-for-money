@@ -11,7 +11,7 @@ services:
       - 32768:52773
       - 53773
     volumes:
-      - riches:/opt/irisapp/data
+      - riches:/voldata
 
 volumes:
   riches:
