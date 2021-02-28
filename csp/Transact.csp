@@ -99,9 +99,13 @@ Do ##class(Riches.Transact).OutputFormField("SubCategory","SubCategory",$Get(iSu
 Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 </script>
 <tr><th colspan="3">#(##class(Riches.Util).GetStatusText(tSC))#</th></tr>
-</table>
+<tr><th>
 <input type="submit" value="Submit">
+</th><th>
+<button type="button" onclick="clearForm()">Import</button>
+</th><th>
 <button type="button" onclick="clearForm()">Clear</button>
+</th></tr></table>
 </form>
 </td></tr>
 <tr><td>
