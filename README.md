@@ -1,9 +1,9 @@
 ## iris-for-money
-This is a template for for a InterSystems IRIS REST API Contest.
-It has an example of REST API with CRUD actions for a Sample Person peristent class.
+This is my entry for InterSystems Grand Prix Contest 2021.
+It has CSP page you can find here: http://localhost:32768/irisapp/Transact.csp
 
 ## Inspiration
-To make an easy template to start building REST API in IRIS
+I have been using Microsoft Money for a very long time. Last week, after Windows Update, it quit working for me. I quickly put data in multiple worksheets in Excel, but I wanted more control to manage my money. This is very much a work in progress. Please be patient with me as I make it work.
 
 ## What it does
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
@@ -25,7 +25,7 @@ Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRI
 
 ## Installation with ZPM
 
-zpm:USER>install rest-api-contest-template
+zpm:USER>install iris-for-money
 
 ## Installation with Docker
 
@@ -36,7 +36,7 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
 ```
-$ git clone git@github.com:intersystems-community/rest-api-contest-template.git
+$ git clone git@github.com:oliverwilms/iris-for-money.git
 ```
 
 Open the terminal in this directory and run:
@@ -141,7 +141,7 @@ Open /src/cls/PackageSample/ObjectScript.cls class and try to make changes - it 
 Feel free to delete PackageSample folder and place your ObjectScript classes in a form
 /src/cls/Package/Classname.cls
 
-The script in Installer.cls will import everything you place under /src/cls into IRIS.
+The script in Installer.cls will import everything under /src and /csp into IRIS.
 
 ## Collaboration 
 Any collaboration is very welcome! Fork and send Pull requests!
