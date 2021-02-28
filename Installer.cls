@@ -69,7 +69,7 @@ ClassMethod CreateWebAppREST(pVars,pLogLevel,tInstaller) As %Status
   Set cspProperties("Enabled") = 1
   Set cspProperties("DeepSeeEnabled") = 1
   Set cspProperties("iKnowEnabled") = 0
-  Set cspProperties("DispatchClass") = "Sample.REST.Base"
+  Set cspProperties("DispatchClass") = "Riches.REST"
   Set cspProperties("Resource") = ""
   Set cspProperties("ServeFiles") = 1
   Set tSC = ##class(Security.Applications).Create(cspName,.cspProperties)
