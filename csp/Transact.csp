@@ -36,8 +36,8 @@ function clearForm()
 }
 function goSplit()
 {
-	document.getElementById("div_split").style="height:400px; width:450px; color:#000000; background:#CCC";
-	document.getElementById("iframe_ledger").height = '500';
+	document.getElementById("div_split").style="color:#000000; background:#CCC";
+	//document.getElementById("iframe_ledger").height = '400';
 }
 function onloadHandler()
 {
