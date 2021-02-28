@@ -3,14 +3,13 @@
   <Document name="iris-for-money.ZPM">
     <Module>
       <Name>iris-for-money</Name>
-      <Version>0.0.1</Version>
+      <Version>0.0.2</Version>
       <Description>IRIS application for managing Money</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="Riches.PKG"/>
       <CSPApplication 
         Url="/irisapp"
-        Recurse="1"
         MatchRoles=":{$dbrole}"
         PasswordAuthEnabled="1"
         UnauthenticatedEnabled="0"
