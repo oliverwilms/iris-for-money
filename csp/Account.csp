@@ -1,0 +1,111 @@
+<html>
+<head>
+<script language="Cache" runat="Server">
+Set tHeader = "Riches - Account"
+Merge pRequestData = %request.Data
+Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Account.csp")
+
+If ($Data(%request.Data("iType",1))) {
+	Set iType = %request.Data("iType",1)
+}
+If ($Data(%request.Data("iNickname",1))) {
+	Set iNickname = %request.Data("iNickname",1)
+}
+If ($Data(%request.Data("iStartBalance",1))) {
+	Set iStartBalance = %request.Data("iStartBalance",1)
+	If (iStartBalance = "") Set iStartBalance = 0
+}
+If ($Get(iNickname) '= "") {
+	Set objAccount = ##class(Riches.Account).%New()
+	Set objAccount.Nickname = iNickname
+	Set objAccount.StartBalance = $Get(iStartBalance)
+	Set objAccount.Type = $Get(iType)
+	Set tSC = objAccount.%Save()
+	Set ^TESTunit(0-$Increment(^TESTunit)) = $SYSTEM.Status.GetOneErrorText(tSC)
+	If (tSC = 1) {
+		Set iNickname = ""
+		Set iStartBalance = ""
+	}
+}
+</script>
+<script language="JavaScript">
+function onloadHandler()
+{
+	var tAction = '#($Get(tAction,""))#';
+	var tLogicalDisplay = '#($Get(pLogicalDisplay,""))#';
+	if (tAction != '') {
+		updateLogicalDisplay(tLogicalDisplay);
+	}
+}
+function processImport(id)
+{
+	alert(id);
+	window.location = 'Account.csp?debug='+id;
+}
+function fileOnChange(id)
+{
+	var fileUploader = document.getElementById('file-uploader');
+	//alert(fileUploader.files);
+	// Loop through the files and get metadata
+  		var file = fileUploader.files[0]; 
+    	var name = file.name;
+    	var type = file.type ? file.type: 'NA';
+    	var size = file.size;
+    	var lastModified = file.lastModified;
+	    alert( file + name + type + size + lastModified );
+}
+function showFile(input)
+{
+	var file = input.files[0];
+	var reader = new FileReader();
+	reader.onload = function() {
+		document.getElementById('debug').value = reader.result;
+  	};
+	reader.onerror = function() {
+		document.getElementById('debug').value = reader.error;
+		alert(reader.error);
+	}
+	reader.readAsText(file);
+}
+</script>
+
+<title>#(tHeader)#</title>
+</head>
+
+<body>
+<h1>#(tHeader)#</h1>
+<form action="" method="post" enctype="multipart/form-data">
+<script language="Cache" runat="Server">
+Set tSC = ##class(Riches.Account).OutputFormData()
+</script>
+<label for="file-uploader">CSV file:</label>
+<input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
+
+</form>
+
+<script language="Cache" runat="Server">
+Write "<table>",!
+Do ##class(Riches.Account).OutputTableData()
+Write "</table>",!
+Write "<textarea id='debug' name='debug' rows='15' cols='150'>",!
+Set tDebug = ""
+Set tRow = ""
+/*
+For {
+	If ($Data(^TESTunit) = 0) { Quit }
+	Set tDebug = $Order(^TESTunit(tDebug))
+	If (tDebug = "") { Quit }
+	Write $Get(^TESTunit(tDebug)),!
+	If ($Increment(tRow) > 4) { Quit }
+}
+*/
+Write "</textarea>","<br>",!
+//Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>",!
+Set q = """"
+Set qClick = q_"processImport(document.getElementById('debug').value)"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Process</button>",!
+</script>
+
+</body>
+</html>
