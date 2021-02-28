@@ -34,6 +34,10 @@ function clearForm()
 	document.getElementById("dCategory").value = '';
 	document.getElementById("iCheckNumber").value = '';
 }
+function goImport()
+{
+	window.location = "Account.csp";
+}
 function goSplit()
 {
 	document.getElementById("div_split").style="color:#000000; background:#CCC";
@@ -102,7 +106,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 <tr><th>
 <input type="submit" value="Submit">
 </th><th>
-<button type="button" onclick="clearForm()">Import</button>
+<button type="button" onclick="goImport()">Import</button>
 </th><th>
 <button type="button" onclick="clearForm()">Clear</button>
 </th></tr></table>
