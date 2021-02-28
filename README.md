@@ -1,4 +1,4 @@
-## rest-api-contest-template
+## iris-for-money
 This is a template for for a InterSystems IRIS REST API Contest.
 It has an example of REST API with CRUD actions for a Sample Person peristent class.
 
@@ -129,6 +129,9 @@ localhost:52773/crud/persons/5
 ```
 
 ## How to start coding
+
+http://x.x.x.x:32768/irisapp/Transact.csp
+
 This is a template, so you can use a template button on Github to create your own copy of this repository.
 The repository is ready to code in VSCode with ObjectScript plugin.
 Install [VSCode](https://code.visualstudio.com/) and [ObjectScript](https://marketplace.visualstudio.com/items?itemName=daimor.vscode-objectscript) plugin and open the folder in VSCode.
