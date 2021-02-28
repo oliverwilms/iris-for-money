@@ -8,7 +8,7 @@ I have been using Microsoft Money for a very long time. Last week, after Windows
 ## What it does
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
-![rest_contest](https://github.com/oliverwilms/bilder/blob/main/Riches_Transact.PNG)
+![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Transact.PNG)
 
 
 ## Challenges I ran into
