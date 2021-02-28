@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-  <Document name="contest-rest-template.ZPM">
+  <Document name="iris-for-money.ZPM">
     <Module>
-      <Name>contest-rest-template</Name>
-      <Version>1.0.3</Version>
+      <Name>iris-for-money</Name>
+      <Version>0.0.1</Version>
+      <Description>IRIS application for managing Money</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
-      
-      <Resource Name="Sample.PKG"/>
-     
-       <CSPApplication 
-        Url="/crud"
+      <Resource Name="Riches.PKG"/>
+      <CSPApplication 
+        Url="/irisapp"
         Recurse="1"
         MatchRoles=":{$dbrole}"
-        PasswordAuthEnabled="0"
+        PasswordAuthEnabled="1"
         UnauthenticatedEnabled="0"
-        DispatchClass="Sample.PersonREST"
+        SourcePath="/csp"
+        DeployPath="{$cspdir}/irisapp"
         ServeFiles="1"
-        CookiePath="/crud"
-        UseCookies="2"
-       />
+        Recurse="1"
+        CookiePath="/irisapp"
+      />
     </Module>
-    
   </Document>
 </Export>
