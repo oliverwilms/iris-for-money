@@ -72,7 +72,7 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
 	Do ..DebugTEST("pDebug = "_pDebug)
-	Write "<table>",!
+	Write "<table border=1>",!
 	If (pDebug = "PREVIEW") {
 		Set pp = ""
 		For {
@@ -98,9 +98,14 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0) 
 	Set tLen = $Length(pDebugLine,delim)
 	For pp=1:1:tLen {
 		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
+		If (pp = 1) Set tLineId = tDebugPiece
 		Set tSC = ..OutputDebugPiece(tDebugPiece,pHeader)
 		If $$$ISERR(tSC) Quit
 	}
+	Set q = """"
+	Set qClick = q_"goDeleteLine("_tLineId_")"_q
+	Set qType = q_"button"_q
+	Write "<th><button type=",qType," onclick=",qClick,">Delete</button></th>",!
 	Write "</tr>",!
 	Quit $$$OK
 }
