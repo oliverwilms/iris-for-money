@@ -37,10 +37,31 @@ function onloadHandler()
 		updateLogicalDisplay(tLogicalDisplay);
 	}
 }
+function postDebug(item, index) {
+	var escape = item.replace(/\//g, '?');
+	if (item == '') escape = 'NULL';
+	document.getElementById("div_debug").innerHTML += index + ":" + item + "<br>";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
+	};
+	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
+	xhttp.send();
+}
 function processImport(id)
 {
-	alert(id);
-	window.location = 'Account.csp?debug='+id;
+	//alert(id);
+	var delim = '\n';
+	var arr = id.split(delim);
+	//alert(arr[1]);
+	arr.forEach(postDebug);
+
+	//window.location = 'Account.csp?debug='+id;
+	//document.getElementById("iframe_debug").src = 'Chooser.csp?iChoose=debug';
+	//document.getElementById("iframe_debug").src = '';
+
 }
 function fileOnChange(id)
 {
@@ -84,6 +105,11 @@ Set tSC = ##class(Riches.Account).OutputFormData()
 </form>
 
 <script language="Cache" runat="Server">
+If ($Data(%request.Data("debug",1))) {
+	Set iDebug = %request.Data("debug",1)
+	Do ##class(Riches.Util).OutputDebug(iDebug)
+}
+
 Write "<table>",!
 Do ##class(Riches.Account).OutputTableData()
 Write "</table>",!
@@ -106,6 +132,6 @@ Set qClick = q_"processImport(document.getElementById('debug').value)"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Process</button>",!
 </script>
-
+<div id="div_debug" name="div_debug" style=""></div>
 </body>
 </html>
