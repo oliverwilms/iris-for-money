@@ -142,7 +142,7 @@ For {
 Write "</textarea>","<br>",!
 //Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>",!
 Set q = """"
-Set qClick = q_"previewResult()"_q
+Set qClick = q_"document.location='Account.csp?debug=PREVIEW'"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
 </script>
