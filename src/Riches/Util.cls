@@ -68,6 +68,54 @@ ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As
 	Quit tSC
 }
 
+ClassMethod OutputDebug(pDebug As %String = "") As %Status
+{
+	Do ..DebugTEST("Riches.Util - OutputDebug")
+	Do ..DebugTEST("pDebug = "_pDebug)
+	Write "<table>",!
+	If (pDebug = "PREVIEW") {
+		Set pp = ""
+		For {
+			Set pp = $Order(^RichesDEBUG(pp))
+			If (pp = "") Quit
+			Set qq = $Order(^RichesDEBUG(pp,""))
+			If (qq = "") Continue
+			Set tDebugLine = $Get(^RichesDEBUG(pp,qq))
+			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0))
+			If $$$ISERR(tSC) Quit
+		}
+	}
+	Write "</table>",!
+	Quit $$$OK
+}
+
+ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0) As %Status
+{
+	Do ..DebugTEST("Riches.Util - OutputDebugLine")
+	Do ..DebugTEST("pDebugLine = "_pDebugLine)
+	Write "<tr>",!
+	Set delim = ","
+	Set tLen = $Length(pDebugLine,delim)
+	For pp=1:1:tLen {
+		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
+		Set tSC = ..OutputDebugPiece(tDebugPiece,(pp = 1))
+		If $$$ISERR(tSC) Quit
+	}
+	Write "</tr>",!
+	Quit $$$OK
+}
+
+ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0) As %Status
+{
+	Do ..DebugTEST("Riches.Util - OutputDebugPiece")
+	Do ..DebugTEST("pDebugPiece = "_pDebugPiece)
+	Set td = $Select(pHeader:"th",1:"td")
+	Write "<",td,">",!
+	Write pDebugPiece
+	Write "</",td,">",!
+	Quit $$$OK
+}
+
 ClassMethod OutputRadio(pName As %String = "", pID As %String = "", pCaption As %String) As %Status
 {
 	Set q = """"
