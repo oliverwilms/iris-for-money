@@ -4,7 +4,7 @@
 Set tHeader = "Riches - Account"
 Merge pRequestData = %request.Data
 Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Account.csp")
-
+Set tClassname = "Riches.Account"
 If ($Data(%request.Data("iType",1))) {
 	Set iType = %request.Data("iType",1)
 }
@@ -20,8 +20,13 @@ If ($Get(iNickname) '= "") {
 	Set objAccount.Nickname = iNickname
 	Set objAccount.StartBalance = $Get(iStartBalance)
 	Set objAccount.Type = $Get(iType)
+	/*
 	Set tSC = objAccount.%Save()
 	Set ^TESTunit(0-$Increment(^TESTunit)) = $SYSTEM.Status.GetOneErrorText(tSC)
+	*/
+	//Merge pRequestData = %request.Data
+	Set tSC = $CLASSMETHOD(tClassname,"SubmitFormData",.pRequestData,.pAction,.pLogicalDisplay)
+
 	If (tSC = 1) {
 		Set iNickname = ""
 		Set iStartBalance = ""
