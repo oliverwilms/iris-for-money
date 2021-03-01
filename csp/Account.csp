@@ -34,6 +34,13 @@ If ($Get(iNickname) '= "") {
 }
 </script>
 <script language="JavaScript">
+function goDeleteLine(id)
+{
+	alert(id);
+	//document.getElementById("div_split").style="color:#000000; background:#CCC";
+	//document.getElementById("iframe_ledger").height = '400';
+}
+
 function onloadHandler()
 {
 	var tAction = '#($Get(tAction,""))#';
@@ -122,6 +129,14 @@ Set tSC = ##class(Riches.Account).OutputFormData()
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
 
 </form>
+Insert into table
+
+<label for="iTable">Choose a car:</label>
+
+<select name="iTable" id="iTable">
+  <option value="Category">Category</option>
+  <option value="Transact">Transact</option>
+</select>
 
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
