@@ -98,7 +98,7 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0) 
 	Set tLen = $Length(pDebugLine,delim)
 	For pp=1:1:tLen {
 		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
-		Set tSC = ..OutputDebugPiece(tDebugPiece,(pp = 1))
+		Set tSC = ..OutputDebugPiece(tDebugPiece,pHeader)
 		If $$$ISERR(tSC) Quit
 	}
 	Write "</tr>",!
