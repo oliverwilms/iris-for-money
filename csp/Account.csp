@@ -50,12 +50,25 @@ function postDebug(item, index) {
 	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
 	xhttp.send();
 }
-function processImport(id)
+function previewResult()
 {
-	alert(id);
+	alert('PREVIEW');
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
+	};
+	xhttp.open("GET", "/restapi/debug", true);
+	xhttp.send();
+	//var escape = item.replace(/\//g, '-');
+	//if (item == '') escape = 'NULL';
+	//document.getElementById("div_debug").innerHTML += index + "," + item + "<br>";
+}
+function processFile(id)
+{
 	var delim = '\n';
 	var arr = id.split(delim);
-	//alert(arr[1]);
 	arr.forEach(postDebug);
 
 	//window.location = 'Account.csp?debug='+id;
@@ -81,7 +94,7 @@ function showFile(input)
 	var reader = new FileReader();
 	reader.onload = function() {
 		//document.getElementById('debug').value = reader.result;
-		processImport(reader.result);
+		processFile(reader.result);
   	};
 	reader.onerror = function() {
 		document.getElementById('debug').value = reader.error;
@@ -129,9 +142,9 @@ For {
 Write "</textarea>","<br>",!
 //Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>",!
 Set q = """"
-Set qClick = q_"processImport(document.getElementById('debug').value)"_q
+Set qClick = q_"previewResult()"_q
 Set qType = q_"button"_q
-Write "<button type=",qType," onclick=",qClick,">Process</button>",!
+Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
 </script>
 <div id="div_debug" name="div_debug" style=""></div>
 </body>
