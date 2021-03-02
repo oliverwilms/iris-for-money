@@ -120,12 +120,18 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Set qValue = q_"Type"_q
 	Set tOption3 = "<option value="_qValue_">Type</option>"
 	Set tSelect2 = "</select>"
+	Set onchange = "onchangeSel(this)"
 	Write "<tr>",!
 	For pp=1:1:tLen {
-		Set qName = q_"sel_"_pp_q
-		Set qID = q_"sel_"_pp_q
-		Set tSelect1 = "<select name="_qName_" id="_qID_">"
-		Set tDebugPiece = "<div>"_tSelect1_tOption0_tOption1_tOption2_tOption3_tSelect2_"</div>"
+		If (pp = 1) {
+			Set qID = q_"div_col_count"_q
+			Set tDebugPiece = "<div id="_qID_">"_tLen_"</div>"
+		} Else {
+			Set qName = q_"sel_"_pp_q
+			Set qID = q_"sel_"_pp_q
+			Set tSelect1 = "<select name="_qName_" id="_qID_"onchange="_q_onchange_q_">"
+			Set tDebugPiece = "<div>"_tSelect1_tOption0_tOption1_tOption2_tOption3_tSelect2_"</div>"
+		}
 		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
 	}
 	Write "</tr>",!
