@@ -52,7 +52,7 @@ function goClickLine(row)
 	var col = columns.substring(1);
 	var val = values.substring(1);
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
-	alert(sql);
+	postSQL(sql);
 }
 function onchangeSel(id)
 {
@@ -83,7 +83,6 @@ function onchangeTable(id)
 function onloadHandler()
 {
 	var x = document.getElementById("div_col_count").innerHTML;
-	//alert(x);
 	var y = "";
 	for (var i = 2; i < x; i++) {
 		y += ",";
@@ -106,6 +105,17 @@ function postDebug(item, index) {
 		}
 	};
 	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
+	xhttp.send();
+}
+function postSQL(query)
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
+	};
+	xhttp.open("POST", "/restapi/sql/" + query, true);
 	xhttp.send();
 }
 function processFile(id)
