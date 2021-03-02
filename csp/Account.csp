@@ -36,13 +36,45 @@ If ($Get(iNickname) '= "") {
 <script language="JavaScript">
 function goDeleteLine(id)
 {
-	alert(id);
 	//document.getElementById("div_split").style="color:#000000; background:#CCC";
-	//document.getElementById("iframe_ledger").height = '400';
+	var x = document.getElementById("div_"+id+"_"+2).innerHTML;
+	alert(x);
 }
-
+function onchangeSel(id)
+{
+	var arr = id.id.split("sel_");
+	var y = arr[1] - 2;
+	var x = document.getElementById("hidden_col_sel").value;
+	var arr = x.split(",");
+	var len = arr.length;
+	//alert(len);
+	var x = document.getElementById(id.id).value;
+	arr[y] = x;
+	y = arr[0];
+	for (var i = 1; i < len; i++) {
+		//alert(y);
+		y += "," + arr[i];
+	}
+	document.getElementById("hidden_col_sel").value = y;
+	
+	//arr.forEach(postDebug);
+	//var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
+	//alert(id.id);
+}
+function onchangeTable(id)
+{
+	var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
+	alert(x);
+}
 function onloadHandler()
 {
+	var x = document.getElementById("div_col_count").innerHTML;
+	//alert(x);
+	var y = "";
+	for (var i = 2; i < x; i++) {
+		y += ",";
+	}
+	document.getElementById("hidden_col_sel").value = y;
 	var tAction = '#($Get(tAction,""))#';
 	var tLogicalDisplay = '#($Get(pLogicalDisplay,""))#';
 	if (tAction != '') {
@@ -119,7 +151,7 @@ function showFile(input)
 <title>#(tHeader)#</title>
 </head>
 
-<body>
+<body onload="onloadHandler();">
 <h1>#(tHeader)#</h1>
 <form action="" method="post" enctype="multipart/form-data">
 <script language="Cache" runat="Server">
@@ -133,11 +165,11 @@ Insert into table
 
 <label for="iTable">Choose a car:</label>
 
-<select name="iTable" id="iTable">
-  <option value="Category">Category</option>
-  <option value="Transact">Transact</option>
+<select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
+  <option value="Riches.Category">Category</option>
+  <option value="Riches.Transact">Transact</option>
 </select>
-
+<input type="text" id="hidden_col_sel" size="150">
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
