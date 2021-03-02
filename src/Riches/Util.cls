@@ -81,7 +81,7 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 			Set qq = $Order(^RichesDEBUG(pp,""))
 			If (qq = "") Continue
 			Set tDebugLine = $Get(^RichesDEBUG(pp,qq))
-			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0))
+			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0),pp)
 			If $$$ISERR(tSC) Quit
 		}
 	}
@@ -89,29 +89,28 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0) As %Status
+ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebugLine")
 	Do ..DebugTEST("pDebugLine = "_pDebugLine)
 	Write "<tr>",!
+	Set q = """"
 	Set delim = ","
 	Set tLen = $Length(pDebugLine,delim)
 	For pp=1:1:tLen {
 		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
 		If (pp = 1) Set tLineId = tDebugPiece
-		Set tSC = ..OutputDebugPiece(tDebugPiece,pHeader)
+		Set qID = q_"div_"_pId_"_"_pp_q
+		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
+		Set tSC = ..OutputDebugPiece(tDiv,pHeader)
 		If $$$ISERR(tSC) Quit
 	}
-	Set q = """"
 	Set qClick = q_"goDeleteLine("_tLineId_")"_q
 	Set qType = q_"button"_q
 	Write "<th><button type=",qType," onclick=",qClick,">Delete</button></th>",!
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
 	Set q = """"
-	Set qName = q_"select1"_q
-	Set qID = q_"select1"_q
-	Set tSelect1 = "<select name="_qName_" id="_qID_">"
 	Set qValue = q_""_q
 	Set tOption0 = "<option value="_qValue_"></option>"
 	Set qValue = q_"Nickname"_q
@@ -123,6 +122,9 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0) 
 	Set tSelect2 = "</select>"
 	Write "<tr>",!
 	For pp=1:1:tLen {
+		Set qName = q_"sel_"_pp_q
+		Set qID = q_"sel_"_pp_q
+		Set tSelect1 = "<select name="_qName_" id="_qID_">"
 		Set tDebugPiece = "<div>"_tSelect1_tOption0_tOption1_tOption2_tOption3_tSelect2_"</div>"
 		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
 	}
