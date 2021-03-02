@@ -34,7 +34,7 @@ If ($Get(iNickname) '= "") {
 }
 </script>
 <script language="JavaScript">
-function goDeleteLine(id)
+function goClickLine(id)
 {
 	//document.getElementById("div_split").style="color:#000000; background:#CCC";
 	var x = document.getElementById("div_"+id+"_"+2).innerHTML;
