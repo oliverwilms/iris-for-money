@@ -89,10 +89,10 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "") As %Status
+ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pDebug As %String = 0) As %Status
 {
-	Do ..DebugTEST("Riches.Util - OutputDebugLine")
-	Do ..DebugTEST("pDebugLine = "_pDebugLine)
+	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugLine")
+	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
 	Write "<tr>",!
 	Set q = """"
 	Set delim = ","
@@ -102,7 +102,7 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		If (pp = 1) Set tLineId = tDebugPiece
 		Set qID = q_"div_"_pId_"_"_pp_q
 		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
-		Set tSC = ..OutputDebugPiece(tDiv,pHeader)
+		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
 		If $$$ISERR(tSC) Quit
 	}
 	Set qClick = q_"goClickLine("_tLineId_")"_q
@@ -138,10 +138,10 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0) As %Status
+ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0, pDebug As %String = 0) As %Status
 {
-	Do ..DebugTEST("Riches.Util - OutputDebugPiece")
-	Do ..DebugTEST("pDebugPiece = "_pDebugPiece)
+	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugPiece")
+	Do:pDebug ..DebugTEST("pDebugPiece = "_pDebugPiece)
 	If pHeader {
 		Set td1 = "<th>"
 	} Else {
