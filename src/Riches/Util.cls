@@ -105,9 +105,9 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		Set tSC = ..OutputDebugPiece(tDiv,pHeader)
 		If $$$ISERR(tSC) Quit
 	}
-	Set qClick = q_"goDeleteLine("_tLineId_")"_q
+	Set qClick = q_"goClickLine("_tLineId_")"_q
 	Set qType = q_"button"_q
-	Write "<th><button type=",qType," onclick=",qClick,">Delete</button></th>",!
+	Write "<th><button type=",qType," onclick=",qClick,">Import</button></th>",!
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
 	Set q = """"
