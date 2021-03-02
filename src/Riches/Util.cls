@@ -107,6 +107,26 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0) 
 	Set qType = q_"button"_q
 	Write "<th><button type=",qType," onclick=",qClick,">Delete</button></th>",!
 	Write "</tr>",!
+	If (pHeader = 0) Quit $$$OK
+	Set q = """"
+	Set qName = q_"select1"_q
+	Set qID = q_"select1"_q
+	Set tSelect1 = "<select name="_qName_" id="_qID_">"
+	Set qValue = q_""_q
+	Set tOption0 = "<option value="_qValue_"></option>"
+	Set qValue = q_"Nickname"_q
+	Set tOption1 = "<option value="_qValue_">Nickname</option>"
+	Set qValue = q_"SortOrder"_q
+	Set tOption2 = "<option value="_qValue_">Sort</option>"
+	Set qValue = q_"Type"_q
+	Set tOption3 = "<option value="_qValue_">Type</option>"
+	Set tSelect2 = "</select>"
+	Write "<tr>",!
+	For pp=1:1:tLen {
+		Set tDebugPiece = "<div>"_tSelect1_tOption0_tOption1_tOption2_tOption3_tSelect2_"</div>"
+		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
+	}
+	Write "</tr>",!
 	Quit $$$OK
 }
 
@@ -114,10 +134,19 @@ ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0
 {
 	Do ..DebugTEST("Riches.Util - OutputDebugPiece")
 	Do ..DebugTEST("pDebugPiece = "_pDebugPiece)
-	Set td = $Select(pHeader:"th",1:"td")
-	Write "<",td,">",!
+	If pHeader {
+		Set td1 = "<th>"
+	} Else {
+		Set td1 = "<td>"
+	}
+	Write td1
 	Write pDebugPiece
-	Write "</",td,">",!
+	If pHeader {
+		Set td1 = "</th>"
+	} Else {
+		Set td1 = "</td>"
+	}
+	Write td1,!
 	Quit $$$OK
 }
 
