@@ -175,15 +175,14 @@ Set tSC = ##class(Riches.Account).OutputFormData()
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
 
 </form>
-Insert into table
 
-<label for="iTable">Choose a car:</label>
+<label for="iTable">Insert into table:</label>
 
 <select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
   <option value="Riches.Category">Category</option>
   <option value="Riches.Transact">Transact</option>
 </select>
-<input type="text" id="hidden_col_sel" size="150">
+<input type="hidden" id="hidden_col_sel" size="150">
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
