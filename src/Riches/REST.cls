@@ -13,6 +13,7 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 <Route Url="/debug" Method="GET" Call="GetDebug" />
 <Route Url="/debug/:debug" Method="POST" Call="PostDebug" />
 <Route Url="/debug/:debug/:index" Method="POST" Call="PostDebug" />
+<Route Url="/sql/:query" Method="POST" Call="PostSQL" />
 </Routes>
 }
 
@@ -53,6 +54,16 @@ ClassMethod PostDebug(pDebug As %String = "", pIndex As %String = -1) As %Status
 	Do ..DebugTEST("pIndex = "_pIndex)
 	Set tIncrement = $Increment(^RichesDEBUG)
 	Set ^RichesDEBUG(pIndex,tIncrement) = pIndex_","_ pDebug
+	Quit $$$OK
+}
+
+ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
+{
+	Do ..DebugTEST("Riches.REST - PostSQL")
+	Do ..DebugTEST("pQuery = "_pQuery)
+	Do ..DebugTEST("pIndex = "_pIndex)
+	//Set tIncrement = $Increment(^RichesDEBUG)
+	//Set ^RichesDEBUG(pIndex,tIncrement) = pIndex_","_ pDebug
 	Quit $$$OK
 }
 
