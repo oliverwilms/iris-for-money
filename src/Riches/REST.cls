@@ -62,9 +62,22 @@ ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 	Do ..DebugTEST("Riches.REST - PostSQL")
 	Do ..DebugTEST("pQuery = "_pQuery)
 	Do ..DebugTEST("pIndex = "_pIndex)
-	//Set tIncrement = $Increment(^RichesDEBUG)
-	//Set ^RichesDEBUG(pIndex,tIncrement) = pIndex_","_ pDebug
-	Quit $$$OK
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set tSC = tStatement.%Prepare(pQuery)
+	If $$$ISERR(tSC) {
+		Do ..DebugStatus(tSC)
+		Write "%Prepare failed:"
+		Do $System.Status.DisplayError(tSC) QUIT
+	} Else {
+		#Dim rset As %SQL.StatementResult
+		// Execute the current statement and return the result. The result of the execute is always the return value.
+		// Success/Failure information is reported in the result object as %SQLCODE, %Message, %ROWCOUNT, and/or %ROWID.
+		Set rset = tStatement.%Execute()
+		Do ..DebugTEST("%SQLCODE = "_rset.%SQLCODE)
+		Do ..DebugTEST("%Message = "_rset.%Message)
+		Do ..DebugTEST("%ROWID = "_rset.%ROWID)
+	}
+	Quit tSC
 }
 
 }
