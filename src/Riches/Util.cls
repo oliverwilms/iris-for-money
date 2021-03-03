@@ -93,13 +93,15 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugLine")
 	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
-	Write "<tr>",!
 	Set q = """"
 	Set delim = ","
 	Set tLen = $Length(pDebugLine,delim)
 	For pp=1:1:tLen {
 		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
-		If (pp = 1) Set tLineId = tDebugPiece
+		If (pp = 1) {
+			Set tLineId = tDebugPiece  // Is tLineId same as pId ?
+			Write "<tr id=",q,"tr_",pId,q,">",!
+		}
 		Set qID = q_"div_"_pId_"_"_pp_q
 		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
 		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
