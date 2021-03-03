@@ -1,6 +1,8 @@
 ## iris-for-money
 This is my entry for InterSystems Grand Prix Contest 2021.
-It has CSP page you can find here: http://localhost:32768/irisapp/Transact.csp
+http://localhost:32768/irisapp/Transact.csp
+![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Transact.PNG)
+If you are prompted to login, enter _SYSTEM and SYS
 
 ## Inspiration
 I have been using Microsoft Money for a very long time. Last week, after Windows Update, it quit working for me. I quickly put data in multiple worksheets in Excel, but I wanted more control to manage my money. This is very much a work in progress. Please be patient with me as I make it work.
@@ -8,7 +10,7 @@ I have been using Microsoft Money for a very long time. Last week, after Windows
 ## What it does
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
-![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Transact.PNG)
+
 
 
 ## Challenges I ran into
