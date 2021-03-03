@@ -10,7 +10,7 @@ I have been using Microsoft Money for a very long time. Last week, after Windows
 ## Getting Started
 I wanted to import some data that I had entered into Excel. I exported a list of Categories into Categories.csv file (in data folder)
 http://localhost:32768/irisapp/Account.csp
-Click the Browse... button and Open Categories.csv file. The contents of the file are displayed on the lower part of your screen. 
+Click the Browse... button and Open Categories.csv file. Click the Preview button to see a table grid with the data from the file.
 
 
 ## What it does
