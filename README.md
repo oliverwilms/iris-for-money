@@ -15,13 +15,13 @@ It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swag
 Not enough time
 
 ## Accomplishments that I proud of
-Easy template with self documented API spec installed with one ZPM command or docker-compose build
+I was able to import data from a CSV file
 
 ## What I learned
 a lot!
 
 ## Built with
-Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRIS openapi API
+Cache Server Pages, IRIS Community Edition in Docker
 
 ## Installation with ZPM
 
