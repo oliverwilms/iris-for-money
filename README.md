@@ -7,6 +7,11 @@ If you are prompted to login, enter _SYSTEM and SYS
 ## Inspiration
 I have been using Microsoft Money for a very long time. Last week, after Windows Update, it quit working for me. I quickly put data in multiple worksheets in Excel, but I wanted more control to manage my money. This is very much a work in progress. Please be patient with me as I make it work.
 
+## Getting Started
+I wanted to import some data that I had entered into Excel. I exported a list of Categories into Categories.csv file (in data folder)
+http://localhost:32768/irisapp/Account.csp
+
+
 ## What it does
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
