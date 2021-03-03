@@ -125,7 +125,8 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	For pp=1:1:tLen {
 		If (pp = 1) {
 			Set qID = q_"div_col_count"_q
-			Set tDebugPiece = "<div id="_qID_">"_tLen_"</div>"
+			Set qStyle = q_"display:none"_q
+			Set tDebugPiece = "<div id="_qID_" style="_qStyle_">"_tLen_"</div>"
 		} Else {
 			Set qName = q_"sel_"_pp_q
 			Set qID = q_"sel_"_pp_q
