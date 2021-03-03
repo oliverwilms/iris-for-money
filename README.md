@@ -11,7 +11,9 @@ I have been using Microsoft Money for a very long time. Last week, after Windows
 I wanted to import some data that I had entered into Excel. I exported a list of Categories into Categories.csv file (in data folder)
 http://localhost:32768/irisapp/Account.csp
 Click the Browse... button and Open Categories.csv file. Click the Preview button to see a table grid with the data from the file.
+
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account.PNG)
+
 Identify the columns that contain the data to insert into the table using the dropdown selections just below the column headers.
 
 ## What it does
