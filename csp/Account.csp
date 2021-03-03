@@ -36,6 +36,7 @@ If ($Get(iNickname) '= "") {
 <script language="JavaScript">
 function goClickLine(row)
 {
+	var rowId = "tr_" + row;
 	var x = document.getElementById("hidden_col_sel").value;
 	var arr = x.split(",");
 	var len = arr.length;
@@ -53,6 +54,7 @@ function goClickLine(row)
 	var val = values.substring(1);
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
 	postSQL(sql);
+	document.getElementById(rowId).style.display = "none";
 }
 function onchangeSel(id)
 {
@@ -97,11 +99,11 @@ function onloadHandler()
 function postDebug(item, index) {
 	var escape = item.replace(/\//g, '-');
 	if (item == '') escape = 'NULL';
-	document.getElementById("div_debug").innerHTML += index + "," + item + "<br>";
+	//document.getElementById("div_debug").innerHTML += index + "," + item + "<br>";
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			//document.getElementById("div_debug").innerHTML += this.responseText;
+			document.getElementById("div_debug").innerHTML += this.responseText;
 		}
 	};
 	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
@@ -187,7 +189,7 @@ If ($Data(%request.Data("debug",1))) {
 Write "<table>",!
 Do ##class(Riches.Account).OutputTableData()
 Write "</table>",!
-Write "<textarea id='debug' name='debug' rows='15' cols='150'>",!
+Write "<textarea id='debug' name='debug' rows='5' cols='150'>",!
 Set tDebug = ""
 Set tRow = ""
 /*
