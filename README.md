@@ -14,7 +14,7 @@ Click the Browse... button and Open Categories.csv file. Click the Preview butto
 
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account.PNG)
 
-Identify the columns that contain the data to insert into the table using the dropdown selections just below the column headers.
+Identify the columns that contain the data to insert into the table using the dropdown selections just below the column headers before you click the Import button in a row that displays a category you want to import into the database.
 
 ## What it does
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
