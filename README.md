@@ -14,8 +14,8 @@ It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swag
 ## Challenges I ran into
 Not enough time
 
-## Accomplishments that I proud of
-I was able to import data from a CSV file
+## Accomplishments that I am proud of
+I was able to import data from a CSV file that I had exported from Excel.
 
 ## What I learned
 a lot!
