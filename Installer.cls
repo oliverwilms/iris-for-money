@@ -67,6 +67,7 @@ ClassMethod CreateWebAppREST(pVars,pLogLevel,tInstaller) As %Status
   Set cspName = "/restapi"
   Set cspProperties("NameSpace") = $Get(Namespace,"IRISAPP")
   Set cspProperties("Enabled") = 1
+  Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
   Set cspProperties("DeepSeeEnabled") = 1
   Set cspProperties("iKnowEnabled") = 0
   Set cspProperties("DispatchClass") = "Riches.REST"
