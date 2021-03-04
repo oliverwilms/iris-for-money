@@ -73,6 +73,12 @@ IRISAPP>do ##class(UnitTest.REST).Setup()
 ^UnitTestRoot="/opt/irisapp/src"
 ```
 
+Execute Test in "UnitTest" package 
+
+```
+IRISAPP>do ##class(%UnitTest.Manager).RunTest("UnitTest","/loadudl")
+```
+
 ## How to Work With it
 
 This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
