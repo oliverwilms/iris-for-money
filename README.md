@@ -64,6 +64,15 @@ Open IRIS session inside the container:
 $ docker exec -it iris-for-money_iris_1 iris session iris -U irisapp
 ```
 
+If you are prompted to login, enter _SYSTEM and SYS
+
+Setup ^UnitTestRoot by running Setup() classmethod:
+
+```
+IRISAPP>do ##class(UnitTest.REST).Setup()
+^UnitTestRoot="/opt/irisapp/src"
+```
+
 ## How to Work With it
 
 This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
