@@ -3,7 +3,7 @@
   <Document name="iris-for-money.ZPM">
     <Module>
       <Name>iris-for-money</Name>
-      <Version>0.0.3</Version>
+      <Version>0.0.4</Version>
       <Description>IRIS application for managing Money</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
@@ -19,6 +19,7 @@
         Recurse="1"
         CookiePath="/irisapp"
       />
+      <UnitTest Name="tests" Package="UnitTest.Riches" Phase="test"/>
     </Module>
   </Document>
 </Export>
