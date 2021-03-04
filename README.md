@@ -56,6 +56,14 @@ Open the terminal in this directory and run:
 $ docker-compose up -d --build
 ```
 
+## Unit Test
+
+Open IRIS session inside the container:
+
+```
+$ docker exec -it iris-for-money_iris_1 iris session iris -U irisapp
+```
+
 ## How to Work With it
 
 This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
