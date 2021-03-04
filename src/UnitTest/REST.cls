@@ -10,7 +10,9 @@ ClassMethod Setup() As %Status
 
 Method TestSQL()
 {
-	Do $$$AssertEquals(##class(Production.Math).Square(2), 4)
+	Set tQuery = "Select COUNT (*) FROM Riches.Category WHERE Nickname = 'Wages'"
+	Set tCountBefore = ##class(Riches.Util).ExecuteQueryOneValue(tQuery)
+	Do $$$AssertEquals(tCountBefore, 0)
 }
 
 }
