@@ -17,6 +17,10 @@ Click the Browse... button and Open Categories.csv file. Click the Preview butto
 Identify the columns that contain the data to insert into the table using the dropdown selections just below the column headers before you click the Import button in a row that displays a category you want to import into the database.
 
 ## What it does
+
+The CSP page posts a request to /restapi/sql/query where query is the query to run against IRIS database.
+
+## What it does (this refers to the template this repository was cloned from)
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
