@@ -58,14 +58,16 @@ Method TestSQL()
 ClassMethod goTest(pVerbose As %String = 1) As %Status
 {
 	Set tQuery = "Select COUNT (*) FROM Riches.Category WHERE Nickname = 'Wages'"
-	Set tSC = ##class(Riches.Util).ExecuteQueryOneValue(tQuery,.tValue)
-	If pVerbose Write "Count before = ",tValue,!
+	Set tSC = ##class(Riches.Util).ExecuteQueryOneValue(tQuery,.tValueBefore)
+	If pVerbose Write "Count before = ",tValueBefore,!
 	Set tSC = ..MakeRequest()
 	Set tQuery = "Select COUNT (*) FROM Riches.Category WHERE Nickname = 'Wages'"
-	Set tSC = ##class(Riches.Util).ExecuteQueryOneValue(tQuery,.tValue)
-	If pVerbose Write "Count after = ",tValue,!
-	If (tValue = 1) Write "Test passed.",!
-	If (tValue '= 1) Write "Test failed.",!
+	Set tSC = ##class(Riches.Util).ExecuteQueryOneValue(tQuery,.tValueAfter)
+	If pVerbose Write "Count after = ",tValueAfter,!
+	Set tResult = "Test failed."
+	If (tValueAfter = 1) Set tResult = "Test passed."  // We want ONE entry per Nickname
+	If (tValueBefore > 0),(tValueAfter = tValueBefore) Set tResult = "Test passed."  // It works if we are not adding another entry
+	Write tResult,!
 	Quit tSC
 }
 
