@@ -74,18 +74,15 @@ $ docker exec -it iris-for-money_iris_1 iris session iris -U irisapp
 
 If you are prompted to login, enter _SYSTEM and SYS
 
-Setup ^UnitTestRoot by running Setup() classmethod:
+Execute UnitTest:
+```
+IRISAPP>do ##class(UnitTest.REST).goTest()
+Count before = 2
+StatusCode/Reason = 200 / OK
+Count after = 3
+Test failed. ```
 
-```
-IRISAPP>do ##class(UnitTest.REST).Setup()
-^UnitTestRoot="/opt/irisapp/src"
-```
-
-Execute Test in "UnitTest" package 
-
-```
-IRISAPP>do ##class(%UnitTest.Manager).RunTest("UnitTest","/loadudl")
-```
+If your first test passes, run it again. The second test fails, because we do not really want multiple categories with the same Nickname 'Wages'.
 
 ## How to Work With it
 
