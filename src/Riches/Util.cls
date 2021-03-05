@@ -1,7 +1,9 @@
 Class Riches.Util
 {
 
-ClassMethod DebugMerge(strMessage As %String = "", ByRef pArray) As %Status
+ClassMethod DebugMerge(
+	strMessage As %String = "",
+	ByRef pArray) As %Status
 {
 	Merge ^TESTunit($I(^TESTunit)) = pArray
 	Set tValue = ""
@@ -36,7 +38,9 @@ ClassMethod GetStatusText(pStatus As %Status) As %String
 	Quit tReturn
 }
 
-ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
+ClassMethod EncodeLogicalDisplay(
+	pLogical As %String = "",
+	pDisplay As %String = "") As %String
 {
 	Set delim = "^"
 	If (pLogical [ delim) {
@@ -49,7 +53,9 @@ ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String =
 	Quit tLogicalDisplay
 }
 
-ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As %Status
+ClassMethod ExecuteQueryOneValue(
+	pQuery As %String,
+	ByRef pResult As %String) As %Status
 {
 	Do ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
 	Do ..DebugTEST("pQuery = "_pQuery)
@@ -72,6 +78,7 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
 	Do ..DebugTEST("pDebug = "_pDebug)
+	If ($Data(^RichesDEBUG) = 0) Quit $$$OK
 	Write "<table border=1>",!
 	If (pDebug = "PREVIEW") {
 		Set pp = ""
@@ -89,7 +96,11 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pDebug As %String = 0) As %Status
+ClassMethod OutputDebugLine(
+	pDebugLine As %String = "",
+	pHeader As %String = 0,
+	pId As %String = "",
+	pDebug As %String = 0) As %Status
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugLine")
 	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
@@ -145,7 +156,10 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0, pDebug As %String = 0) As %Status
+ClassMethod OutputDebugPiece(
+	pDebugPiece As %String = "",
+	pHeader As %String = 0,
+	pDebug As %String = 0) As %Status
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugPiece")
 	Do:pDebug ..DebugTEST("pDebugPiece = "_pDebugPiece)
@@ -165,7 +179,10 @@ ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0
 	Quit $$$OK
 }
 
-ClassMethod OutputRadio(pName As %String = "", pID As %String = "", pCaption As %String) As %Status
+ClassMethod OutputRadio(
+	pName As %String = "",
+	pID As %String = "",
+	pCaption As %String) As %Status
 {
 	Set q = """"
 	Set qRadio = q_"radio"_q
@@ -176,7 +193,9 @@ ClassMethod OutputRadio(pName As %String = "", pID As %String = "", pCaption As 
 	Quit $$$OK
 }
 
-ClassMethod QuoteJSLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
+ClassMethod QuoteJSLogicalDisplay(
+	pLogical As %String = "",
+	pDisplay As %String = "") As %String
 {
 	Set tLogicalDisplay = ..EncodeLogicalDisplay(pLogical,pDisplay)
 	Quit ##class(%CSP.Page).QuoteJS(tLogicalDisplay)
