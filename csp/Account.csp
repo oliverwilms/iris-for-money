@@ -84,7 +84,11 @@ function onchangeTable(id)
 }
 function onloadHandler()
 {
-	var x = document.getElementById("div_col_count").innerHTML;
+	if (document.getElementById("div_col_count") == null) {
+		var x = 0;
+	} else {
+		var x = document.getElementById("div_col_count").innerHTML;
+	}
 	var y = "";
 	for (var i = 2; i < x; i++) {
 		y += ",";
