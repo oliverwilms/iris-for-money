@@ -19,7 +19,6 @@
         Recurse="1"
         CookiePath="/irisapp"
       />
-      <UnitTest Name="tests" Package="UnitTest.Riches" Phase="test"/>
     </Module>
   </Document>
 </Export>
