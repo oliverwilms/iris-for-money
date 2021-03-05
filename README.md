@@ -80,7 +80,8 @@ IRISAPP>do ##class(UnitTest.REST).goTest()
 Count before = 2
 StatusCode/Reason = 200 / OK
 Count after = 3
-Test failed. ```
+Test failed. 
+```
 
 If your first test passes, run it again. The second test fails, because we do not really want multiple categories with the same Nickname 'Wages'.
 
