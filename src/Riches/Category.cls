@@ -1,4 +1,4 @@
-Class Riches.Category Extends %Persistent
+Class Riches.Category Extends (%Persistent, %JSON.Adaptor, %Populate)
 {
 
 Property Type As %String(VALUELIST = ",I,E");
