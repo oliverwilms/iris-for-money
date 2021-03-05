@@ -18,7 +18,11 @@ Identify the columns that contain the data to insert into the table using the dr
 
 ## What it does
 
-The CSP page posts a request to /restapi/sql/query where query is the query to run against IRIS database.
+The CSP page posts a request to /restapi/sql/query where query is the query to run against IRIS database:
+
+```
+Insert into Riches.Category (Nickname) values ('Wages')
+```
 
 ## What it does (this refers to the template this repository was cloned from)
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
