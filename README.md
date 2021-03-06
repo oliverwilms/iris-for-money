@@ -38,7 +38,7 @@ Again I go to http://localhost:32768/irisapp/Account.csp. This time I create a r
 Not enough time
 
 ## Accomplishments that I am proud of
-I was able to import data from a CSV file that I had exported from Excel.
+I was able to import data from a CSV file that I had exported from Excel. As of today, Saturday, I am able to select from three tables to insert data into Category, Merchant, and Transact tables.
 
 ## What I learned
 a lot!
