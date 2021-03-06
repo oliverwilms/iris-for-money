@@ -9,6 +9,13 @@ Property DefaultSubCat As SubCategory;
 
 Property SortOrder As %String;
 
+ClassMethod GetColumns(ByRef pColumns) As %String
+{
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Nickname","Nickname")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("SortOrder","Sort")
+	Quit $$$OK
+}
+
 ClassMethod OutputFormData(iNickname As %String = "", iSortOrder As %String = "") As %Status
 {
 	Set q = """"
