@@ -62,31 +62,36 @@ function goClickLine(row)
 	postSQL(sql);
 	document.getElementById(rowId).style.display = "none";
 }
-function onchangeSel(id)
+function goClickPreview()
+{
+	var x = document.getElementById("iTable").value;
+	alert(x);
+	document.location = "Account.csp?debug=PREVIEW&iTable=" + x;
+}
+function onchangeSel(id)  // id is this of <select> for column selection
 {
 	var arr = id.id.split("sel_");
-	var y = arr[1] - 2;
+	var y = arr[1] - 2;  // which position changes
 	var x = document.getElementById("hidden_col_sel").value;
 	var arr = x.split(",");
 	var len = arr.length;
-	//alert(len);
-	var x = document.getElementById(id.id).value;
+	var x = document.getElementById(id.id).value;  // selected column
 	arr[y] = x;
 	y = arr[0];
 	for (var i = 1; i < len; i++) {
-		//alert(y);
 		y += "," + arr[i];
 	}
-	document.getElementById("hidden_col_sel").value = y;
-	
-	//arr.forEach(postDebug);
-	//var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
-	//alert(id.id);
+	document.getElementById("hidden_col_sel").value = y;  // comma delimited list of selected columns
 }
-function onchangeTable(id)
+function onchangeTable(id)  // id is this.value - Riches.Transact
 {
-	var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
-	alert(x);
+	if (document.getElementById("div_col_count") == null) {
+		var x = 0;
+	} else {
+		var x = document.getElementById("div_col_count").innerHTML;
+	}
+	//var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
+	//alert(id);
 }
 function onloadHandler()
 {
@@ -167,6 +172,24 @@ function showFile(input)
 	}
 	reader.readAsText(file);
 }
+function tableClickHandler(id)
+{
+	//alert(id);
+	updateLogicalDisplay(id);
+}
+function updateLogicalDisplay(id)
+{
+	var delim = '^';
+	var arr = id.split(delim);
+	var tDisplay = 'iNickname';
+	var tLogical = 'iChoose';
+	var tElement = '#($Get(tElement,""))#';
+	parent.document.getElementById(tLogical).value = arr[1];
+	parent.document.getElementById(tDisplay).value = arr[2];
+	if (tElement == 'Account') {
+		parent.document.getElementById("iframe_ledger").src = 'Ledger.csp?iAccount=' + arr[1];
+	}
+}
 </script>
 
 <title>#(tHeader)#</title>
@@ -183,20 +206,24 @@ Set tSC = ##class(Riches.Account).OutputFormData()
 <tr><td>
 <label for="file-uploader">CSV file:</label>
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
-</td></tr></table></form>
+</td></tr></table>
 <label for="iTable">Insert into table:</label>
 
 <select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
   <option value="Riches.Category">Category</option>
   <option value="Riches.Transact">Transact</option>
 </select>
-<input type="hidden" id="hidden_col_sel" size="150">
+</form>
+<input type="text" id="hidden_col_sel" size="100">
+<input type="text" id="hidden_tab_col" size="100">
 <script language="Cache" runat="Server">
+If ($Data(%request.Data("iTable",1))) {
+	Set iTable = %request.Data("iTable",1)
+}
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
-	Do ##class(Riches.Util).OutputDebug(iDebug)
+	Do ##class(Riches.Util).OutputDebug($Get(iTable,iDebug))
 }
-
 Write "<table>",!
 Do ##class(Riches.Account).OutputTableData()
 Write "</table>",!
@@ -215,7 +242,7 @@ For {
 Write "</textarea>","<br>",!
 //Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$Namespace,"'>View Debug Global</a>",!
 Set q = """"
-Set qClick = q_"document.location='Account.csp?debug=PREVIEW'"_q
+Set qClick = q_"goClickPreview()"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
 </script>
