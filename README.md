@@ -24,11 +24,8 @@ The CSP page posts a request to /restapi/sql/query where query is the query to r
 Insert into Riches.Category (Nickname) values ('Wages')
 ```
 
-## What it does (this refers to the template this repository was cloned from)
-Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
-It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
-
-
+## New - Data Model
+Now includes /riches web app in IRIS to add another way to manage persistent data in Riches.Category class. It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
 ## Challenges I ran into
 Not enough time
