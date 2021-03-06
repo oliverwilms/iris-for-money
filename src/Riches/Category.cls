@@ -7,6 +7,11 @@ Property Nickname As %String;
 
 Property SortOrder As %String;
 
+ClassMethod AddTestData(amount As %Integer)
+{
+	Do ..Populate(amount)
+}
+
 ClassMethod OutputFormData(iNickname As %String = "", iSortOrder As %String = "") As %Status
 {
 	Set q = """"
@@ -123,8 +128,32 @@ Storage Default
 </Data>
 <DataLocation>^Riches.CategoryD</DataLocation>
 <DefaultData>CategoryDefaultData</DefaultData>
+<ExtentSize>6</ExtentSize>
 <IdLocation>^Riches.CategoryD</IdLocation>
 <IndexLocation>^Riches.CategoryI</IndexLocation>
+<Property name="%%CLASSNAME">
+<AverageFieldSize>1</AverageFieldSize>
+<Selectivity>100.0000%</Selectivity>
+</Property>
+<Property name="%%ID">
+<AverageFieldSize>1</AverageFieldSize>
+<Selectivity>1</Selectivity>
+</Property>
+<Property name="Nickname">
+<AverageFieldSize>5</AverageFieldSize>
+<Selectivity>33.3333%</Selectivity>
+</Property>
+<Property name="SortOrder">
+<AverageFieldSize>1.67</AverageFieldSize>
+<Selectivity>33.3333%</Selectivity>
+</Property>
+<Property name="Type">
+<AverageFieldSize>.33</AverageFieldSize>
+<Selectivity>33.3333%</Selectivity>
+</Property>
+<SQLMap name="IDKEY">
+<BlockCount>-4</BlockCount>
+</SQLMap>
 <StreamLocation>^Riches.CategoryS</StreamLocation>
 <Type>%Storage.Persistent</Type>
 }
