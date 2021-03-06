@@ -12,6 +12,23 @@ ClassMethod AddTestData(amount As %Integer)
 	Do ..Populate(amount)
 }
 
+ClassMethod GetColumns(ByRef pColumns) As %String
+{
+	/*
+	Set tOption0 = "<option value="_qValue_"></option>"
+	Set qValue = q_"Nickname"_q
+	Set tOption1 = "<option value="_qValue_">Nickname</option>"
+	Set qValue = q_"SortOrder"_q
+	Set tOption2 = "<option value="_qValue_">Sort</option>"
+	Set qValue = q_"Type"_q
+	Set tOption3 = "<option value="_qValue_">Type</option>"
+	*/
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Nickname","Nickname")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("SortOrder","Sort")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Type","Type")
+	Quit $$$OK
+}
+
 ClassMethod OutputFormData(iNickname As %String = "", iSortOrder As %String = "") As %Status
 {
 	Set q = """"
