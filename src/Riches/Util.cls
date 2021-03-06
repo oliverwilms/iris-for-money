@@ -1,9 +1,7 @@
 Class Riches.Util
 {
 
-ClassMethod DebugMerge(
-	strMessage As %String = "",
-	ByRef pArray) As %Status
+ClassMethod DebugMerge(strMessage As %String = "", ByRef pArray) As %Status
 {
 	Merge ^TESTunit($I(^TESTunit)) = pArray
 	Set tValue = ""
@@ -38,9 +36,7 @@ ClassMethod GetStatusText(pStatus As %Status) As %String
 	Quit tReturn
 }
 
-ClassMethod EncodeLogicalDisplay(
-	pLogical As %String = "",
-	pDisplay As %String = "") As %String
+ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
 {
 	Set delim = "^"
 	If (pLogical [ delim) {
@@ -53,9 +49,7 @@ ClassMethod EncodeLogicalDisplay(
 	Quit tLogicalDisplay
 }
 
-ClassMethod ExecuteQueryOneValue(
-	pQuery As %String,
-	ByRef pResult As %String) As %Status
+ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As %Status
 {
 	Do ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
 	Do ..DebugTEST("pQuery = "_pQuery)
@@ -74,11 +68,39 @@ ClassMethod ExecuteQueryOneValue(
 	Quit tSC
 }
 
+ClassMethod GetOptionsTableColumns(pClassname As %String = "", Output pOptions As %String) As %String
+{
+	/*
+	Set q = """"
+	Set qValue = q_""_q
+	Set tOption0 = "<option value="_qValue_"></option>"
+	Set qValue = q_"Nickname"_q
+	Set tOption1 = "<option value="_qValue_">Nickname</option>"
+	Set qValue = q_"SortOrder"_q
+	Set tOption2 = "<option value="_qValue_">Sort</option>"
+	Set qValue = q_"Type"_q
+	Set tOption3 = "<option value="_qValue_">Type</option>"
+	*/
+	Set q = """"
+	Set qValue = q_""_q
+	Set pOptions = "<option value="_qValue_"></option>"
+	If (pClassname = "") Set pClassname = "Riches.Category"
+	Set tSC = $CLASSMETHOD(pClassname,"GetColumns",.pColumns)
+	For ii = 1:1:$Get(pColumns,0) {
+		Set tLogicalDisplay = $Get(pColumns(ii))
+		Set delim = $Extract(tLogicalDisplay,1)
+		Set tLogical = $Piece(tLogicalDisplay,delim,2)
+		Set tDisplay = $Piece(tLogicalDisplay,delim,3)
+		Set qValue = q_tLogical_q
+		Set pOptions = pOptions_"<option value="_qValue_">"_tDisplay_"</option>"
+	}
+	Quit pOptions
+}
+
 ClassMethod OutputDebug(pDebug As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
 	Do ..DebugTEST("pDebug = "_pDebug)
-	If ($Data(^RichesDEBUG) = 0) Quit $$$OK
 	Write "<table border=1>",!
 	If (pDebug = "PREVIEW") {
 		Set pp = ""
@@ -96,11 +118,7 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugLine(
-	pDebugLine As %String = "",
-	pHeader As %String = 0,
-	pId As %String = "",
-	pDebug As %String = 0) As %Status
+ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pDebug As %String = 0) As %Status
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugLine")
 	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
@@ -127,6 +145,8 @@ ClassMethod OutputDebugLine(
 	Write "</th>",!
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
+	// Row of <select> for choosing table column to import to
+	Set tClassname = "Riches.Category"
 	Set q = """"
 	Set qValue = q_""_q
 	Set tOption0 = "<option value="_qValue_"></option>"
@@ -149,6 +169,7 @@ ClassMethod OutputDebugLine(
 			Set qID = q_"sel_"_pp_q
 			Set tSelect1 = "<select name="_qName_" id="_qID_"onchange="_q_onchange_q_">"
 			Set tDebugPiece = "<div>"_tSelect1_tOption0_tOption1_tOption2_tOption3_tSelect2_"</div>"
+			Set tDebugPiece = "<div>"_tSelect1_..GetOptionsTableColumns(tClassname)_tSelect2_"</div>"
 		}
 		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
 	}
@@ -156,10 +177,7 @@ ClassMethod OutputDebugLine(
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugPiece(
-	pDebugPiece As %String = "",
-	pHeader As %String = 0,
-	pDebug As %String = 0) As %Status
+ClassMethod OutputDebugPiece(pDebugPiece As %String = "", pHeader As %String = 0, pDebug As %String = 0) As %Status
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugPiece")
 	Do:pDebug ..DebugTEST("pDebugPiece = "_pDebugPiece)
@@ -179,10 +197,7 @@ ClassMethod OutputDebugPiece(
 	Quit $$$OK
 }
 
-ClassMethod OutputRadio(
-	pName As %String = "",
-	pID As %String = "",
-	pCaption As %String) As %Status
+ClassMethod OutputRadio(pName As %String = "", pID As %String = "", pCaption As %String) As %Status
 {
 	Set q = """"
 	Set qRadio = q_"radio"_q
@@ -193,9 +208,7 @@ ClassMethod OutputRadio(
 	Quit $$$OK
 }
 
-ClassMethod QuoteJSLogicalDisplay(
-	pLogical As %String = "",
-	pDisplay As %String = "") As %String
+ClassMethod QuoteJSLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
 {
 	Set tLogicalDisplay = ..EncodeLogicalDisplay(pLogical,pDisplay)
 	Quit ##class(%CSP.Page).QuoteJS(tLogicalDisplay)
