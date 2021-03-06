@@ -85,7 +85,10 @@ ClassMethod GetOptionsTableColumns(pClassname As %String = "", Output pOptions A
 	Set qValue = q_""_q
 	Set pOptions = "<option value="_qValue_"></option>"
 	If (pClassname = "") Set pClassname = "Riches.Category"
-	Set tSC = $CLASSMETHOD(pClassname,"GetColumns",.pColumns)
+	Try {
+		Set tSC = $CLASSMETHOD(pClassname,"GetColumns",.pColumns)
+	} Catch {
+	}
 	For ii = 1:1:$Get(pColumns,0) {
 		Set tLogicalDisplay = $Get(pColumns(ii))
 		Set delim = $Extract(tLogicalDisplay,1)
@@ -93,6 +96,26 @@ ClassMethod GetOptionsTableColumns(pClassname As %String = "", Output pOptions A
 		Set tDisplay = $Piece(tLogicalDisplay,delim,3)
 		Set qValue = q_tLogical_q
 		Set pOptions = pOptions_"<option value="_qValue_">"_tDisplay_"</option>"
+	}
+	Quit pOptions
+}
+
+ClassMethod GetOptionsTableNames(pSelected As %String = "", Output pOptions As %String) As %String
+{
+	/*
+  <option value="Riches.Category">Category</option>
+  <option value="Riches.Merchant">Merchant</option>
+  <option value="Riches.Transact">Transact</option>
+	*/
+	Set q = """"
+	Set qValue = q_""_q
+	Set pOptions = "<option value="_qValue_"></option>"
+	For ii = "Category", "Merchant", "Transact" {
+		Set tLogical = "Riches."_ii
+		Set tDisplay = ii
+		Set qValue = q_tLogical_q
+		Set selected = $Select((tLogical = pSelected):" selected",1:"")
+		Set pOptions = pOptions_"<option value="_qValue_selected_">"_tDisplay_"</option>"
 	}
 	Quit pOptions
 }
@@ -212,6 +235,30 @@ ClassMethod OutputRadio(pName As %String = "", pID As %String = "", pCaption As 
 	Set qID = q_pID_q
 	Write "<input type=",qRadio," id=",qID," name=",qName," value=",qID,">",!
 	Write "<label for=",qID,">",pCaption,"</label><br>",!
+	Quit $$$OK
+}
+
+ClassMethod OutputSelectTable(pName As %String = "iTable", pID As %String = "iTable", pCaption As %String = "Insert into table:", pSelected As %String) As %Status
+{
+	/*
+<label for="iTable">Insert into table:</label>
+
+<select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
+  <option value="Riches.Category">Category</option>
+  <option value="Riches.Merchant">Merchant</option>
+  <option value="Riches.Transact">Transact</option>
+</select>
+	*/
+	Set pDebug = 1
+	Do:pDebug ..DebugTEST("Riches.Util - OutputSelectTable")
+	Do:pDebug ..DebugTEST("pSelected = "_$Get(pSelected))
+	Set q = """"
+	Set qName = q_pName_q
+	Set qID = q_pID_q
+	Write "<label for=",qID,">",pCaption,"</label>",!
+	Write "<select name=",qName," id=",qID," onchange=",q,"onchangeTable(this.value)",q,">",!
+	Write ..GetOptionsTableNames($Get(pSelected))
+	Write "</select>",!
 	Quit $$$OK
 }
 
