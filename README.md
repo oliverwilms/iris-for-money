@@ -84,9 +84,9 @@ If your first test passes, run it again. The second test fails, because we do no
 
 ## How to Work With it
 
-This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
-The API is available on localhost:52773/crud/
-This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:52773/crud/_spec
+iris-for-money includes /riches REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
+The API is available on localhost:32768/riches/
+This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:32768/crud/_spec
 THis spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
 Or you can install [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) with:
 ```
@@ -97,7 +97,7 @@ And check the documentation on localhost:52773/swagger-ui/index.html
 
 # Testing GET requests
 
-To test GET you need to have some data. You can create it with POST request (see below), or you can create some fake testing data. to do that open IRIS terminal and call:
+To test GET you need to have some data. You can create it with POST request (see below), or you can create some fake testing data. To do that open IRIS terminal and call:
 
 ```
 IRISAPP>do ##class(Sample.Person).AddTestData(10)
