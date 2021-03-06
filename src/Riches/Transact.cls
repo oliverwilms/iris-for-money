@@ -23,6 +23,21 @@ Property Memo As %String;
 
 Property OtherSide As Transact;
 
+ClassMethod GetColumns(ByRef pColumns) As %String
+{
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Account","Account")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("AmountCredit","Credit")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("AmountDebit","Debit")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Category","Category")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("SubCategory","SubCategory")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Merchant","Merchant")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("TranDate","Date")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("TranTime","Time")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("CheckNumber","Check")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Memo","Memo")
+	Quit $$$OK
+}
+
 ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String = "", pValue As %String = "", split As %Boolean = 0) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputFormField")
