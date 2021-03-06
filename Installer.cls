@@ -18,6 +18,10 @@ XData setup
     <Log Text="Creating web application /irisapp" Level="0"/>
     <RunInstall Class="App.Installer" Method="CreateWebApp"/>
   </If>
+  <If Condition='(##class(Security.Applications).Exists("/riches")=0)'>
+    <Log Text="Creating web application /riches" Level="0"/>
+    <RunInstall Class="App.Installer" Method="CreateWebAppModel"/>
+  </If>
   <If Condition='(##class(Security.Applications).Exists("/restapi")=0)'>
     <Log Text="Creating web application /restapi" Level="0"/>
     <RunInstall Class="App.Installer" Method="CreateWebAppREST"/>
@@ -25,7 +29,7 @@ XData setup
 </Manifest>
 }
 
-ClassMethod CreateWebApp(pVars,pLogLevel,tInstaller) As %Status
+ClassMethod CreateWebApp(pVars, pLogLevel, tInstaller) As %Status
 {
   If $IsObject($Get(tInstaller)) {
     Set Namespace = tInstaller.Evaluate("${Namespace}")
@@ -54,7 +58,36 @@ ClassMethod CreateWebApp(pVars,pLogLevel,tInstaller) As %Status
   Quit $$$OK
 }
 
-ClassMethod CreateWebAppREST(pVars,pLogLevel,tInstaller) As %Status
+ClassMethod CreateWebAppModel(pVars, pLogLevel, tInstaller) As %Status
+{
+	If $Data(tInstaller) {
+		Set Namespace = tInstaller.Evaluate("${Namespace}")
+		Do tInstaller.PushNS("%SYS")
+	}
+  Do ##class(Security.System).GetInstallationSecuritySetting(.security)
+  If (security="None") {
+    Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated
+  } Else {
+    Set cspProperties("AutheEnabled") = $$$AutheCache // Password
+  }
+  Set cspName = "/riches"
+  Set cspProperties("NameSpace") = $Get(Namespace,"IRISAPP")
+  Set cspProperties("Enabled") = 1
+  Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
+  Set cspProperties("DeepSeeEnabled") = 1
+  Set cspProperties("iKnowEnabled") = 0
+  Set cspProperties("DispatchClass") = "Riches.CategoryREST"
+  Set cspProperties("Resource") = ""
+  Set cspProperties("ServeFiles") = 1
+  Set tSC = ##class(Security.Applications).Create(cspName,.cspProperties)
+	If $Data(tInstaller) {
+		Do tInstaller.PopNS()
+	}
+  If $$$ISERR(tSC) Throw ##class(%Installer.Exception).CreateFromStatus(tSC)
+  Quit $$$OK
+}
+
+ClassMethod CreateWebAppREST(pVars, pLogLevel, tInstaller) As %Status
 {
   Set Namespace = tInstaller.Evaluate("${Namespace}")
   Do tInstaller.PushNS("%SYS")
