@@ -97,10 +97,16 @@ ClassMethod GetOptionsTableColumns(pClassname As %String = "", Output pOptions A
 	Quit pOptions
 }
 
-ClassMethod OutputDebug(pDebug As %String = "") As %Status
+ClassMethod OutputDebug(pDebug As %String = "", pTable As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
 	Do ..DebugTEST("pDebug = "_pDebug)
+	Do ..DebugTEST("pTable = "_pTable)
+	If ($Data(^RichesDEBUG) = 0) Quit $$$OK
+	If (pTable = "") {
+		Set pTable = pDebug
+		Set pDebug = "PREVIEW"
+	}
 	Write "<table border=1>",!
 	If (pDebug = "PREVIEW") {
 		Set pp = ""
@@ -110,7 +116,7 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 			Set qq = $Order(^RichesDEBUG(pp,""))
 			If (qq = "") Continue
 			Set tDebugLine = $Get(^RichesDEBUG(pp,qq))
-			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0),pp)
+			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0),pp,pTable)
 			If $$$ISERR(tSC) Quit
 		}
 	}
@@ -118,7 +124,7 @@ ClassMethod OutputDebug(pDebug As %String = "") As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pDebug As %String = 0) As %Status
+ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pTable As %String = "", pDebug As %String = 0) As %Status
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugLine")
 	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
@@ -146,7 +152,8 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
 	// Row of <select> for choosing table column to import to
-	Set tClassname = "Riches.Category"
+	Set tClassname = pTable
+	//Set tClassname = "Riches.Category"
 	Set q = """"
 	Set qValue = q_""_q
 	Set tOption0 = "<option value="_qValue_"></option>"
