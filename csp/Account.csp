@@ -4,6 +4,10 @@
 Set tHeader = "Riches - Account"
 Merge pRequestData = %request.Data
 Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Account.csp")
+// Check tSC to avoid duplicate submissions
+If $$$ISOK(tSC) {
+	//Set tSC = ##class(Riches.Transact).SubmitFormData(.pRequestData,.pAction,.pId)
+
 Set tClassname = "Riches.Account"
 If ($Data(%request.Data("iType",1))) {
 	Set iType = %request.Data("iType",1)
@@ -31,6 +35,8 @@ If ($Get(iNickname) '= "") {
 		Set iNickname = ""
 		Set iStartBalance = ""
 	}
+}
+
 }
 </script>
 <script language="JavaScript">
@@ -169,14 +175,15 @@ function showFile(input)
 <body onload="onloadHandler();">
 <h1>#(tHeader)#</h1>
 <form action="" method="post" enctype="multipart/form-data">
+<table border="1"><tr><td>
 <script language="Cache" runat="Server">
 Set tSC = ##class(Riches.Account).OutputFormData()
 </script>
+</td></tr>
+<tr><td>
 <label for="file-uploader">CSV file:</label>
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
-
-</form>
-
+</td></tr></table></form>
 <label for="iTable">Insert into table:</label>
 
 <select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
