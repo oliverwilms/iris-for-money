@@ -24,8 +24,15 @@ The CSP page posts a request to /restapi/sql/query where query is the query to r
 Insert into Riches.Category (Nickname) values ('Wages')
 ```
 
-## New - Data Model
-Now includes /riches web app in IRIS to add another way to manage persistent data in Riches.Category class. It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
+## Import Transactions
+I have entered transaction data into Excel to keep track of Account Balances while I work on this app.
+
+Again I go to http://localhost:32768/irisapp/Account.csp. This time I create a record in Account table.
+
+![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account_New.PNG)
+
+## Data Model
+/riches web app is another way to manage persistent data in Riches.Category class. It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
 ## Challenges I ran into
 Not enough time
