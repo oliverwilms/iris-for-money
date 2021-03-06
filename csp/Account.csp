@@ -38,6 +38,9 @@ If ($Get(iNickname) '= "") {
 }
 
 }
+If ($Data(%request.Data("iTable",1))) {
+	Set iTable = %request.Data("iTable",1)
+}
 </script>
 <script language="JavaScript">
 function goClickLine(row)
@@ -207,19 +210,23 @@ Set tSC = ##class(Riches.Account).OutputFormData()
 <label for="file-uploader">CSV file:</label>
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
 </td></tr></table>
+<script language="Cache" runat="Server">
+Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
+/*
 <label for="iTable">Insert into table:</label>
 
 <select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
   <option value="Riches.Category">Category</option>
+  <option value="Riches.Merchant">Merchant</option>
   <option value="Riches.Transact">Transact</option>
 </select>
+*/
+</script>
+
 </form>
 <input type="text" id="hidden_col_sel" size="100">
 <input type="text" id="hidden_tab_col" size="100">
 <script language="Cache" runat="Server">
-If ($Data(%request.Data("iTable",1))) {
-	Set iTable = %request.Data("iTable",1)
-}
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
 	Do ##class(Riches.Util).OutputDebug($Get(iTable,iDebug))
