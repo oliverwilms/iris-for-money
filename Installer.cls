@@ -76,7 +76,7 @@ ClassMethod CreateWebAppModel(pVars, pLogLevel, tInstaller) As %Status
   Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
   Set cspProperties("DeepSeeEnabled") = 1
   Set cspProperties("iKnowEnabled") = 0
-  Set cspProperties("DispatchClass") = "Riches.CategoryREST"
+  Set cspProperties("DispatchClass") = "Riches.Model.CategoryREST"
   Set cspProperties("Resource") = ""
   Set cspProperties("ServeFiles") = 1
   Set tSC = ##class(Security.Applications).Create(cspName,.cspProperties)
