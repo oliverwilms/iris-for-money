@@ -83,7 +83,7 @@ ClassMethod OutputTableAccountTypes() As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "javascript:tableClickHandler('#');", pMaxRows = -1) As %Status
+ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "javascript:tableClickHandler(#);", pMaxRows = -1) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Account - OutputTableData")
 	Do ##class(Util).DebugTEST("pWhere = "_pWhere)
