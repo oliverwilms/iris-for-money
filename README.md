@@ -126,7 +126,7 @@ localhost:32768/riches/category/1
 This will return JSON data for the person with ID=1, something like that:
 
 ```
-{"Name":"Elon Mask","Title":"CEO","Company":"Tesla","Phone":"123-123-1233","DOB":"1982-01-19"}
+{"Nickname":"Wages"}
 ```
 
 # Testing POST request
@@ -134,14 +134,14 @@ This will return JSON data for the person with ID=1, something like that:
 Create a POST request e.g. in Postman with raw data in JSON. e.g.
 
 ```
-{"Name":"Elon Mask","Title":"CEO","Company":"Tesla","Phone":"123-123-1233","DOB":"1982-01-19"}
+{"Nickname":"Income Tax"}
 ```
 
-Adjust the authorisation if needed - it is basic for container with default login and password for IRIR Community edition container
+Adjust the authorisation if needed - it is basic for container with default login and password for IRIS Community edition container
 
 and send the POST request to localhost:32768/riches/category/
 
-This will create a record in Sample.Person class of IRIS.
+This will create a record in Riches.Category class in IRIS.
 
 # Testing PUT request
 
@@ -149,7 +149,7 @@ PUT request could be used to update the records. This needs to send the similar 
 E.g. we want to change the record with id=5. Prepare in Postman the JSON in raw like following:
 
 ```
-{"Name":"Jeff Besos","Title":"CEO","Company":"Amazon","Phone":"123-123-1233","DOB":"1982-01-19"}
+{"Nickname":"Groceries"}
 ```
 
 and send the put request to:
