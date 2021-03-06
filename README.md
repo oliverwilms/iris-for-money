@@ -114,13 +114,13 @@ This REST API exposes two GET requests: all the data and one record.
 To get all the data in JSON call:
 
 ```
-localhost:32768/crud/persons/all
+localhost:32768/riches/category/all
 ```
 
-To request the data for a particular record provide the id in GET request like 'localhost:/crud/persons/id' . E.g.:
+To request the data for a particular record provide the id in GET request like 'localhost:/riches/category/id' . E.g.:
 
 ```
-localhost:32768/crud/persons/1
+localhost:32768/riches/category/1
 ```
 
 This will return JSON data for the person with ID=1, something like that:
@@ -139,7 +139,7 @@ Create a POST request e.g. in Postman with raw data in JSON. e.g.
 
 Adjust the authorisation if needed - it is basic for container with default login and password for IRIR Community edition container
 
-and send the POST request to localhost:32768/crud/persons/
+and send the POST request to localhost:32768/riches/category/
 
 This will create a record in Sample.Person class of IRIS.
 
@@ -154,7 +154,7 @@ E.g. we want to change the record with id=5. Prepare in Postman the JSON in raw 
 
 and send the put request to:
 ```
-localhost:32768/crud/persons/5
+localhost:32768/riches/category/5
 ```
 
 # Testing DELETE request
@@ -162,7 +162,7 @@ localhost:32768/crud/persons/5
 For delete request this REST API expects only the id of the record to delete. E.g. if the id=5 the following DELETE call will delete the record:
 
 ```
-localhost:32768/crud/persons/5
+localhost:32768/riches/category/5
 ```
 
 ## How to start coding
