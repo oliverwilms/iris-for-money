@@ -110,6 +110,7 @@ Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$N
 </div>
 <script type="text/javascript">
 parent.AdjustIframeHeight(document.getElementById("page-container").scrollHeight);
+parent.AdjustIframeWidth(document.getElementById("page-container").scrollWidth);
 </script>
 </body>
 </html>
