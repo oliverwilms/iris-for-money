@@ -104,6 +104,7 @@ ClassMethod CreateWebAppREST(pVars, pLogLevel, tInstaller) As %Status
   Set cspProperties("DeepSeeEnabled") = 1
   Set cspProperties("iKnowEnabled") = 0
   Set cspProperties("DispatchClass") = "Riches.REST"
+  set cspProperties("MatchRoles") = ":%All"  // To allow unauthenticated access, you must give the web application the %All role
   Set cspProperties("Resource") = ""
   Set cspProperties("ServeFiles") = 1
   Set tSC = ##class(Security.Applications).Create(cspName,.cspProperties)
