@@ -29,8 +29,9 @@ function updateLogicalDisplay(id)
 </script>
 <title>#(tHeader)#</title>
 </head>
-<body onload="onloadHandler();">
-<h2>#(tHeader)#</h2>
+<body onload="onloadHandler();" style="margin-top:0;">
+<div id="page-container">
+<h2 style="margin-top:0; text-align:center; letter-spacing:1px;">#(tHeader)#</h2>
 
 <table border=1>
 <tr>
@@ -73,6 +74,9 @@ Write "<a href='/csp/sys/exp/UtilExpGlobalView.csp?$ID2=TESTunit&$NAMESPACE=",$N
 <td>Current Balance</td>
 <td>#($Get(tCurrBalance))#</td>
 </tr>
-
+</div>
+<script type="text/javascript">
+parent.AdjustIframeHeight(document.getElementById("page-container").scrollHeight);
+</script>
 </body>
 </html>
