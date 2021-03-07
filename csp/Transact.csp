@@ -159,6 +159,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iiMemo),split)
 <script type="text/javascript">
 function AdjustIframeHeightOnLoad() { document.getElementById("iframe_ledger").style.height = document.getElementById("iframe_ledger").contentWindow.document.body.scrollHeight + "px"; }
 function AdjustIframeHeight(i) { document.getElementById("iframe_ledger").style.height = parseInt(i) + "px"; }
+function AdjustIframeWidth(i) { document.getElementById("iframe_ledger").style.width = parseInt(i) + "px"; }
 </script>
 </body>
 </html>
