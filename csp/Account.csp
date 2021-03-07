@@ -57,14 +57,15 @@ function goClickLine(row)
 	var columns = "";
 	var values = "";
 	for (var i = 0; i < len; i++) {
-		x = arr[i];
 		if (arr[i] != "") {
 			columns += "," + arr[i]
-			values += ",'" + document.getElementById("div_"+row+"_"+(i+2)).innerHTML + "'";
+			x = document.getElementById("div_" + row + "_" + (i+2)).innerHTML;
+			values += ",'" + x + "'";
 		}
 	}
 	var table = document.getElementById("iTable").value;
 	var col = columns.substring(1);  // skip leading comma
+	alert(values);
 	var val = values.substring(1);  // skip leading comma
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
 	postSQL(sql);
@@ -83,7 +84,7 @@ function goClickReset()
 function onchangeSel(id)  // id is this of <select> for column selection
 {
 	var arr = id.id.split("sel_");
-	var y = arr[1] - 2;  // which position changes
+	var y = arr[1] - 1;  // which position changes
 	var x = document.getElementById("hidden_col_sel").value;
 	var arr = x.split(",");
 	var len = arr.length;
@@ -117,11 +118,19 @@ function onloadHandler()
 		y += ",";
 	}
 	document.getElementById("hidden_col_sel").value = y;
-	var tAction = '#($Get(tAction,""))#';
-	var tLogicalDisplay = '#($Get(pLogicalDisplay,""))#';
-	if (tAction != '') {
-		updateLogicalDisplay(tLogicalDisplay);
+	if (document.getElementById("div_0_1") == null) {
+		var x = "";
+	} else {
+		var x = document.getElementById("div_0_1").innerHTML;
+		if (x == "") {
+			document.getElementById("div_0_1").innerHTML = document.getElementById("iChoose").value;
+		}
 	}
+	//var tAction = '#($Get(tAction,""))#';
+	//var tLogicalDisplay = '#($Get(pLogicalDisplay,""))#';
+	//if (tAction != '') {
+	//	updateLogicalDisplay(tLogicalDisplay);
+	//}
 }
 function postDebug(item, index) {
 	var escape = item.replace(/\//g, '-');  // fix slashes in dates
@@ -240,8 +249,8 @@ Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into 
 </script>
 
 </form>
-<input type="hidden" id="hidden_col_sel" size="100">
-<input type="hidden" id="hidden_tab_col" size="100">
+<input type="text" id="hidden_col_sel" size="100">
+<input type="text" id="hidden_tab_col" size="100">
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
