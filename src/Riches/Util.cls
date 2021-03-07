@@ -159,18 +159,17 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		If (pp = 1) {
 			Set tLineId = tDebugPiece  // Is tLineId same as pId ?
 			Write "<tr id=",q,"tr_",pId,q,">",!
+			Set qID = q_"div_"_pId_"_0"_q
+			Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
+			Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
+			If $$$ISERR(tSC) Quit
+			// Add a table cell for iAccount
+			Set tDebugPiece = $Get(iAccount)
 		}
 		Set qID = q_"div_"_pId_"_"_pp_q
 		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
 		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
 		If $$$ISERR(tSC) Quit
-		If (pp '= 1) { Continue }
-		// Add a table cell for iAccount
-		Set qID = q_"div_"_pId_"_iA"_q
-		Set tDiv = "<div id="_qID_">"_$Get(iAccount)_"</div>"
-		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
-		If $$$ISERR(tSC) Quit
-		
 	}
 	Write "<th>",!
 	If (pHeader = 0) {
@@ -185,14 +184,6 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Set tClassname = pTable
 	//Set tClassname = "Riches.Category"
 	Set q = """"
-	Set qValue = q_""_q
-	Set tOption0 = "<option value="_qValue_"></option>"
-	Set qValue = q_"Nickname"_q
-	Set tOption1 = "<option value="_qValue_">Nickname</option>"
-	Set qValue = q_"SortOrder"_q
-	Set tOption2 = "<option value="_qValue_">Sort</option>"
-	Set qValue = q_"Type"_q
-	Set tOption3 = "<option value="_qValue_">Type</option>"
 	Set tSelect2 = "</select>"
 	Set onchange = "onchangeSel(this)"
 	Write "<tr>",!
@@ -201,13 +192,14 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 			Set qID = q_"div_col_count"_q
 			Set qStyle = q_"display:none"_q
 			Set tDebugPiece = "<div id="_qID_" style="_qStyle_">"_tLen_"</div>"
-		} Else {
-			Set qName = q_"sel_"_pp_q
-			Set qID = q_"sel_"_pp_q
-			Set tSelect1 = "<select name="_qName_" id="_qID_"onchange="_q_onchange_q_">"
-			Set tDebugPiece = "<div>"_tSelect1_tOption0_tOption1_tOption2_tOption3_tSelect2_"</div>"
-			Set tDebugPiece = "<div>"_tSelect1_..GetOptionsTableColumns(tClassname)_tSelect2_"</div>"
+			Set tSC = ..OutputDebugPiece(tDebugPiece,0)
+			If $$$ISERR(tSC) Quit
+			// Add a <select> for iAccount
 		}
+		Set qName = q_"sel_"_pp_q
+		Set qID = q_"sel_"_pp_q
+		Set tSelect1 = "<select name="_qName_" id="_qID_"onchange="_q_onchange_q_">"
+		Set tDebugPiece = "<div>"_tSelect1_..GetOptionsTableColumns(tClassname)_tSelect2_"</div>"
 		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
 	}
 	Write "</tr>",!
