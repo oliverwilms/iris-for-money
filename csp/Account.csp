@@ -123,7 +123,9 @@ function onloadHandler()
 	}
 }
 function postDebug(item, index) {
-	var escape = item.replace(/\//g, '-');
+	var escape = item.replace(/\//g, '-');  // fix slashes in dates
+	//var escape = encodeURI(escape);
+	var escape = encodeURIComponent(escape);  // fix % and more
 	if (item == '') escape = 'NULL';
 	//document.getElementById("div_debug").innerHTML += index + "," + item + "<br>";
 	var xhttp = new XMLHttpRequest();
