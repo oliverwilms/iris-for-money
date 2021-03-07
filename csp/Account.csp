@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <script language="Cache" runat="Server">
@@ -63,8 +64,8 @@ function goClickLine(row)
 		}
 	}
 	var table = document.getElementById("iTable").value;
-	var col = columns.substring(1);
-	var val = values.substring(1);
+	var col = columns.substring(1);  // skip leading comma
+	var val = values.substring(1);  // skip leading comma
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
 	postSQL(sql);
 	document.getElementById(rowId).style.display = "none";
@@ -127,14 +128,19 @@ function postDebug(item, index) {
 	//var escape = encodeURI(escape);
 	var escape = encodeURIComponent(escape);  // fix % and more
 	if (item == '') escape = 'NULL';
-	//document.getElementById("div_debug").innerHTML += index + "," + item + "<br>";
+	document.getElementById("div_debug").innerHTML += index + "," + escape + "<br>";
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			document.getElementById("div_debug").innerHTML += this.responseText;
 		}
+		if (this.readyState == 4 && this.status != 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
 	};
+	//xhttp.open("GET", "/restapi/debug", true, "_SYSTEM", "SYS");
 	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
+	//xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true, "_SYSTEM", "SYS");
 	xhttp.send();
 }
 function postSQL(query)
@@ -195,13 +201,13 @@ function updateLogicalDisplay(id)
 	var delim = '^';
 	var arr = id.split(delim);
 	var tDisplay = 'iNickname';
-	var tLogical = 'iChoose';
+	var tLogical = 'iAccount';
 	var tElement = '#($Get(tElement,""))#';
 	parent.document.getElementById(tLogical).value = arr[1];
 	parent.document.getElementById(tDisplay).value = arr[2];
-	if (tElement == 'Account') {
-		parent.document.getElementById("iframe_ledger").src = 'Ledger.csp?iAccount=' + arr[1];
-	}
+	//if (tElement == 'Account') {
+	//	parent.document.getElementById("iframe_ledger").src = 'Ledger.csp?iAccount=' + arr[1];
+	//}
 }
 </script>
 
