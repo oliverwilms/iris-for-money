@@ -36,7 +36,11 @@ If ($Get(iNickname) '= "") {
 		Set iStartBalance = ""
 	}
 }
-
+If ($Data(%request.Data("debug",1))) {
+	Set iDebug = %request.Data("debug",1)
+	//If (iDebug = "RESET") Kill ^RichesDEBUG
+	//Do ##class(Riches.Util).OutputDebug($Get(iTable,iDebug))
+}
 }
 If ($Data(%request.Data("iTable",1))) {
 	Set iTable = %request.Data("iTable",1)
@@ -68,8 +72,12 @@ function goClickLine(row)
 function goClickPreview()
 {
 	var x = document.getElementById("iTable").value;
-	alert(x);
 	document.location = "Account.csp?debug=PREVIEW&iTable=" + x;
+}
+function goClickReset()
+{
+	var x = document.getElementById("iTable").value;
+	document.location = "Account.csp?debug=RESET&iTable=" + x;
 }
 function onchangeSel(id)  // id is this of <select> for column selection
 {
@@ -224,11 +232,12 @@ Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into 
 </script>
 
 </form>
-<input type="text" id="hidden_col_sel" size="100">
-<input type="text" id="hidden_tab_col" size="100">
+<input type="hidden" id="hidden_col_sel" size="100">
+<input type="hidden" id="hidden_tab_col" size="100">
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
+	If (iDebug = "RESET") Kill ^RichesDEBUG
 	Do ##class(Riches.Util).OutputDebug($Get(iTable,iDebug))
 }
 Write "<table>",!
@@ -252,6 +261,9 @@ Set q = """"
 Set qClick = q_"goClickPreview()"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
+Set qClick = q_"goClickReset()"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Reset</button>",!
 </script>
 <div id="div_debug" name="div_debug" style=""></div>
 </body>
