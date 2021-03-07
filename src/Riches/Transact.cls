@@ -61,7 +61,7 @@ ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String =
 	Set qID = q_prefixI_pField_q
 	Set qIDD = q_prefixD_pField_q
 	Set qSize = q_tSize_q
-	Set qTarget = q_"iframe_chooser"_q
+	Set qTarget = q_"iframe_ledger"_q
 	Set qText = q_"text"_q
 	Set qHide = q_"hidden"_q
 	Set qValue = q_pValue_q
