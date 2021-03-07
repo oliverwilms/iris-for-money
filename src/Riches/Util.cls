@@ -164,6 +164,13 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
 		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
 		If $$$ISERR(tSC) Quit
+		If (pp '= 1) { Continue }
+		// Add a table cell for iAccount
+		Set qID = q_"div_"_pId_"_iA"_q
+		Set tDiv = "<div id="_qID_">"_$Get(iAccount)_"</div>"
+		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
+		If $$$ISERR(tSC) Quit
+		
 	}
 	Write "<th>",!
 	If (pHeader = 0) {
