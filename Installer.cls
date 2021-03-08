@@ -9,7 +9,7 @@ XData setup
 
   <Namespace Name="${Namespace}" Code="${Namespace}" Data="${Namespace}" Create="yes" Ensemble="no">
     <Configuration>
-      <Database Name="${Namespace}" Dir="/voldata/irisdb/irisapp" Create="yes"/>
+      <Database Name="${Namespace}" Dir="/voldata/irisdb/irisapp" Create="yes" MountRequired="true" Resource="%DB_IRISAPP" PublicPermissions="" MountAtStartup="true"/>
     </Configuration>
     <Import File="${SourceDir}" Flags="ck" Recurse="1"/>
   </Namespace>
@@ -104,7 +104,7 @@ ClassMethod CreateWebAppREST(pVars, pLogLevel, tInstaller) As %Status
   Set cspProperties("DeepSeeEnabled") = 1
   Set cspProperties("iKnowEnabled") = 0
   Set cspProperties("DispatchClass") = "Riches.REST"
-  set cspProperties("MatchRoles") = ":%All"  // To allow unauthenticated access, you must give the web application the %All role
+  set cspProperties("MatchRoles") = ":%DB_IRISAPP"  // To allow unauthenticated access, you must give the web application the %DB_IRISAPP role
   Set cspProperties("Resource") = ""
   Set cspProperties("ServeFiles") = 1
   Set tSC = ##class(Security.Applications).Create(cspName,.cspProperties)
