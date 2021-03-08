@@ -36,13 +36,13 @@ Again I go to http://localhost:32768/irisapp/Account.csp. This time I create a r
 /riches web app is another way to manage persistent data in Riches.Category class. It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
 ## Challenges I ran into
-Not enough time
+All of a sudden I got 401 when using /restapi from Import page Account.csp. I got it resolved hours later.
 
 ## Accomplishments that I am proud of
-I was able to import data from a CSV file that I had exported from Excel. As of today, Saturday, I am able to select from three tables to insert data into Category, Merchant, and Transact tables.
+I was able to import data from a CSV file that I had exported from Excel. As of today, Sunday, I am able to select from three tables to insert data into Category, Merchant, and Transact tables and I verified data got inserted into three different tables.
 
 ## What I learned
-a lot!
+MatchRoles = %DB_IRISAPP to allow /restapi to work Unauthenticated.
 
 ## Built with
 Cache Server Pages, IRIS Community Edition in Docker
