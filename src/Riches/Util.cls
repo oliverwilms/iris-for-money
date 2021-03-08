@@ -120,14 +120,14 @@ ClassMethod GetOptionsTableNames(pSelected As %String = "", Output pOptions As %
 	Quit pOptions
 }
 
-ClassMethod OutputDebug(pDebug As %String = "", pTable As %String = "") As %Status
+ClassMethod OutputDebug(pAccount As %String = "", pTable As %String = "", pDebug As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
-	Do ..DebugTEST("pDebug = "_pDebug)
+	Do ..DebugTEST("pAccount = "_pAccount)
 	Do ..DebugTEST("pTable = "_pTable)
 	If ($Data(^RichesDEBUG) = 0) Quit $$$OK
-	If (pTable = "") {
-		Set pTable = pDebug
+	If (pDebug = "") {
+		//Set pTable = pDebug
 		Set pDebug = "PREVIEW"
 	}
 	Write "<table border=1>",!
@@ -139,7 +139,8 @@ ClassMethod OutputDebug(pDebug As %String = "", pTable As %String = "") As %Stat
 			Set qq = $Order(^RichesDEBUG(pp,""))
 			If (qq = "") Continue
 			Set tDebugLine = $Get(^RichesDEBUG(pp,qq))
-			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0),pp,pTable)
+			Set pDebug = 0
+			Set tSC = ..OutputDebugLine(tDebugLine,(pp = 0),pp,pAccount,pTable,pDebug)
 			If $$$ISERR(tSC) Quit
 		}
 	}
@@ -147,7 +148,7 @@ ClassMethod OutputDebug(pDebug As %String = "", pTable As %String = "") As %Stat
 	Quit $$$OK
 }
 
-ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pTable As %String = "", pDebug As %String = 0) As %Status
+ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pAccount As %String = "", pTable As %String = "", pDebug As %String = 0) As %Status
 {
 	Do:pDebug ..DebugTEST("Riches.Util - OutputDebugLine")
 	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
@@ -164,7 +165,7 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 			Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
 			If $$$ISERR(tSC) Quit
 			// Add a table cell for iAccount
-			Set tDebugPiece = $Get(iAccount)
+			Set tDebugPiece = $Get(pAccount)
 		}
 		Set qID = q_"div_"_pId_"_"_pp_q
 		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
