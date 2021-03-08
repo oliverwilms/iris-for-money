@@ -58,11 +58,16 @@ ClassMethod PostDebug(pDebug As %String = "", pIndex As %String = -1) As %Status
 	Quit $$$OK
 }
 
+/// Insert into Riches.Transact (Account,TranDate,Merchant,Category,AmountDebit,AmountCredit) values ('Chase Better Banking Checking','1-3-2021','Aldi','Groceries','51.41','')
+/// %Message = Field 'Riches.Transact.AmountCredit' (value <EMPTY STRING>) failed validation
+/// 				Field 'Riches.Transact.TranDate' (value '1-3-2021') failed validation
 ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 {
 	Do ..DebugTEST("Riches.REST - PostSQL")
 	Do ..DebugTEST("pQuery = "_pQuery)
 	Do ..DebugTEST("pIndex = "_pIndex)
+	Set tSC = ..TestQuery(pQuery,.pQuery)
+	Do ..DebugTEST("TestQuery = "_pQuery)
 	Set tStatement = ##class(%SQL.Statement).%New()
 	Set tSC = tStatement.%Prepare(pQuery)
 	If $$$ISERR(tSC) {
@@ -79,6 +84,81 @@ ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 		Do ..DebugTEST("%ROWID = "_rset.%ROWID)
 	}
 	Quit tSC
+}
+
+ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Status
+{
+	Do ..DebugTEST("Riches.REST - TestQuery")
+	Do ..DebugTEST("pQuery = "_pQuery)
+	Set tCOMMAND = $ZCONVERT($Piece(pQuery," ",1),"U")
+	Do ..DebugTEST("tCOMMAND = "_tCOMMAND)
+	Set tPIECE2 = $ZCONVERT($Piece(pQuery," ",2),"U")
+	Do ..DebugTEST("tPIECE2 = "_tPIECE2)
+	If (tCOMMAND = "INSERT"),(tPIECE2 = "INTO") {
+		Set tTable = $Piece(pQuery," ",3)
+		Do ..DebugTEST("tTable = "_tTable)
+		Set tPiece4 = $Piece(pQuery," ",4)
+		Do ..DebugTEST("tPiece4 = "_tPiece4)
+		Set tPIECE5 = $ZCONVERT($Piece(pQuery," ",5),"U")
+		Do ..DebugTEST("tPIECE5 = "_tPIECE5)
+		If (tPIECE5 = "VALUES") {
+			Set tColumns = tPiece4
+			Do ..DebugTEST("tColumns = "_tColumns)
+			Set tCOLUMNS = $ZCONVERT(tColumns,"U")
+			Do ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
+			Set tParValues = $Piece(pQuery," ",6,999)
+			If ($Extract(tParValues,1) = "("),($Extract(tParValues,*) = ")") {
+				Set tValues = $Extract(tParValues,2,*-1)
+			}
+			Set tValues = $Get(tValues,tParValues)
+			Do ..DebugTEST("tValues = "_$Get(tValues,tParValues))
+			If (tCOLUMNS [ "DATE") {
+				Set tLength = $Length(tColumns,",")
+				Do ..DebugTEST("tLength = "_tLength)
+				For ii = 1:1:tLength {
+					Do ..DebugTEST("ii = "_ii)
+					Set tCNAME = $Piece(tCOLUMNS,",",ii)
+					If (tCNAME [ "AMOUNT") {
+						Set tValue = $Piece(tValues,",",ii)
+						Do ..DebugTEST("tValue = "_tValue)
+						Set tSC = ..UnQuote(tValue,.tAValue)
+						If ($Get(tAValue) = "") {
+							Set tAmount = 0
+							Do ..DebugTEST("tAmount = "_$Get(tAmount))
+							Set $Piece(tValues,",",ii) = $Get(tAmount)
+							Do ..DebugTEST("tValues = "_tValues)
+						}
+					}
+					If (tCNAME [ "DATE") {
+						Set tValue = $Piece(tValues,",",ii)
+						Do ..DebugTEST("tValue = "_tValue)
+						Set tSC = ..UnQuote(tValue,.tDValue)
+						If ($Get(tDValue) ? 1.N1"-"1.N1"-"1.N) {
+							Set tDate = $ZDATEH(tDValue,8)
+							Do ..DebugTEST("tDate = "_$Get(tDate))
+							Set $Piece(tValues,",",ii) = $Get(tDate)
+							Do ..DebugTEST("tValues = "_tValues)
+						}
+					}
+				}
+				Set tParValues = "("_$Get(tValues,tParValues)_")"
+				Set $Piece(pQuery," ",6,999) = tParValues
+				Do ..DebugTEST("pQuery = "_pQuery)
+			}
+		}
+	}
+	Set pQuery2 = pQuery
+	Do ..DebugTEST("pQuery2 = "_pQuery)
+	Quit $$$OK
+}
+
+ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Status
+{
+	If ($Extract(pQuote,1) = "'"),($Extract(pQuote,*) = "'") {
+		Set pUnQuote = $Extract(pQuote,2,*-1)
+		Quit $$$OK
+	}
+	Quit $$$OK
 }
 
 }
