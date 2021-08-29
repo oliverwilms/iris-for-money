@@ -49,6 +49,10 @@ If ($Data(%request.Data("iAccount",1))) {
 If ($Data(%request.Data("iTable",1))) {
 	Set iTable = %request.Data("iTable",1)
 }
+Set tOnLoadColumnCount = 13
+For ii = 1:1:tOnLoadColumnCount {
+	Set tColSel = $Get(tColSel) _ ","
+}
 </script>
 <script language="JavaScript">
 function goClickButton(id)
@@ -249,7 +253,7 @@ Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into 
 </script>
 
 </form>
-<input type="hidden" id="hidden_col_sel" size="100">
+<input type="hidden" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
 <input type="hidden" id="hidden_tab_col" size="100">
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
