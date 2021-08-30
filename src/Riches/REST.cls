@@ -86,6 +86,31 @@ ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 	Quit tSC
 }
 
+ClassMethod TestFiles(pColumns As %String = "", ByRef pValues As %String) As %Status
+{
+	Do ..DebugTEST("Riches.REST - TestFiles")
+	Do ..DebugTEST("pColumns = "_pColumns)
+	Do ..DebugTEST("pValues = "_$Get(pValues))
+	Set tCOLUMNS = $ZCONVERT(pColumns,"U")
+	Do ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
+	Set tSC = $$$OK
+	Set tLength = $Length(pColumns,",")
+	Do ..DebugTEST("tLength = "_tLength)
+	For ii = 1:1:tLength {
+		Do ..DebugTEST("ii = "_ii)
+		Set tCNAME = $Piece(tCOLUMNS,",",ii)
+		If (tCNAME [ "MERCHANT") {
+			Set tValue = $Piece(pValues,",",ii)
+			Do ..DebugTEST("tValue = "_tValue)
+			Set tSC = ##class(Riches.Merchant).TestValue(tValue,.tMerchantId,.pId)
+			Do ..DebugTEST("tMerchantId = "_tMerchantId)
+			Do ..DebugTEST("pId = "_pId)
+			Set $Piece(pValues,",",ii) = tMerchantId
+		}
+	}
+	Quit tSC
+}
+
 ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Status
 {
 	Do ..DebugTEST("Riches.REST - TestQuery")
@@ -111,7 +136,9 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 				Set tValues = $Extract(tParValues,2,*-1)
 			}
 			Set tValues = $Get(tValues,tParValues)
-			Do ..DebugTEST("tValues = "_$Get(tValues,tParValues))
+			Do ..DebugTEST("tValues = "_$Get(tValues))
+			Set tSC = ..UnQuoteValues(tValues,.tValues)
+			Set tSC = ..TestFiles(tCOLUMNS,.tValues)
 			If (tCOLUMNS [ "DATE") {
 				Set tLength = $Length(tColumns,",")
 				Do ..DebugTEST("tLength = "_tLength)
@@ -122,7 +149,7 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 						Set tValue = $Piece(tValues,",",ii)
 						Do ..DebugTEST("tValue = "_tValue)
 						Set tSC = ..UnQuote(tValue,.tAValue)
-						If ($Get(tAValue) = "") {
+						If ($Get(tAValue) = "''") {
 							Set tAmount = 0
 							Do ..DebugTEST("tAmount = "_$Get(tAmount))
 							Set $Piece(tValues,",",ii) = $Get(tAmount)
@@ -141,22 +168,50 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 						}
 					}
 				}
-				Set tParValues = "("_$Get(tValues,tParValues)_")"
+				Set tParValues = "("_$Get(tValues)_")"
 				Set $Piece(pQuery," ",6,999) = tParValues
 				Do ..DebugTEST("pQuery = "_pQuery)
 			}
 		}
 	}
 	Set pQuery2 = pQuery
-	Do ..DebugTEST("pQuery2 = "_pQuery)
+	Do ..DebugTEST("pQuery2 = "_pQuery2)
 	Quit $$$OK
 }
 
 ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Status
 {
-	If ($Extract(pQuote,1) = "'"),($Extract(pQuote,*) = "'") {
-		Set pUnQuote = $Extract(pQuote,2,*-1)
-		Quit $$$OK
+	Set boolContinue = 1
+	While boolContinue {
+		Set tFirst = $Extract(pQuote,1)
+		Set tLast = $Extract(pQuote,*)
+		If (tFirst = "'") {
+			If (tFirst = tLast) {
+				Set pQuote = $Extract(pQuote,2,*-1)
+			} Else { Set boolContinue = 0 }
+		} ElseIf (tFirst = """") {
+			If (tFirst = tLast) {
+				Set pQuote = $Extract(pQuote,2,*-1)
+			} Else { Set boolContinue = 0 }
+		} Else { Set boolContinue = 0 }
+	}
+	Set pUnQuote = pQuote
+	If (pUnQuote = "") Set pUnQuote = "''"
+	Quit $$$OK
+}
+
+ClassMethod UnQuoteValues(pQuote As %String = "", Output pUnQuote As %String) As %Status
+{
+	Do ..DebugTEST("Riches.REST - UnQuoteValues")
+	Set tLength = $Length(pQuote,",")
+	Do ..DebugTEST("tLength = "_tLength)
+	For ii = 1:1:tLength {
+		Do ..DebugTEST("ii = "_ii)
+		Set tValue = $Piece(pQuote,",",ii)
+		Do ..DebugTEST("tValue = "_tValue)
+		Set tSC = ..UnQuote(tValue,.tUnValue)
+		Do ..DebugTEST("tUnValue = "_tUnValue)
+		Set $Piece(pUnQuote,",",ii) = tUnValue
 	}
 	Quit $$$OK
 }
