@@ -232,6 +232,12 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
+/*
+
+select Account.Nickname, AmountCredit, AmountDebit, Category.Nickname, CheckNumber, Memo, Merchant.Nickname, OtherSide, Status, SubCategory, TranDate, TranTime
+ from Riches.Transact, Riches.Account, Riches.Category, Riches.Merchant where Category.Id = Transact.Category and Merchant.Id = Transact.Merchant
+
+*/
 Storage Default
 {
 <Data name="TransactDefaultData">
