@@ -127,6 +127,31 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
+ClassMethod TestValue(pValue As %String = "", Output pCategoryId, Output pId) As %Status
+{
+	Do ##class(Util).DebugTEST("Riches.Category - TestValue")
+	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Set pId = ""
+	Set tSC = $$$OK
+	Set iNickname = pValue
+	Set pQuery = "SELECT ID FROM Riches.Category WHERE NICKNAME = '"_pValue_"'"
+	Set tSC = ##class(Util).ExecuteQueryOneValue(pQuery,.pCategoryId)
+	If ($Get(pCategoryId) = "") {
+		Set objCategory = ##class(Riches.Category).%New()
+		Set objCategory.Nickname = iNickname
+		Set objCategory.SortOrder = $Get(iSortOrder)
+		Set tSC = objCategory.%Save()
+		Do ##class(Util).DebugStatus(tSC)
+		If $$$ISOK(tSC) {
+			Set pCategoryId = objCategory.%Id()
+		 	Set pId = ##class(Util).EncodeLogicalDisplay(objCategory.%Id(),objCategory.Nickname)
+		}
+	}
+	Do ##class(Util).DebugTEST("pCategoryId = "_$Get(pCategoryId,pId))
+	Do ##class(Util).DebugTEST("pId = "_pId)
+	Quit tSC
+}
+
 Storage Default
 {
 <Data name="CategoryDefaultData">
