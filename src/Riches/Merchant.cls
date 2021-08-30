@@ -95,6 +95,29 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
+ClassMethod TestValue(pValue As %String = "", Output pMerchantId, Output pId) As %Status
+{
+	Do ##class(Util).DebugTEST("Riches.Merchant - TestValue")
+	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Set pId = ""
+	Set tSC = $$$OK
+	Set iNickname = pValue
+	If ($Get(iNickname) '= "") {
+		Set objMerchant = ##class(Riches.Merchant).%New()
+		Set objMerchant.Nickname = iNickname
+		Set objMerchant.SortOrder = $Get(iSortOrder)
+		Set tSC = objMerchant.%Save()
+		Do ##class(Util).DebugStatus(tSC)
+		If $$$ISOK(tSC) {
+			Set pMerchantId = objMerchant.%Id()
+		 	Set pId = ##class(Util).EncodeLogicalDisplay(objMerchant.%Id(),objMerchant.Nickname)
+		}
+	}
+	Do ##class(Util).DebugTEST("pMerchantId = "_$Get(pMerchantId,pId))
+	Do ##class(Util).DebugTEST("pId = "_pId)
+	Quit tSC
+}
+
 Storage Default
 {
 <Data name="MerchantDefaultData">
