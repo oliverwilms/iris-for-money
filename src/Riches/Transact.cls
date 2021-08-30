@@ -21,6 +21,8 @@ Property CheckNumber As %Integer;
 
 Property Memo As %String;
 
+Property Status As %String;
+
 Property OtherSide As Transact;
 
 ClassMethod GetColumns(ByRef pColumns) As %String
@@ -263,10 +265,13 @@ Storage Default
 <Value>CheckNumber</Value>
 </Value>
 <Value name="11">
-<Value>OtherSide</Value>
+<Value>Memo</Value>
 </Value>
 <Value name="12">
-<Value>Memo</Value>
+<Value>Status</Value>
+</Value>
+<Value name="13">
+<Value>OtherSide</Value>
 </Value>
 </Data>
 <DataLocation>^Riches.TransactD</DataLocation>
