@@ -147,6 +147,31 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
+ClassMethod TestValue(pValue As %String = "", Output pAccountId, Output pId) As %Status
+{
+	Do ##class(Util).DebugTEST("Riches.Account - TestValue")
+	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Set pId = ""
+	Set tSC = $$$OK
+	Set iNickname = pValue
+	Set pQuery = "SELECT ID FROM Riches.Account WHERE NICKNAME = '"_pValue_"'"
+	Set tSC = ##class(Util).ExecuteQueryOneValue(pQuery,.pAccountId)
+	If ($Get(pAccountId) = "") {
+		Set objAccount = ##class(Riches.Account).%New()
+		Set objAccount.Nickname = iNickname
+		Set objAccount.SortOrder = $Get(iSortOrder)
+		Set tSC = objAccount.%Save()
+		Do ##class(Util).DebugStatus(tSC)
+		If $$$ISOK(tSC) {
+			Set pAccountId = objAccount.%Id()
+		 	Set pId = ##class(Util).EncodeLogicalDisplay(objAccount.%Id(),objAccount.Nickname)
+		}
+	}
+	Do ##class(Util).DebugTEST("pAccountId = "_$Get(pAccountId,pId))
+	Do ##class(Util).DebugTEST("pId = "_pId)
+	Quit tSC
+}
+
 Storage Default
 {
 <Data name="AccountDefaultData">
