@@ -102,7 +102,9 @@ ClassMethod TestValue(pValue As %String = "", Output pMerchantId, Output pId) As
 	Set pId = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
-	If ($Get(iNickname) '= "") {
+	Set pQuery = "SELECT ID FROM Riches.Merchant WHERE NICKNAME = '"_pValue_"'"
+	Set tSC = ##class(Util).ExecuteQueryOneValue(pQuery,.pMerchantId)
+	If ($Get(pMerchantId) = "") {
 		Set objMerchant = ##class(Riches.Merchant).%New()
 		Set objMerchant.Nickname = iNickname
 		Set objMerchant.SortOrder = $Get(iSortOrder)
