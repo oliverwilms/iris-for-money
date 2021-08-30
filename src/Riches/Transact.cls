@@ -37,6 +37,7 @@ ClassMethod GetColumns(ByRef pColumns) As %String
 	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("TranTime","Time")
 	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("CheckNumber","Check")
 	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Memo","Memo")
+	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Status","Status")
 	Quit $$$OK
 }
 
