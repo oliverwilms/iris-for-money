@@ -99,13 +99,26 @@ ClassMethod TestFiles(pColumns As %String = "", ByRef pValues As %String) As %St
 	For ii = 1:1:tLength {
 		Do ..DebugTEST("ii = "_ii)
 		Set tCNAME = $Piece(tCOLUMNS,",",ii)
-		If (tCNAME [ "MERCHANT") {
-			Set tValue = $Piece(pValues,",",ii)
-			Do ..DebugTEST("tValue = "_tValue)
-			Set tSC = ##class(Riches.Merchant).TestValue(tValue,.tMerchantId,.pId)
-			Do ..DebugTEST("tMerchantId = "_tMerchantId)
+		Do ..DebugTEST("tCNAME = "_tCNAME)
+		Set tValue = $Piece(pValues,",",ii)
+		Do ..DebugTEST("tValue = "_tValue)
+		If (tCNAME = "ACCOUNT") {
+			Set tSC = ##class(Riches.Account).TestValue(tValue,.tFileId,.pId)
+			Do ..DebugTEST("tFileId = "_tFileId)
 			Do ..DebugTEST("pId = "_pId)
-			Set $Piece(pValues,",",ii) = tMerchantId
+			Set $Piece(pValues,",",ii) = tFileId
+		}
+		If (tCNAME = "CATEGORY") {
+			Set tSC = ##class(Riches.Category).TestValue(tValue,.tFileId,.pId)
+			Do ..DebugTEST("tFileId = "_tFileId)
+			Do ..DebugTEST("pId = "_pId)
+			Set $Piece(pValues,",",ii) = tFileId
+		}
+		If (tCNAME = "MERCHANT") {
+			Set tSC = ##class(Riches.Merchant).TestValue(tValue,.tFileId,.pId)
+			Do ..DebugTEST("tFileId = "_tFileId)
+			Do ..DebugTEST("pId = "_pId)
+			Set $Piece(pValues,",",ii) = tFileId
 		}
 	}
 	Quit tSC
@@ -164,6 +177,17 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 							Set tDate = $ZDATEH(tDValue,8)
 							Do ..DebugTEST("tDate = "_$Get(tDate))
 							Set $Piece(tValues,",",ii) = $Get(tDate)
+							Do ..DebugTEST("tValues = "_tValues)
+						}
+					}
+					If (tCNAME [ "TIME") {
+						Set tValue = $Piece(tValues,",",ii)
+						Do ..DebugTEST("tValue = "_tValue)
+						Set tSC = ..UnQuote(tValue,.tTValue)
+						If ($Get(tTValue) = "''") {
+							Set tTime = 0
+							Do ..DebugTEST("tTime = "_$Get(tTime))
+							Set $Piece(tValues,",",ii) = $Get(tTime)
 							Do ..DebugTEST("tValues = "_tValues)
 						}
 					}
