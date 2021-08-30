@@ -17,7 +17,7 @@ Property TranDate As %Date;
 
 Property TranTime As %Time;
 
-Property CheckNumber As %Integer;
+Property CheckNumber As %String;
 
 Property Memo As %String;
 
