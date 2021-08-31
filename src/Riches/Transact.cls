@@ -25,6 +25,17 @@ Property Status As %String;
 
 Property OtherSide As Transact;
 
+Trigger Balance [ Event = INSERT, Time = AFTER ]
+{
+	// get row id of inserted row
+	NEW id,SQLCODE,%msg,%ok,%oper
+	SET id = {ID}
+	SET aa = {Account}
+	SET cr = {AmountCredit}
+	SET db = {AmountDebit}
+	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
+}
+
 ClassMethod GetColumns(ByRef pColumns) As %String
 {
 	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Account","Account")
