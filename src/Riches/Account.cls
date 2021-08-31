@@ -172,6 +172,25 @@ ClassMethod TestValue(pValue As %String = "", Output pAccountId, Output pId) As 
 	Quit tSC
 }
 
+ClassMethod UpdateBalance(pAccount As %String, pCredit As %String, pDebit As %String) As %Status
+{
+	Do ##class(Util).DebugTEST("Riches.Account - UpdateBalance")
+	Do ##class(Util).DebugTEST("pAccount = "_$Get(pAccount))
+	Do ##class(Util).DebugTEST("pCredit = "_$Get(pCredit))
+	Do ##class(Util).DebugTEST("pDebit = "_$Get(pDebit))
+	Set tSC = $$$OK
+	If ($Get(pAccount) = "") Quit tSC
+	Set objAccount = ##class(Riches.Account).%OpenId(pAccount)
+	If '$IsObject(objAccount) {
+		Quit tSC
+	}
+	Set tBalance = objAccount.CurrBalance + $Get(pCredit) - $Get(pDebit)
+	Set objAccount.CurrBalance = tBalance
+	Set tSC = objAccount.%Save()
+	Do ##class(Util).DebugStatus(tSC)
+	Quit tSC
+}
+
 Storage Default
 {
 <Data name="AccountDefaultData">
