@@ -154,10 +154,12 @@ ClassMethod TestValue(pValue As %String = "", Output pAccountId, Output pId) As 
 	Set pId = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
-	Set pQuery = "SELECT ID FROM Riches.Account WHERE NICKNAME = '"_pValue_"'"
+	Set tQuote = $Select(($Extract(pValue,1)="'"):"",1:"'")
+	Set pQuery = "SELECT ID FROM Riches.Account WHERE NICKNAME = "_tQuote_pValue_tQuote
 	Set tSC = ##class(Util).ExecuteQueryOneValue(pQuery,.pAccountId)
 	If ($Get(pAccountId) = "") {
 		Set objAccount = ##class(Riches.Account).%New()
+		If (tQuote = "") Set iNickname = $Extract(iNickname,2,*-1)
 		Set objAccount.Nickname = iNickname
 		Set objAccount.SortOrder = $Get(iSortOrder)
 		Set tSC = objAccount.%Save()
