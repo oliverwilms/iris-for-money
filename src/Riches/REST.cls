@@ -102,6 +102,7 @@ ClassMethod TestFiles(pColumns As %String = "", ByRef pValues As %String) As %St
 		Do ..DebugTEST("tCNAME = "_tCNAME)
 		Set tValue = $Piece(pValues,",",ii)
 		Do ..DebugTEST("tValue = "_tValue)
+		If (tValue = "''") Set tValue = "Unassigned"
 		If (tCNAME = "ACCOUNT") {
 			Set tSC = ##class(Riches.Account).TestValue(tValue,.tFileId,.pId)
 			Do ..DebugTEST("tFileId = "_tFileId)
