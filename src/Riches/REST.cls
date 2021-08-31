@@ -142,6 +142,9 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 		Do ..DebugTEST("tPIECE5 = "_tPIECE5)
 		If (tPIECE5 = "VALUES") {
 			Set tColumns = tPiece4
+			If ($Extract(tColumns,1) = "("),($Extract(tColumns,*) = ")") {
+				Set tColumns = $Extract(tColumns,2,*-1)
+			}
 			Do ..DebugTEST("tColumns = "_tColumns)
 			Set tCOLUMNS = $ZCONVERT(tColumns,"U")
 			Do ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
