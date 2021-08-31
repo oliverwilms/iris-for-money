@@ -134,10 +134,12 @@ ClassMethod TestValue(pValue As %String = "", Output pCategoryId, Output pId) As
 	Set pId = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
-	Set pQuery = "SELECT ID FROM Riches.Category WHERE NICKNAME = '"_pValue_"'"
+	Set tQuote = $Select(($Extract(pValue,1)="'"):"",1:"'")
+	Set pQuery = "SELECT ID FROM Riches.Category WHERE NICKNAME = "_tQuote_pValue_tQuote
 	Set tSC = ##class(Util).ExecuteQueryOneValue(pQuery,.pCategoryId)
 	If ($Get(pCategoryId) = "") {
 		Set objCategory = ##class(Riches.Category).%New()
+		If (tQuote = "") Set iNickname = $Extract(iNickname,2,*-1)
 		Set objCategory.Nickname = iNickname
 		Set objCategory.SortOrder = $Get(iSortOrder)
 		Set tSC = objCategory.%Save()
