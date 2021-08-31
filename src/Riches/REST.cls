@@ -165,8 +165,8 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 					If (tCNAME [ "AMOUNT") {
 						Set tValue = $Piece(tValues,",",ii)
 						Do ..DebugTEST("tValue = "_tValue)
-						Set tSC = ..UnQuote(tValue,.tAValue)
-						If ($Get(tAValue) = "''") {
+						Set tAValue = $Extract(tValue,2,*-1)
+						If ($Get(tAValue) = "") {
 							Set tAmount = 0
 							Do ..DebugTEST("tAmount = "_$Get(tAmount))
 							Set $Piece(tValues,",",ii) = $Get(tAmount)
@@ -176,7 +176,7 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 					If (tCNAME [ "DATE") {
 						Set tValue = $Piece(tValues,",",ii)
 						Do ..DebugTEST("tValue = "_tValue)
-						Set tSC = ..UnQuote(tValue,.tDValue)
+						Set tDValue = $Extract(tValue,2,*-1)
 						If ($Get(tDValue) ? 1.N1"-"1.N1"-"1.N) {
 							Set tDate = $ZDATEH(tDValue,8)
 							Do ..DebugTEST("tDate = "_$Get(tDate))
@@ -187,8 +187,8 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 					If (tCNAME [ "TIME") {
 						Set tValue = $Piece(tValues,",",ii)
 						Do ..DebugTEST("tValue = "_tValue)
-						Set tSC = ..UnQuote(tValue,.tTValue)
-						If ($Get(tTValue) = "''") {
+						Set tTValue = $Extract(tValue,2,*-1)
+						If ($Get(tTValue) = "") {
 							Set tTime = 0
 							Do ..DebugTEST("tTime = "_$Get(tTime))
 							Set $Piece(tValues,",",ii) = $Get(tTime)
@@ -223,7 +223,7 @@ ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Stat
 			} Else { Set boolContinue = 0 }
 		} Else { Set boolContinue = 0 }
 	}
-	Set pUnQuote = pQuote
+	Set pUnQuote = "'"_pQuote_"'"
 	If (pUnQuote = "") Set pUnQuote = "''"
 	Quit $$$OK
 }
