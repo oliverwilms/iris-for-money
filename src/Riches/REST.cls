@@ -179,10 +179,10 @@ ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Sta
 						Set tDValue = $Extract(tValue,2,*-1)
 						If ($Get(tDValue) ? 1.N1"-"1.N1"-"1.N) {
 							Set tDate = $ZDATEH(tDValue,8)
-							Do ..DebugTEST("tDate = "_$Get(tDate))
-							Set $Piece(tValues,",",ii) = $Get(tDate)
-							Do ..DebugTEST("tValues = "_tValues)
 						}
+						Do ..DebugTEST("tDate = "_$Get(tDate,0))
+						Set $Piece(tValues,",",ii) = $Get(tDate,0)
+						Do ..DebugTEST("tValues = "_tValues)
 					}
 					If (tCNAME [ "TIME") {
 						Set tValue = $Piece(tValues,",",ii)
@@ -223,7 +223,22 @@ ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Stat
 			} Else { Set boolContinue = 0 }
 		} Else { Set boolContinue = 0 }
 	}
-	Set pUnQuote = "'"_pQuote_"'"
+	// Problem with '
+	Set pEscape1 = ##class(%CSP.Page).EscapeHTML(pQuote)
+	Set pEscape2 = ##class(%CSP.Page).EscapeURL(pQuote)
+	If (pQuote [ "'") {
+		Do ..DebugTEST("pEscape1 = "_pEscape1)
+		Do ..DebugTEST("pEscape2 = "_pEscape2)
+		If '(pEscape1 [ "'") {
+			Set pUnQuote = "'"_pEscape1_"'"
+		} ElseIf '(pEscape2 [ "'") {
+			Set pUnQuote = "'"_pEscape2_"'"
+		} Else {
+			Set pUnQuote = ""
+		}
+	} Else {
+		Set pUnQuote = "'"_pQuote_"'"
+	}
 	If (pUnQuote = "") Set pUnQuote = "''"
 	Quit $$$OK
 }
