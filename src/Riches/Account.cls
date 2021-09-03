@@ -23,6 +23,16 @@ Property Nickname As %String;
 
 Property Rewards As %String;
 
+Trigger Balance [ Event = UPDATE, Time = AFTER ]
+{
+	// get row id of inserted row
+	NEW id,SQLCODE,%msg,%ok,%oper
+	SET aa = {ID}
+	SET cr = {StartBalance}
+	SET db = 0
+	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
+}
+
 ClassMethod IdentifyAccountType(pValue As %String = "") As %String
 {
 	Set tAccountType = "Other"
@@ -151,7 +161,7 @@ ClassMethod TestValue(pValue As %String = "", Output pAccountId, Output pId) As 
 {
 	Do ##class(Util).DebugTEST("Riches.Account - TestValue")
 	Do ##class(Util).DebugTEST("pValue = "_pValue)
-	Set pId = ""
+	Set (pAccountId,pId) = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
 	Set tQuote = $Select(($Extract(pValue,1)="'"):"",1:"'")
