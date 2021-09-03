@@ -23,15 +23,17 @@ Property Nickname As %String;
 
 Property Rewards As %String;
 
+/// If StartBalance is updated, also update Current Account Balance
 Trigger Balance [ Event = UPDATE, Time = AFTER ]
 {
 	// get row id of inserted row
 	NEW id,SQLCODE,%msg,%ok,%oper
 	SET aa = {ID}
-	SET cr = {StartBalance}
-	SET db = 0
+	SET cr = {StartBalance*N}
+	SET db = {StartBalance*O}
 	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
 }
+
 
 ClassMethod IdentifyAccountType(pValue As %String = "") As %String
 {
