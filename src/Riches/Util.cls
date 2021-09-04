@@ -173,11 +173,10 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		If $$$ISERR(tSC) Quit
 	}
 	Write "<th>",!
-	If (pHeader = 0) {
-		Set qClick = q_"goClickLine("_tLineId_")"_q
-		Set qType = q_"button"_q
-		Write "<button type=",qType," onclick=",qClick,">Import</button>",!
-	}
+	Set x = $Select((pHeader = 0):"goClickLine",1:"goClickHeader")
+	Set qClick = q_x_"("_tLineId_")"_q
+	Set qType = q_"button"_q
+	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
 	Write "</th>",!
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
