@@ -72,7 +72,7 @@ ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 	If $$$ISERR(tSC) {
 		Do ..DebugStatus(tSC)
 		Write "%Prepare failed:"
-		Do $System.Status.DisplayError(tSC) QUIT
+		Do $System.Status.DisplayError(tSC) // QUIT
 	} Else {
 		#Dim rset As %SQL.StatementResult
 		// Execute the current statement and return the result. The result of the execute is always the return value.
