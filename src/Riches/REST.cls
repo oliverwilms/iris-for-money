@@ -65,7 +65,6 @@ ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 {
 	Do ..DebugTEST("Riches.REST - PostSQL")
 	Do ..DebugTEST("pQuery = "_pQuery)
-	Do ..DebugTEST("pIndex = "_pIndex)
 	Set tSC = ..TestQuery(pQuery,.pQuery)
 	Do ..DebugTEST("TestQuery = "_pQuery)
 	Set tStatement = ##class(%SQL.Statement).%New()
@@ -86,129 +85,131 @@ ClassMethod PostSQL(pQuery As %String = "", pIndex As %String = -1) As %Status
 	Quit tSC
 }
 
-ClassMethod TestFiles(pColumns As %String = "", ByRef pValues As %String) As %Status
+ClassMethod TestFiles(pColumns As %String = "", ByRef pValues As %String, pVerbose As %Integer = 0) As %Status
 {
-	Do ..DebugTEST("Riches.REST - TestFiles")
-	Do ..DebugTEST("pColumns = "_pColumns)
-	Do ..DebugTEST("pValues = "_$Get(pValues))
+	Do:pVerbose ..DebugTEST("Riches.REST - TestFiles")
+	Do:pVerbose ..DebugTEST("pColumns = "_pColumns)
+	Do:pVerbose ..DebugTEST("pValues = "_$Get(pValues))
 	Set tCOLUMNS = $ZCONVERT(pColumns,"U")
-	Do ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
+	Do:pVerbose ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
 	Set tSC = $$$OK
 	Set tLength = $Length(pColumns,",")
-	Do ..DebugTEST("tLength = "_tLength)
+	Do:pVerbose ..DebugTEST("tLength = "_tLength)
 	For ii = 1:1:tLength {
-		Do ..DebugTEST("ii = "_ii)
+		Do:pVerbose ..DebugTEST("ii = "_ii)
 		Set tCNAME = $Piece(tCOLUMNS,",",ii)
-		Do ..DebugTEST("tCNAME = "_tCNAME)
+		Do:pVerbose ..DebugTEST("tCNAME = "_tCNAME)
 		Set tValue = $Piece(pValues,",",ii)
-		Do ..DebugTEST("tValue = "_tValue)
+		Do:pVerbose ..DebugTEST("tValue = "_tValue)
 		If (tValue = "''") Set tValue = "Unassigned"
 		If (tCNAME = "ACCOUNT") {
 			Set tSC = ##class(Riches.Account).TestValue(tValue,.tFileId,.pId)
-			Do ..DebugTEST("tFileId = "_tFileId)
-			Do ..DebugTEST("pId = "_pId)
+			Do:pVerbose ..DebugTEST("tFileId = "_tFileId)
+			Do:pVerbose ..DebugTEST("pId = "_pId)
 			Set $Piece(pValues,",",ii) = tFileId
 		}
 		If (tCNAME = "CATEGORY") {
 			Set tSC = ##class(Riches.Category).TestValue(tValue,.tFileId,.pId)
-			Do ..DebugTEST("tFileId = "_tFileId)
-			Do ..DebugTEST("pId = "_pId)
+			Do:pVerbose ..DebugTEST("tFileId = "_tFileId)
+			Do:pVerbose ..DebugTEST("pId = "_pId)
 			Set $Piece(pValues,",",ii) = tFileId
 		}
 		If (tCNAME = "MERCHANT") {
 			Set tSC = ##class(Riches.Merchant).TestValue(tValue,.tFileId,.pId)
-			Do ..DebugTEST("tFileId = "_tFileId)
-			Do ..DebugTEST("pId = "_pId)
+			Do:pVerbose ..DebugTEST("tFileId = "_tFileId)
+			Do:pVerbose ..DebugTEST("pId = "_pId)
 			Set $Piece(pValues,",",ii) = tFileId
 		}
 	}
 	Quit tSC
 }
 
-ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String) As %Status
+ClassMethod TestQuery(pQuery As %String = "", Output pQuery2 As %String, pVerbose As %Integer = 0) As %Status
 {
-	Do ..DebugTEST("Riches.REST - TestQuery")
-	Do ..DebugTEST("pQuery = "_pQuery)
+	Do:pVerbose ..DebugTEST("Riches.REST - TestQuery")
+	Do:pVerbose ..DebugTEST("pQuery = "_pQuery)
 	Set tCOMMAND = $ZCONVERT($Piece(pQuery," ",1),"U")
-	Do ..DebugTEST("tCOMMAND = "_tCOMMAND)
+	Do:pVerbose ..DebugTEST("tCOMMAND = "_tCOMMAND)
 	Set tPIECE2 = $ZCONVERT($Piece(pQuery," ",2),"U")
-	Do ..DebugTEST("tPIECE2 = "_tPIECE2)
+	Do:pVerbose ..DebugTEST("tPIECE2 = "_tPIECE2)
 	If (tCOMMAND = "INSERT"),(tPIECE2 = "INTO") {
 		Set tTable = $Piece(pQuery," ",3)
-		Do ..DebugTEST("tTable = "_tTable)
+		Do:pVerbose ..DebugTEST("tTable = "_tTable)
 		Set tPiece4 = $Piece(pQuery," ",4)
-		Do ..DebugTEST("tPiece4 = "_tPiece4)
+		Do:pVerbose ..DebugTEST("tPiece4 = "_tPiece4)
 		Set tPIECE5 = $ZCONVERT($Piece(pQuery," ",5),"U")
-		Do ..DebugTEST("tPIECE5 = "_tPIECE5)
+		Do:pVerbose ..DebugTEST("tPIECE5 = "_tPIECE5)
 		If (tPIECE5 = "VALUES") {
 			Set tColumns = tPiece4
 			If ($Extract(tColumns,1) = "("),($Extract(tColumns,*) = ")") {
 				Set tColumns = $Extract(tColumns,2,*-1)
 			}
-			Do ..DebugTEST("tColumns = "_tColumns)
+			Do:pVerbose ..DebugTEST("tColumns = "_tColumns)
 			Set tCOLUMNS = $ZCONVERT(tColumns,"U")
-			Do ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
+			Do:pVerbose ..DebugTEST("tCOLUMNS = "_tCOLUMNS)
 			Set tParValues = $Piece(pQuery," ",6,999)
 			If ($Extract(tParValues,1) = "("),($Extract(tParValues,*) = ")") {
 				Set tValues = $Extract(tParValues,2,*-1)
 			}
 			Set tValues = $Get(tValues,tParValues)
-			Do ..DebugTEST("tValues = "_$Get(tValues))
+			Do:pVerbose ..DebugTEST("tValues = "_$Get(tValues))
 			Set tSC = ..UnQuoteValues(tValues,.tValues)
 			Set tSC = ..TestFiles(tCOLUMNS,.tValues)
 			If (tCOLUMNS [ "DATE") {
 				Set tLength = $Length(tColumns,",")
-				Do ..DebugTEST("tLength = "_tLength)
+				Do:pVerbose ..DebugTEST("tLength = "_tLength)
 				For ii = 1:1:tLength {
-					Do ..DebugTEST("ii = "_ii)
+					Do:pVerbose ..DebugTEST("ii = "_ii)
 					Set tCNAME = $Piece(tCOLUMNS,",",ii)
 					If (tCNAME [ "AMOUNT") {
 						Set tValue = $Piece(tValues,",",ii)
-						Do ..DebugTEST("tValue = "_tValue)
+						Do:pVerbose ..DebugTEST("tValue = "_tValue)
 						Set tAValue = $Extract(tValue,2,*-1)
 						If ($Get(tAValue) = "") {
 							Set tAmount = 0
-							Do ..DebugTEST("tAmount = "_$Get(tAmount))
+							Do:pVerbose ..DebugTEST("tAmount = "_$Get(tAmount))
 							Set $Piece(tValues,",",ii) = $Get(tAmount)
-							Do ..DebugTEST("tValues = "_tValues)
+							Do:pVerbose ..DebugTEST("tValues = "_tValues)
 						}
 					}
 					If (tCNAME [ "DATE") {
 						Set tValue = $Piece(tValues,",",ii)
-						Do ..DebugTEST("tValue = "_tValue)
+						Do:pVerbose ..DebugTEST("tValue = "_tValue)
 						Set tDValue = $Extract(tValue,2,*-1)
 						If ($Get(tDValue) ? 1.N1"-"1.N1"-"1.N) {
 							Set tDate = $ZDATEH(tDValue,8)
 						}
-						Do ..DebugTEST("tDate = "_$Get(tDate,0))
+						Do:pVerbose ..DebugTEST("tDate = "_$Get(tDate,0))
 						Set $Piece(tValues,",",ii) = $Get(tDate,0)
-						Do ..DebugTEST("tValues = "_tValues)
+						Do:pVerbose ..DebugTEST("tValues = "_tValues)
 					}
 					If (tCNAME [ "TIME") {
 						Set tValue = $Piece(tValues,",",ii)
-						Do ..DebugTEST("tValue = "_tValue)
+						Do:pVerbose ..DebugTEST("tValue = "_tValue)
 						Set tTValue = $Extract(tValue,2,*-1)
 						If ($Get(tTValue) = "") {
 							Set tTime = 0
-							Do ..DebugTEST("tTime = "_$Get(tTime))
+							Do:pVerbose ..DebugTEST("tTime = "_$Get(tTime))
 							Set $Piece(tValues,",",ii) = $Get(tTime)
-							Do ..DebugTEST("tValues = "_tValues)
+							Do:pVerbose ..DebugTEST("tValues = "_tValues)
 						}
 					}
 				}
 				Set tParValues = "("_$Get(tValues)_")"
 				Set $Piece(pQuery," ",6,999) = tParValues
-				Do ..DebugTEST("pQuery = "_pQuery)
+				Do:pVerbose ..DebugTEST("pQuery = "_pQuery)
 			}
 		}
 	}
 	Set pQuery2 = pQuery
-	Do ..DebugTEST("pQuery2 = "_pQuery2)
+	Do:pVerbose ..DebugTEST("pQuery2 = "_pQuery2)
 	Quit $$$OK
 }
 
-ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Status
+ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String, pVerbose As %Integer = 0) As %Status
 {
+	Do:pVerbose ..DebugTEST("Riches.REST - UnQuote")
+	Do:pVerbose ..DebugTEST("pQuote = "_pQuote)
 	Set boolContinue = 1
 	While boolContinue {
 		Set tFirst = $Extract(pQuote,1)
@@ -223,7 +224,8 @@ ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Stat
 			} Else { Set boolContinue = 0 }
 		} Else { Set boolContinue = 0 }
 	}
-	// Problem with '
+	/*
+	// Problem with ' or #
 	Set pEscape1 = ##class(%CSP.Page).EscapeHTML(pQuote)
 	Set pEscape2 = ##class(%CSP.Page).EscapeURL(pQuote)
 	If (pQuote [ "'") {
@@ -239,21 +241,30 @@ ClassMethod UnQuote(pQuote As %String = "", Output pUnQuote As %String) As %Stat
 	} Else {
 		Set pUnQuote = "'"_pQuote_"'"
 	}
+	*/
+	// Problem with ' or #
+	Set pEscape = ##class(%CSP.Page).EscapeHTML(pQuote)
+		Do:pVerbose ..DebugTEST("pEscape = "_pEscape)
+	If (pQuote '= pEscape) {
+		//Do ..DebugTEST("pEscape = "_pEscape)
+	}
+	Set pUnQuote = "'"_pEscape_"'"
 	If (pUnQuote = "") Set pUnQuote = "''"
+		Do:pVerbose ..DebugTEST("pUnQuote = "_pUnQuote)
 	Quit $$$OK
 }
 
-ClassMethod UnQuoteValues(pQuote As %String = "", Output pUnQuote As %String) As %Status
+ClassMethod UnQuoteValues(pQuote As %String = "", Output pUnQuote As %String, pVerbose As %Integer = 0) As %Status
 {
-	Do ..DebugTEST("Riches.REST - UnQuoteValues")
+	Do:pVerbose ..DebugTEST("Riches.REST - UnQuoteValues")
 	Set tLength = $Length(pQuote,",")
-	Do ..DebugTEST("tLength = "_tLength)
+	Do:pVerbose ..DebugTEST("tLength = "_tLength)
 	For ii = 1:1:tLength {
-		Do ..DebugTEST("ii = "_ii)
+		Do:pVerbose ..DebugTEST("ii = "_ii)
 		Set tValue = $Piece(pQuote,",",ii)
-		Do ..DebugTEST("tValue = "_tValue)
+		Do:pVerbose ..DebugTEST("tValue = "_tValue)
 		Set tSC = ..UnQuote(tValue,.tUnValue)
-		Do ..DebugTEST("tUnValue = "_tUnValue)
+		Do:pVerbose ..DebugTEST("tUnValue = "_tUnValue)
 		Set $Piece(pUnQuote,",",ii) = tUnValue
 	}
 	Quit $$$OK
