@@ -111,7 +111,7 @@ ClassMethod TestValue(pValue As %String = "", Output pMerchantId, Output pId, pV
 		Set objMerchant.Nickname = iNickname
 		Set objMerchant.SortOrder = $Get(iSortOrder)
 		Set tSC = objMerchant.%Save()
-		Do ##class(Util).DebugStatus(tSC)
+		Do:pVerbose ##class(Util).DebugStatus(tSC)
 		If $$$ISOK(tSC) {
 			Set pMerchantId = objMerchant.%Id()
 		 	Set pId = ##class(Util).EncodeLogicalDisplay(objMerchant.%Id(),objMerchant.Nickname)
