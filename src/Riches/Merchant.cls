@@ -95,10 +95,10 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
-ClassMethod TestValue(pValue As %String = "", Output pMerchantId, Output pId) As %Status
+ClassMethod TestValue(pValue As %String = "", Output pMerchantId, Output pId, pVerbose As %Integer = 0) As %Status
 {
-	Do ##class(Util).DebugTEST("Riches.Merchant - TestValue")
-	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Do:pVerbose ##class(Util).DebugTEST("Riches.Merchant - TestValue")
+	Do:pVerbose ##class(Util).DebugTEST("pValue = "_pValue)
 	Set pId = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
@@ -117,8 +117,8 @@ ClassMethod TestValue(pValue As %String = "", Output pMerchantId, Output pId) As
 		 	Set pId = ##class(Util).EncodeLogicalDisplay(objMerchant.%Id(),objMerchant.Nickname)
 		}
 	}
-	Do ##class(Util).DebugTEST("pMerchantId = "_$Get(pMerchantId,pId))
-	Do ##class(Util).DebugTEST("pId = "_pId)
+	Do:pVerbose ##class(Util).DebugTEST("pMerchantId = "_$Get(pMerchantId,pId))
+	Do:pVerbose ##class(Util).DebugTEST("pId = "_pId)
 	Quit tSC
 }
 
