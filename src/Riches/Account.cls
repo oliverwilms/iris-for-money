@@ -34,7 +34,6 @@ Trigger Balance [ Event = UPDATE, Time = AFTER ]
 	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
 }
 
-
 ClassMethod IdentifyAccountType(pValue As %String = "") As %String
 {
 	Set tAccountType = "Other"
@@ -159,39 +158,46 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
-ClassMethod TestValue(pValue As %String = "", Output pAccountId, Output pId) As %Status
+ClassMethod TestValue(pValue As %String = "", Output pAccountId, Output pId, pVerbose As %Integer = 0) As %Status
 {
-	Do ##class(Util).DebugTEST("Riches.Account - TestValue")
-	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Do:pVerbose ##class(Util).DebugTEST("Riches.Account - TestValue")
+	Do:pVerbose ##class(Util).DebugTEST("pValue = "_pValue)
 	Set (pAccountId,pId) = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
 	Set tQuote = $Select(($Extract(pValue,1)="'"):"",1:"'")
 	Set pQuery = "SELECT ID FROM Riches.Account WHERE NICKNAME = "_tQuote_pValue_tQuote
 	Set tSC = ##class(Util).ExecuteQueryOneValue(pQuery,.pAccountId)
+	Do:pVerbose ##class(Util).DebugTEST("pAccountId = "_pAccountId)
 	If ($Get(pAccountId) = "") {
+ //Do ##class(Util).DebugTEST("Riches.Account - If + 1")
 		Set objAccount = ##class(Riches.Account).%New()
+ //Do ##class(Util).DebugTEST("Riches.Account - If + 2")
 		If (tQuote = "") Set iNickname = $Extract(iNickname,2,*-1)
+ //Do ##class(Util).DebugTEST("Riches.Account - If + 3")
 		Set objAccount.Nickname = iNickname
-		Set objAccount.SortOrder = $Get(iSortOrder)
+ //Do ##class(Util).DebugTEST("Riches.Account - If + 4")
+		//Set objAccount.SortOrder = $Get(iSortOrder)
+ //Do ##class(Util).DebugTEST("Riches.Account - If + 5")
 		Set tSC = objAccount.%Save()
-		Do ##class(Util).DebugStatus(tSC)
+		Do:pVerbose ##class(Util).DebugStatus(tSC)
 		If $$$ISOK(tSC) {
 			Set pAccountId = objAccount.%Id()
 		 	Set pId = ##class(Util).EncodeLogicalDisplay(objAccount.%Id(),objAccount.Nickname)
 		}
 	}
-	Do ##class(Util).DebugTEST("pAccountId = "_$Get(pAccountId,pId))
-	Do ##class(Util).DebugTEST("pId = "_pId)
+ //Do ##class(Util).DebugTEST("Riches.Account - Else")
+	Do:pVerbose ##class(Util).DebugTEST("pAccountId = "_$Get(pAccountId,pId))
+	Do:pVerbose ##class(Util).DebugTEST("pId = "_pId)
 	Quit tSC
 }
 
-ClassMethod UpdateBalance(pAccount As %String, pCredit As %String, pDebit As %String) As %Status
+ClassMethod UpdateBalance(pAccount As %String, pCredit As %String, pDebit As %String, pVerbose As %Integer = 0) As %Status
 {
-	Do ##class(Util).DebugTEST("Riches.Account - UpdateBalance")
-	Do ##class(Util).DebugTEST("pAccount = "_$Get(pAccount))
-	Do ##class(Util).DebugTEST("pCredit = "_$Get(pCredit))
-	Do ##class(Util).DebugTEST("pDebit = "_$Get(pDebit))
+	Do:pVerbose ##class(Util).DebugTEST("Riches.Account - UpdateBalance")
+	Do:pVerbose ##class(Util).DebugTEST("pAccount = "_$Get(pAccount))
+	Do:pVerbose ##class(Util).DebugTEST("pCredit = "_$Get(pCredit))
+	Do:pVerbose ##class(Util).DebugTEST("pDebit = "_$Get(pDebit))
 	Set tSC = $$$OK
 	If ($Get(pAccount) = "") Quit tSC
 	Set objAccount = ##class(Riches.Account).%OpenId(pAccount)
@@ -201,7 +207,7 @@ ClassMethod UpdateBalance(pAccount As %String, pCredit As %String, pDebit As %St
 	Set tBalance = objAccount.CurrBalance + $Get(pCredit) - $Get(pDebit)
 	Set objAccount.CurrBalance = tBalance
 	Set tSC = objAccount.%Save()
-	Do ##class(Util).DebugStatus(tSC)
+	Do:pVerbose ##class(Util).DebugStatus(tSC)
 	Quit tSC
 }
 
