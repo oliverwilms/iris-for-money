@@ -2,6 +2,11 @@
 <html>
 <head>
 <script language="Cache" runat="Server">
+Set tDebugCount = $Get(^RichesDEBUG,0)
+// ^RichesDEBUG(0,1)
+// "0,""Date"",""Check"",""Merchant"",""Category"",""SubCategory"",""Memo"",""Credit"",""Debit"",""Bill Pay"",""Debit Card"",""Account"",""Balance"",""Status"""
+// ,TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status
+Set tHiddenColSelect = ",TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status"
 Set tHeader = "Riches - Account"
 Merge pRequestData = %request.Data
 Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Account.csp")
@@ -53,6 +58,7 @@ Set tOnLoadColumnCount = 13
 For ii = 1:1:tOnLoadColumnCount {
 	Set tColSel = $Get(tColSel) _ ","
 }
+Set tColSel = tHiddenColSelect
 </script>
 <script language="JavaScript">
 function goClickButton(id)
@@ -61,6 +67,17 @@ function goClickButton(id)
 	var iAccount = document.getElementById("iAccount").value;
 	document.location = "Account.csp?debug=" + id + "&iTable=" + iTable + "&iAccount=" + iAccount;
 }
+function goClickHeader(row)
+{
+	alert(row);
+	var count = '#($Get(tDebugCount,0))#';
+	var retVal = confirm("Do you want to import all rows?");
+	if (retVal == true) {
+		for (var row = 1; row < count; row++) {
+			goClickLine(row);
+		}
+	}
+}
 function goClickLine(row)
 {
 	var rowId = "tr_" + row;
@@ -68,20 +85,25 @@ function goClickLine(row)
 	var arr = x.split(",");
 	var len = arr.length;
 	var columns = "";
+	var escape = ""
 	var values = "";
 	for (var i = 0; i < len; i++) {
 		if (arr[i] != "") {
 			columns += "," + arr[i]
 			x = document.getElementById("div_" + row + "_" + (i+1)).innerHTML;
-			values += ",'" + x + "'";
+			escape = x.replace(/#/g, '%23');  // fix # - end of query string marker
+			escape = escape.replace(/'/g, '%27');  // fix ' - single quote
+			escape = escape.replace(/\?/g, '.');  // replace q-mark with period
+			escape = escape.replace(/&/g, ' ');  // replace ampersand with space
+			values += ",'" + escape + "'";
 		}
 	}
 	var table = document.getElementById("iTable").value;
 	var col = columns.substring(1);  // skip leading comma
 	var val = values.substring(1);  // skip leading comma
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
-	var escape = sql.replace(/#/g, '%23');  // fix #
-	postSQL(escape);
+	//var escape = sql.replace(/#/g, '%23');  // fix #
+	postSQL(sql);
 	document.getElementById(rowId).style.display = "none";
 }
 function onchangeSel(id)  // id is this of <select> for column selection
@@ -112,18 +134,20 @@ function onchangeTable(id)  // id is this.value - Riches.Transact
 function onloadHandler()
 {
 	var iAccount = '#($Get(iAccount,""))#';
-	document.getElementById("iAccount").value = iAccount;
+	if (document.getElementById("iAccount") != null) {
+		document.getElementById("iAccount").value = iAccount;
+	}
 	if (document.getElementById("div_col_count") == null) {
 		var x = 13;
 	} else {
 		var x = document.getElementById("div_col_count").innerHTML;
 	}
-	alert(x);
+	//alert(x);
 	var y = "";
 	for (var i = 2; i < x; i++) {
 		y += ",";
 	}
-	document.getElementById("hidden_col_sel").value = y;
+	document.getElementById("hidden_col_sel").value = '#($Get(tHiddenColSelect,""))#';
 	if (document.getElementById("div_0_1") == null) {
 		var x = "";
 	} else {
@@ -166,8 +190,8 @@ function postSQL(query)
 			document.getElementById("div_debug").innerHTML += this.responseText;
 		}
 	};
-	var escape = query.replace(/#/g, '%23');  // fix #
-	xhttp.open("POST", "/restapi/sql/" + escape, true);
+	//var escape = query.replace(/#/g, '%23');  // fix #
+	xhttp.open("POST", "/restapi/sql/" + query, true);
 	xhttp.send();
 }
 function processFile(id)
