@@ -80,7 +80,8 @@ function goClickLine(row)
 	var col = columns.substring(1);  // skip leading comma
 	var val = values.substring(1);  // skip leading comma
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
-	postSQL(sql);
+	var escape = sql.replace(/#/g, '%23');  // fix #
+	postSQL(escape);
 	document.getElementById(rowId).style.display = "none";
 }
 function onchangeSel(id)  // id is this of <select> for column selection
@@ -113,10 +114,11 @@ function onloadHandler()
 	var iAccount = '#($Get(iAccount,""))#';
 	document.getElementById("iAccount").value = iAccount;
 	if (document.getElementById("div_col_count") == null) {
-		var x = 0;
+		var x = 13;
 	} else {
 		var x = document.getElementById("div_col_count").innerHTML;
 	}
+	alert(x);
 	var y = "";
 	for (var i = 2; i < x; i++) {
 		y += ",";
@@ -164,7 +166,8 @@ function postSQL(query)
 			document.getElementById("div_debug").innerHTML += this.responseText;
 		}
 	};
-	xhttp.open("POST", "/restapi/sql/" + query, true);
+	var escape = query.replace(/#/g, '%23');  // fix #
+	xhttp.open("POST", "/restapi/sql/" + escape, true);
 	xhttp.send();
 }
 function processFile(id)
@@ -253,8 +256,8 @@ Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into 
 </script>
 
 </form>
-<input type="hidden" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
-<input type="hidden" id="hidden_tab_col" size="100">
+<input type="text" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
+<input type="text" id="hidden_tab_col" size="100">
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
 	Set iDebug = %request.Data("debug",1)
