@@ -127,10 +127,10 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 	Quit tSC
 }
 
-ClassMethod TestValue(pValue As %String = "", Output pCategoryId, Output pId) As %Status
+ClassMethod TestValue(pValue As %String = "", Output pCategoryId, Output pId, pVerbose As %Integer = 0) As %Status
 {
-	Do ##class(Util).DebugTEST("Riches.Category - TestValue")
-	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Do:pVerbose ##class(Util).DebugTEST("Riches.Category - TestValue")
+	Do:pVerbose ##class(Util).DebugTEST("pValue = "_pValue)
 	Set pId = ""
 	Set tSC = $$$OK
 	Set iNickname = pValue
@@ -149,8 +149,8 @@ ClassMethod TestValue(pValue As %String = "", Output pCategoryId, Output pId) As
 		 	Set pId = ##class(Util).EncodeLogicalDisplay(objCategory.%Id(),objCategory.Nickname)
 		}
 	}
-	Do ##class(Util).DebugTEST("pCategoryId = "_$Get(pCategoryId,pId))
-	Do ##class(Util).DebugTEST("pId = "_pId)
+	Do:pVerbose ##class(Util).DebugTEST("pCategoryId = "_$Get(pCategoryId,pId))
+	Do:pVerbose ##class(Util).DebugTEST("pId = "_pId)
 	Quit tSC
 }
 
