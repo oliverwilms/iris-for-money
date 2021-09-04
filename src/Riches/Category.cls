@@ -143,7 +143,7 @@ ClassMethod TestValue(pValue As %String = "", Output pCategoryId, Output pId, pV
 		Set objCategory.Nickname = iNickname
 		Set objCategory.SortOrder = $Get(iSortOrder)
 		Set tSC = objCategory.%Save()
-		Do ##class(Util).DebugStatus(tSC)
+		Do:pVerbose ##class(Util).DebugStatus(tSC)
 		If $$$ISOK(tSC) {
 			Set pCategoryId = objCategory.%Id()
 		 	Set pId = ##class(Util).EncodeLogicalDisplay(objCategory.%Id(),objCategory.Nickname)
