@@ -49,22 +49,22 @@ ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String =
 	Quit tLogicalDisplay
 }
 
-ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As %Status
+ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String, pVerbose As %Integer = 0) As %Status
 {
-	Do ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
-	Do ..DebugTEST("pQuery = "_pQuery)
+	Do:pVerbose ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
+	Do:pVerbose ..DebugTEST("pQuery = "_pQuery)
 	Set pResult = ""
 	Set rs = ##class(%ResultSet).%New()
 	Set tSC = rs.Prepare(pQuery)
-	Do ..DebugStatus(tSC)
+	Do:pVerbose ..DebugStatus(tSC)
 	If $$$ISOK(tSC) {
 		Set tSC = rs.Execute()
-		Do ..DebugStatus(tSC)
+		Do:pVerbose ..DebugStatus(tSC)
 		If $$$ISOK(tSC), rs.Next() Set pResult = rs.GetData(1)
 	}
 	Do rs.Close()
 	Set rs = ""
-	Do ..DebugTEST("pResult = "_pResult)
+	Do:pVerbose ..DebugTEST("pResult = "_pResult)
 	Quit tSC
 }
 
