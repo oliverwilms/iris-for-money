@@ -47,11 +47,11 @@ ClassMethod GetDebug() As %Status
 	Quit $$$OK
 }
 
-ClassMethod PostDebug(pDebug As %String = "", pIndex As %String = -1) As %Status
+ClassMethod PostDebug(pDebug As %String = "", pIndex As %String = -1, pVerbose As %Integer = 0) As %Status
 {
-	Do ..DebugTEST("Riches.REST - PostDebug")
-	Do ..DebugTEST("pDebug = "_pDebug)
-	Do ..DebugTEST("pIndex = "_pIndex)
+	Do:pVerbose ..DebugTEST("Riches.REST - PostDebug")
+	Do:pVerbose ..DebugTEST("pDebug = "_pDebug)
+	Do:pVerbose ..DebugTEST("pIndex = "_pIndex)
 	Set tIncrement = $Increment(^RichesDEBUG)
 	If ($Extract(pDebug,*) = $Char(13)) Set pDebug = $Extract(pDebug,1,*-1)
 	Set ^RichesDEBUG(pIndex,tIncrement) = pIndex_","_ pDebug
