@@ -49,22 +49,22 @@ ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String =
 	Quit tLogicalDisplay
 }
 
-ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String, pVerbose As %Integer = 0) As %Status
+ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As %Status
 {
-	Do:pVerbose ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
-	Do:pVerbose ..DebugTEST("pQuery = "_pQuery)
+	Do ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
+	Do ..DebugTEST("pQuery = "_pQuery)
 	Set pResult = ""
 	Set rs = ##class(%ResultSet).%New()
 	Set tSC = rs.Prepare(pQuery)
-	Do:pVerbose ..DebugStatus(tSC)
+	Do ..DebugStatus(tSC)
 	If $$$ISOK(tSC) {
 		Set tSC = rs.Execute()
-		Do:pVerbose ..DebugStatus(tSC)
+		Do ..DebugStatus(tSC)
 		If $$$ISOK(tSC), rs.Next() Set pResult = rs.GetData(1)
 	}
 	Do rs.Close()
 	Set rs = ""
-	Do:pVerbose ..DebugTEST("pResult = "_pResult)
+	Do ..DebugTEST("pResult = "_pResult)
 	Quit tSC
 }
 
@@ -173,10 +173,11 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		If $$$ISERR(tSC) Quit
 	}
 	Write "<th>",!
-	Set x = $Select((pHeader = 0):"goClickLine",1:"goClickHeader")
-	Set qClick = q_x_"("_tLineId_")"_q
-	Set qType = q_"button"_q
-	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
+	If (pHeader = 0) {
+		Set qClick = q_"goClickLine("_tLineId_")"_q
+		Set qType = q_"button"_q
+		Write "<button type=",qType," onclick=",qClick,">Import</button>",!
+	}
 	Write "</th>",!
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
@@ -265,6 +266,13 @@ ClassMethod QuoteJSLogicalDisplay(pLogical As %String = "", pDisplay As %String 
 {
 	Set tLogicalDisplay = ..EncodeLogicalDisplay(pLogical,pDisplay)
 	Quit ##class(%CSP.Page).QuoteJS(tLogicalDisplay)
+}
+
+ClassMethod SQLGrantAccess() As %Status
+{
+	&sql(GRANT INSERT,SELECT,UPDATE ON Riches.Account,Riches.Category,Riches.Merchant,Riches.SubCategory,Riches.Transact TO UnknownUser)
+	if SQLCODE < 0 throw ##class(%Exception.SQL).CreateFromSQLCODE(%SQLCODE,"Grant roles")
+	Quit $$$OK
 }
 
 }
