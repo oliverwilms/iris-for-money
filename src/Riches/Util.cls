@@ -49,22 +49,22 @@ ClassMethod EncodeLogicalDisplay(pLogical As %String = "", pDisplay As %String =
 	Quit tLogicalDisplay
 }
 
-ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String) As %Status
+ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String, pVerbose As %Integer = 0) As %Status
 {
-	Do ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
-	Do ..DebugTEST("pQuery = "_pQuery)
+	Do:pVerbose ..DebugTEST("Riches.Util - ExecuteQueryOneValue")
+	Do:pVerbose ..DebugTEST("pQuery = "_pQuery)
 	Set pResult = ""
 	Set rs = ##class(%ResultSet).%New()
 	Set tSC = rs.Prepare(pQuery)
-	Do ..DebugStatus(tSC)
+	Do:pVerbose ..DebugStatus(tSC)
 	If $$$ISOK(tSC) {
 		Set tSC = rs.Execute()
-		Do ..DebugStatus(tSC)
+		Do:pVerbose ..DebugStatus(tSC)
 		If $$$ISOK(tSC), rs.Next() Set pResult = rs.GetData(1)
 	}
 	Do rs.Close()
 	Set rs = ""
-	Do ..DebugTEST("pResult = "_pResult)
+	Do:pVerbose ..DebugTEST("pResult = "_pResult)
 	Quit tSC
 }
 
@@ -173,11 +173,10 @@ ClassMethod OutputDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 		If $$$ISERR(tSC) Quit
 	}
 	Write "<th>",!
-	If (pHeader = 0) {
-		Set qClick = q_"goClickLine("_tLineId_")"_q
-		Set qType = q_"button"_q
-		Write "<button type=",qType," onclick=",qClick,">Import</button>",!
-	}
+	Set x = $Select((pHeader = 0):"goClickLine",1:"goClickHeader")
+	Set qClick = q_x_"("_tLineId_")"_q
+	Set qType = q_"button"_q
+	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
 	Write "</th>",!
 	Write "</tr>",!
 	If (pHeader = 0) Quit $$$OK
@@ -242,7 +241,6 @@ ClassMethod OutputSelectTable(pName As %String = "iTable", pID As %String = "iTa
 {
 	/*
 <label for="iTable">Insert into table:</label>
-
 <select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
   <option value="Riches.Category">Category</option>
   <option value="Riches.Merchant">Merchant</option>
