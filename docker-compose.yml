@@ -7,12 +7,15 @@ services:
     command: "-b /opt/irisapp/vcopy.sh"
     init: true
     restart: always
-    ports: 
-      - 32769:51773
+    ports:
+# new SuperServer Port    
+#      - 32769:51773
+      - 32769:1972
       - 32768:52773
       - 53773
     volumes:
-      - ~/iris.key:/usr/irissys/mgr/iris.key
+# no license required for community image    
+#      - ~/iris.key:/usr/irissys/mgr/iris.key
       - riches:/voldata
 
 volumes:
