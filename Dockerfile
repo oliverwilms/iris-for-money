@@ -54,3 +54,8 @@ RUN rm -f $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log $ISC_PACKAGE_INSTALLDIR/mgr/IRI
 
 # we need Write privilege for UnitTest
 RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp/src/UnitTest/* && chmod +w /opt/irisapp/src/UnitTest/*
+
+# [INFO] Starting InterSystems IRIS instance IRIS...
+# [INFO] Invalid registry ownership
+# [ERROR] Command "iris start IRIS quietly" exited with status 256
+RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /usr/local/etc/irissys/iris.reg
