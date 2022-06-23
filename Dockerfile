@@ -20,7 +20,7 @@ RUN chmod 775 /opt/irisapp/csp /opt/irisapp/csp/*
 USER irisowner
 
 COPY  Installer.cls .
-COPY  src src
+COPY --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} src src
 COPY data data
 COPY irissession.sh /
 SHELL ["/irissession.sh"]
