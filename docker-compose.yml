@@ -15,7 +15,5 @@ services:
     volumes:
 # no license required for community image    
 #      - ~/iris.key:/usr/irissys/mgr/iris.key
-      - riches:/voldata
-
-volumes:
-  riches:
+      - /efs/ICS:/ICS
+      - /efs/ICS/volumes/riches/voldata:/voldata
