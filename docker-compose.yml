@@ -8,10 +8,8 @@ services:
     init: true
     restart: always
     ports:
-# new SuperServer Port    
-#      - 32769:51773
-      - 32769:1972
-      - 32768:52773
+      - 19800:1972
+      - 57700:52773
       - 53773
     volumes:
 # no license required for community image    
