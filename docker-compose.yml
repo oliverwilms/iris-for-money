@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     #command: "-b /opt/irisapp/vcopy.sh"
     command: --check-caps false --before /opt/irisapp/vcopy.sh
+    environment:
+      - ISC_DATA_DIRECTORY=/voldata/iconfig
     init: true
     restart: always
     ports:
