@@ -1,6 +1,6 @@
 ## iris-for-money
 This is my entry for InterSystems Grand Prix Contest 2021.
-http://localhost:32768/irisapp/Transact.csp
+http://localhost:57700/irisapp/Transact.csp
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Transact.PNG)
 
 If you are prompted to login, enter _SYSTEM and SYS
@@ -10,7 +10,7 @@ I have been using Microsoft Money for a very long time. Last week, after Windows
 
 ## Getting Started
 I wanted to import some data that I had entered into Excel. I exported a list of Categories into Categories.csv file (in data folder)
-http://localhost:32768/irisapp/Account.csp
+http://localhost:57700/irisapp/Account.csp
 Click the Browse... button and Open Categories.csv file. Click the Preview button to see a table grid with the data from the file.
 
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account.PNG)
@@ -28,7 +28,7 @@ Insert into Riches.Category (Nickname) values ('Wages')
 ## Import Transactions
 I have entered transaction data into Excel to keep track of Account Balances while I work on this app.
 
-Again I go to http://localhost:32768/irisapp/Account.csp. This time I create a record in Account table.
+Again I go to http://localhost:57700/irisapp/Account.csp. This time I create a record in Account table.
 
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account_New.PNG)
 
@@ -93,14 +93,14 @@ If your first test passes, run it again. The second test fails, because we do no
 ## How to Work With it
 
 iris-for-money includes /riches REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
-The API is available on localhost:32768/riches/
-This REST API goes with  OpenAPI (swagger) documentation. You can check it localhost:32768/crud/_spec
+The API is available on localhost:57700/riches/
+This REST API goes with  OpenAPI (swagger) documentation. You can check it localhost:57700/crud/_spec
 This spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
 Or you can install [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) with:
 ```
 zpm:IRISAPP>install swagger-ui
 ``` 
-And check the documentation on localhost:32768/swagger-ui/index.html
+And check the documentation on localhost:57700/swagger-ui/index.html
 
 
 # Testing GET requests
@@ -122,13 +122,13 @@ This REST API exposes two GET requests: all the data and one record.
 To get all the data in JSON call:
 
 ```
-localhost:32768/riches/category/all
+localhost:57700/riches/category/all
 ```
 
 To request the data for a particular record provide the id in GET request like 'localhost:/riches/category/id' . E.g.:
 
 ```
-localhost:32768/riches/category/1
+localhost:57700/riches/category/1
 ```
 
 This will return JSON data for the person with ID=1, something like that:
@@ -147,7 +147,7 @@ Create a POST request e.g. in Postman with raw data in JSON. e.g.
 
 Adjust the authorisation if needed - it is basic for container with default login and password for IRIS Community edition container
 
-and send the POST request to localhost:32768/riches/category/
+and send the POST request to localhost:57700/riches/category/
 
 This will create a record in Riches.Category class in IRIS.
 
@@ -162,7 +162,7 @@ E.g. we want to change the record with id=5. Prepare in Postman the JSON in raw 
 
 and send the put request to:
 ```
-localhost:32768/riches/category/5
+localhost:57700/riches/category/5
 ```
 
 # Testing DELETE request
@@ -170,12 +170,12 @@ localhost:32768/riches/category/5
 For delete request this REST API expects only the id of the record to delete. E.g. if the id=5 the following DELETE call will delete the record:
 
 ```
-localhost:32768/riches/category/5
+localhost:57700/riches/category/5
 ```
 
 ## How to start coding
 
-http://x.x.x.x:32768/irisapp/Transact.csp
+http://x.x.x.x:57700/irisapp/Transact.csp
 
 This is a template, so you can use a template button on Github to create your own copy of this repository.
 The repository is ready to code in VSCode with ObjectScript plugin.
