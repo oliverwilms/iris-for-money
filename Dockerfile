@@ -58,4 +58,4 @@ RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp/src/UnitT
 # [INFO] Starting InterSystems IRIS instance IRIS...
 # [INFO] Invalid registry ownership
 # [ERROR] Command "iris start IRIS quietly" exited with status 256
-RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /usr/local/etc/irissys/iris.reg
+##RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /usr/local/etc/irissys/iris.reg
