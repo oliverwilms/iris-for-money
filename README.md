@@ -94,8 +94,8 @@ If your first test passes, run it again. The second test fails, because we do no
 
 iris-for-money includes /riches REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
 The API is available on localhost:32768/riches/
-This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:32768/crud/_spec
-THis spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
+This REST API goes with  OpenAPI (swagger) documentation. You can check it localhost:32768/crud/_spec
+This spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
 Or you can install [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) with:
 ```
 zpm:IRISAPP>install swagger-ui
