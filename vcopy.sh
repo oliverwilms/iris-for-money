@@ -8,7 +8,8 @@ if [ -f "/usr/local/etc/irissys/iris.reg" ]; then
     chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /usr/local/etc/irissys/iris.reg
 fi
 
-if [ ! -d "/voldata/irisdb/irisapp" ]; then
+# [ERROR] mkdir: cannot create directory '/voldata/irisdb': Permission denied
+if [ ! -f "/voldata/irisdb/irisapp/IRIS.DAT" ]; then
     mkdir -p "/voldata/irisdb/irisapp"
     if [ -d "/ghostdb" ]; then
         cp -Rpfv /ghostdb/* /voldata/
