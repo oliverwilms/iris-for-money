@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     #command: "-b /opt/irisapp/vcopy.sh"
     command: --check-caps false
-    environment:
-      - ISC_DATA_DIRECTORY=/voldata/iconfig
+    #environment:
+    #  - ISC_DATA_DIRECTORY=/voldata/iconfig
     init: true
     restart: always
     ports:
@@ -18,4 +18,4 @@ services:
 # no license required for community image    
 #      - ~/iris.key:/usr/irissys/mgr/iris.key
       - /efs/ICS:/ICS
-      - /efs/ICS/volumes/riches/voldata:/voldata
+    #  - /efs/ICS/volumes/riches/voldata:/voldata
