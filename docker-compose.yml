@@ -4,7 +4,8 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    command: "-b /opt/irisapp/vcopy.sh"
+    #command: "-b /opt/irisapp/vcopy.sh"
+    command: --check-caps false -b /opt/irisapp/vcopy.sh
     init: true
     restart: always
     ports:
