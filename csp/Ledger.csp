@@ -21,7 +21,7 @@ function onloadHandler()
 }
 function tableClickHandler(id)
 {
-	var location = 'Account.csp?id='+id;
+	var location = 'Transact.csp?id='+id;
 	window.parent.location = location;
 	updateLogicalDisplay(id);
 }
