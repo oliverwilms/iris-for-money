@@ -5,6 +5,10 @@ Set tHeader = "Riches - Transact"
 Merge pRequestData = %request.Data
 Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Transact.csp")
 If $$$ISOK(tSC) Set tSC = ##class(Riches.Transact).SubmitFormData(.pRequestData,.pAction,.pId)
+/* Extract ID from %request.Data */
+If ($Data(%request.Data("id",1))) {
+	Set iId = %request.Data("id",1)
+}
 /* Extract iAccount from %request.Data */
 If ($Data(%request.Data("iAccount",1))) {
 	Set iAccount = %request.Data("iAccount",1)
@@ -95,7 +99,25 @@ Write "</td></tr></table>",!
 <form>
 <table border=1>
 <script language="Cache" runat="Server">
+If ($Get(iId) '= "") {
+	Set oTransact = ##class(Riches.Transact).%OpenId(iId)
+	If $IsObject(oTransact) {
+		Set iAccount = oTransact.Account.%Id()
+		Set iTranDate = oTransact.TranDate
+		Set iTranTime = oTransact.TranTime
+		Set iCheckNumber = oTransact.CheckNumber
+		Set iMerchant = oTransact.Merchant.%Id()
+		Set iAmountDebit = oTransact.AmountDebit
+		Set iAmountCredit = oTransact.AmountCredit
+		Try {
+			Set iCategory = oTransact.Category.%Id()
+			Set iSubCategory = oTransact.SubCategory.%Id()
+		} Catch {}
+		Set iMemo = oTransact.Memo
+	}
+}
 Do ##class(Riches.Transact).OutputFormHead(0)
+Do ##class(Riches.Transact).OutputHiddenId($Get(iId))
 Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
 Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
 Do ##class(Riches.Transact).OutputFormField("TranTime","Time",$Get(iTranTime,$Piece($Horolog,",",2)))
