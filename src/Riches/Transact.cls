@@ -52,7 +52,11 @@ ClassMethod GetColumns(ByRef pColumns) As %String
 	Quit $$$OK
 }
 
-ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String = "", pValue As %String = "", split As %Boolean = 0) As %Status
+ClassMethod OutputFormField(
+	pField As %String = "Account",
+	pCaption As %String = "",
+	pValue As %String = "",
+	split As %Boolean = 0) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputFormField")
 	Do ##class(Util).DebugTEST("pField = "_pField)
@@ -144,7 +148,68 @@ ClassMethod OutputFormSplit() As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "window.location='Transact.csp?iAccount=#';", pMaxRows = -1) As %Status
+ClassMethod OutputHiddenId(
+	pValue As %String = "",
+	split As %Boolean = 0) As %Status
+{
+	Do ##class(Util).DebugTEST("Riches.Transact - OutputHiddenId")
+	Do ##class(Util).DebugTEST("pValue = "_pValue)
+	Set pCaption = "Transact Id"
+	Set pField = "TransactId"
+	If split {
+		Set prefixD = "dd"
+		Set prefixI = "ii"
+		Set tSize = 5
+		Write "<td>",!
+	} Else {
+		Set prefixD = "d"
+		Set prefixI = "i"
+		Set tSize = 25
+		Write "<tr>",!
+	}
+	Set q = """"
+	Set qHref = ""
+	Do ##class(Util).DebugTEST("tURL = "_qHref)
+	//Set qHref = q_##class(%CSP.Page).EscapeURL(tURL)_q
+	//Do ##class(Util).DebugTEST("qHref = "_qHref)
+	Set qID = q_prefixI_pField_q
+	Set qIDD = q_prefixD_pField_q
+	Set qSize = q_tSize_q
+	Set qTarget = q_"iframe_ledger"_q
+	Set qText = q_"text"_q
+	Set qHide = q_"hidden"_q
+	Set qValue = q_pValue_q
+	If ($Get(tQuery) '= "") Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
+	Set qDisplay = q_$Get(tDisplay,pValue)_q
+	If split {
+		Write "<table><tr>"
+	} Else {
+		Write "<td><label for=",qID,">",pCaption,":</label></td>",!
+	}
+	Write "<td>",!
+	If $Data(tDisplay) {
+		Write "<input type=",qText," id=",qIDD," size=",qSize," value=",qDisplay,$Get(onChange),">",!
+		Write "<input type=",qHide," id=",qID," name=",qID," size=",qSize," value=",qValue,">",!
+	} Else {
+		Write "<input type=",qText," id=",qID," name=",qID," size=",qSize," value=",qValue,">",!
+	}
+	Write "</td>",!
+	If split {
+		Write "</tr><tr>",!
+	}
+	Write "<td><a href=",qHref," target=",qTarget,">----</a></td>",!
+	If split {
+		Write "</tr></table></td>",!
+	} Else {
+		Write "</tr>",!
+	}
+	Quit $$$OK
+}
+
+ClassMethod OutputTableData(
+	pWhere As %String = "",
+	pTrClick As %String = "window.location='Transact.csp?iAccount=#';",
+	pMaxRows = -1) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputTableData")
 	Do ##class(Util).DebugTEST("pWhere = "_pWhere)
@@ -183,7 +248,10 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "windo
 	Quit tSC
 }
 
-ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %Status
+ClassMethod SubmitFormData(
+	ByRef pRequestData,
+	Output pAction,
+	Output pId) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - SubmitFormData")
 	Do ##class(Util).DebugMerge("pRequestData = ",.pRequestData)
@@ -294,6 +362,7 @@ Storage Default
 </Data>
 <DataLocation>^Riches.TransactD</DataLocation>
 <DefaultData>TransactDefaultData</DefaultData>
+<ExtentSize>0</ExtentSize>
 <IdLocation>^Riches.TransactD</IdLocation>
 <IndexLocation>^Riches.TransactI</IndexLocation>
 <StreamLocation>^Riches.TransactS</StreamLocation>
