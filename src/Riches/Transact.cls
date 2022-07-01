@@ -116,16 +116,20 @@ ClassMethod OutputFormField(
 	Quit $$$OK
 }
 
-ClassMethod OutputFormHead(split As %Boolean = 0) As %Status
+ClassMethod OutputFormHead(
+	split As %Boolean = 0,
+	hiddenId As %String = "") As %Status
 {
 	Set q = """"
 	Set qClick = q_"goSplit()"_q
 	Set qType = q_"button"_q
+	Set tHead1 = "Form"
+	If ($Get(hiddenId) '= "") Set tHead1 = hiddenId
 	Write "<tr>",!
 	If split {
 		Write "<th>Category</th><th>SubCategory</th><th>Debit</th><th>Credit</th><th>Memo</th>",!
 	} Else {
-		Write "<th>Form</th><th>Display</th><th><button type=",qType," onclick=",qClick,">Split</button></th>",!
+		Write "<th>",tHead1,"</th><th>Display</th><th><button type=",qType," onclick=",qClick,">Split</button></th>",!
 	}
 	Write "</tr>",!
 	Quit $$$OK
@@ -166,7 +170,7 @@ ClassMethod OutputHiddenId(
 		Set prefixD = "d"
 		Set prefixI = "i"
 		Set tSize = 25
-		Write "<tr>",!
+		Write "<tr hidden=true>",!
 	}
 	Set q = """"
 	Set qHref = ""
@@ -198,7 +202,7 @@ ClassMethod OutputHiddenId(
 	If split {
 		Write "</tr><tr>",!
 	}
-	Write "<td><a href=",qHref," target=",qTarget,">----</a></td>",!
+	//Write "<td><a href=",qHref," target=",qTarget,">----</a></td>",!
 	If split {
 		Write "</tr></table></td>",!
 	} Else {
