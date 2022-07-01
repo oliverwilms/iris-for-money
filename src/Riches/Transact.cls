@@ -313,7 +313,11 @@ ClassMethod SubmitFormData(
 		Set oTransact = ##class(Riches.Transact).%OpenId(iTransactId)
 		If (0 = $IsObject(oTransact)) TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot Open Transact #"_iTransactId)
 		Set d("Account") = 0 + $Get(iAccount) - oTransact.Account.%Id()
-		Set d("AmountCredit") = 0
+		Set d("AmountCredit") = 0 + $Get(iAmountCredit) - oTransact.AmountCredit
+		If (0 '= d("AmountCredit")) {
+			&SQL(UPDATE Riches.Transact Set AmountCredit = :iAmountCredit WHERE ID = :iTransactId)
+			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Transact - SQLCODE = "_SQLCODE)
+		}
 		Set d("AmountDebit") = 0 + $Get(iAmountDebit) - oTransact.AmountDebit
 	Do ##class(Util).DebugMerge("dAmountDebit = ",d("AmountDebit"))
 		If (0 '= d("AmountDebit")) {
