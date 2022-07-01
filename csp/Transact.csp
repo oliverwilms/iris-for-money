@@ -42,6 +42,10 @@ function goImport()
 {
 	window.location = "Account.csp";
 }
+function goNew()
+{
+	window.location = "Transact.csp"
+}
 function goSplit()
 {
 	document.getElementById("div_split").style="color:#000000; background:#CCC";
@@ -116,7 +120,7 @@ If ($Get(iId) '= "") {
 		Set iMemo = oTransact.Memo
 	}
 }
-Do ##class(Riches.Transact).OutputFormHead(0)
+Do ##class(Riches.Transact).OutputFormHead(0,$Get(iId))
 Do ##class(Riches.Transact).OutputHiddenId($Get(iId))
 Do ##class(Riches.Transact).OutputFormField("Account","Account",$Get(iAccount))
 Do ##class(Riches.Transact).OutputFormField("TranDate","Date",$Get(iTranDate,$Piece($Horolog,",",1)))
