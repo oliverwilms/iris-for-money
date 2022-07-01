@@ -306,6 +306,32 @@ ClassMethod SubmitFormData(
 	Do ##class(Util).DebugStatus(tSC)
 	If $$$ISERR(tSC) Quit tSC
 	TSTART
+	If ($Data(pRequestData("iTransactId",1))) {
+		Set iTransactId = pRequestData("iTransactId",1)
+	}
+	If ($Get(iTransactId) '= "") {
+		Set oTransact = ##class(Riches.Transact).%OpenId(iTransactId)
+		If (0 = $IsObject(oTransact)) TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot Open Transact #"_iTransactId)
+		Set d("Account") = 0 + $Get(iAccount) - oTransact.Account.%Id()
+		Set d("AmountCredit") = 0
+		Set d("AmountDebit") = 0 + $Get(iAmountDebit) - oTransact.AmountDebit
+	Do ##class(Util).DebugMerge("dAmountDebit = ",d("AmountDebit"))
+		If (0 '= d("AmountDebit")) {
+			&SQL(UPDATE Riches.Transact Set AmountDebit = :iAmountDebit WHERE ID = :iTransactId)
+			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Transact - SQLCODE = "_SQLCODE)
+		}
+	Do ##class(Util).DebugMerge("dAccount = ",d("Account"))
+		If (0 = d("Account")) {
+			Set d("Balance") = 0 - d("AmountDebit") + d("AmountCredit")
+	Do ##class(Util).DebugMerge("dBalance = ",d("Balance"))
+			If (0 '= d("Balance")) {
+				&SQL(UPDATE Riches.Account SET CurrBalance = CurrBalance + :d("Balance") WHERE ID = :iAccount)
+				If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Account - SQLCODE = "_SQLCODE)
+			}
+		}
+		TCOMMIT
+		Quit tSC
+	}  // If ($Data(pRequestData("iTransactId",1)))
 	&SQL(INSERT INTO Riches.Transact (Account,AmountCredit,AmountDebit,Category,Merchant,TranDate,TranTime,CheckNumber,Memo)
 		VALUES (:iAccount,:iAmountCredit,:iAmountDebit,:iCategory,:iMerchant,:iTranDate,:iTranTime,:iCheckNumber,:iMemo))
 	Do ##class(Util).DebugTEST("SQLCODE = "_SQLCODE)
