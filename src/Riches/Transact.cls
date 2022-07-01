@@ -122,14 +122,19 @@ ClassMethod OutputFormHead(
 {
 	Set q = """"
 	Set qClick = q_"goSplit()"_q
+	Set qClickNew = q_"goNew()"_q
 	Set qType = q_"button"_q
 	Set tHead1 = "Form"
-	If ($Get(hiddenId) '= "") Set tHead1 = hiddenId
+	Set tHead2 = "Display"
+	If ($Get(hiddenId) '= "") {
+		Set tHead1 = hiddenId
+		Set tHead2 = "<button type="_qType_" onclick="_qClickNew_">New</button>"
+	}
 	Write "<tr>",!
 	If split {
 		Write "<th>Category</th><th>SubCategory</th><th>Debit</th><th>Credit</th><th>Memo</th>",!
 	} Else {
-		Write "<th>",tHead1,"</th><th>Display</th><th><button type=",qType," onclick=",qClick,">Split</button></th>",!
+		Write "<th>",tHead1,"</th><th>",tHead2,"</th><th><button type=",qType," onclick=",qClick,">Split</button></th>",!
 	}
 	Write "</tr>",!
 	Quit $$$OK
