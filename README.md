@@ -44,6 +44,11 @@ I was able to import data from a CSV file that I had exported from Excel. As of 
 ## What I learned
 MatchRoles = %DB_IRISAPP to allow /restapi to work Unauthenticated.
 
+You can verify that it works by going to http://localhost:57700/restapi/debug. I was very happy when I could see
+```
+{"BaseLogId":1}
+```
+
 ## Built with
 Cache Server Pages, IRIS Community Edition in Docker
 
