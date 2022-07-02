@@ -321,7 +321,8 @@ ClassMethod SubmitFormData(
 	If ($Get(iTransactId) '= "") {
 		Set oTransact = ##class(Riches.Transact).%OpenId(iTransactId)
 		If (0 = $IsObject(oTransact)) TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot Open Transact #"_iTransactId)
-		Set d("Account") = 0 + $Get(iAccount) - oTransact.Account.%Id()
+		Set oldAccount = oTransact.Account.%Id()
+		Set d("Account") = 0 + $Get(iAccount) - oldAccount
 		Set d("AmountCredit") = 0 + $Get(iAmountCredit) - oTransact.AmountCredit
 		If (0 '= d("AmountCredit")) {
 			&SQL(UPDATE Riches.Transact Set AmountCredit = :iAmountCredit WHERE ID = :iTransactId)
@@ -339,8 +340,21 @@ ClassMethod SubmitFormData(
 	Do ##class(Util).DebugMerge("dBalance = ",d("Balance"))
 			If (0 '= d("Balance")) {
 				&SQL(UPDATE Riches.Account SET CurrBalance = CurrBalance + :d("Balance") WHERE ID = :iAccount)
-				If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Account - SQLCODE = "_SQLCODE)
+				If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Balance - SQLCODE = "_SQLCODE)
 			}
+		} Else {
+			Set d("Balance") = 0 + oTransact.AmountDebit - oTransact.AmountCredit
+			If (0 '= d("Balance")) {
+				&SQL(UPDATE Riches.Account SET CurrBalance = CurrBalance + :d("Balance") WHERE ID = :oldAccount)
+				If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE oldAccount - SQLCODE = "_SQLCODE)
+			}
+			Set d("Balance") = 0 - iAmountDebit + iAmountCredit
+			If (0 '= d("Balance")) {
+				&SQL(UPDATE Riches.Account SET CurrBalance = CurrBalance + :d("Balance") WHERE ID = :iAccount)
+				If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Balance - SQLCODE = "_SQLCODE)
+			}
+			&SQL(UPDATE Riches.Transact Set Account = :iAccount WHERE ID = :iTransactId)
+			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Account - SQLCODE = "_SQLCODE)
 		}
 		TCOMMIT
 		Quit tSC
