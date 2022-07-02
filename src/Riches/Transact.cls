@@ -342,6 +342,14 @@ ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %S
 			&SQL(UPDATE Riches.Transact Set Account = :iAccount WHERE ID = :iTransactId)
 			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Account - SQLCODE = "_SQLCODE)
 		}
+		If (iCheckNumber '= oTransact.CheckNumber) {
+			&SQL(UPDATE Riches.Transact Set CheckNumber = :iCheckNumber WHERE ID = :iTransactId)
+			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Check Number - SQLCODE = "_SQLCODE)
+		}
+		If (iMemo '= oTransact.Memo) {
+			&SQL(UPDATE Riches.Transact Set Memo = :iMemo WHERE ID = :iTransactId)
+			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Memo - SQLCODE = "_SQLCODE)
+		}
 		TCOMMIT
 		Quit tSC
 	}  // If ($Data(pRequestData("iTransactId",1)))
