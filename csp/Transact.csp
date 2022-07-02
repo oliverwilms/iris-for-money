@@ -38,6 +38,10 @@ function clearForm()
 	document.getElementById("dCategory").value = '';
 	document.getElementById("iCheckNumber").value = '';
 }
+function deleteForm(id)
+{
+	alert('delete id = ' + id);
+}
 function goImport()
 {
 	window.location = "Account.csp";
@@ -103,6 +107,8 @@ Write "</td></tr></table>",!
 <form>
 <table border=1>
 <script language="Cache" runat="Server">
+Set tLabelErase = "Clear"
+Set tClickErase = "clearForm()"
 If ($Get(iId) '= "") {
 	Set oTransact = ##class(Riches.Transact).%OpenId(iId)
 	If $IsObject(oTransact) {
@@ -118,6 +124,8 @@ If ($Get(iId) '= "") {
 			Set iSubCategory = oTransact.SubCategory.%Id()
 		} Catch {}
 		Set iMemo = oTransact.Memo
+		Set tLabelErase = "Delete"
+		Set tClickErase = "deleteForm("_$Get(iId)_")"
 	}
 }
 Do ##class(Riches.Transact).OutputFormHead(0,$Get(iId))
@@ -139,7 +147,7 @@ Do ##class(Riches.Transact).OutputFormField("Memo","Memo",$Get(iMemo))
 </th><th>
 <button type="button" onclick="goImport()">Import</button>
 </th><th>
-<button type="button" onclick="clearForm()">Clear</button>
+<button type="button" onclick=#($Get(tClickErase,"clearForm()"))#>#($Get(tLabelErase,"Clear"))#</button>
 </th></tr></table>
 </form>
 </td></tr>
