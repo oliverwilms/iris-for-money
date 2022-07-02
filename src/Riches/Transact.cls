@@ -53,11 +53,7 @@ ClassMethod GetColumns(ByRef pColumns) As %String
 	Quit $$$OK
 }
 
-ClassMethod OutputFormField(
-	pField As %String = "Account",
-	pCaption As %String = "",
-	pValue As %String = "",
-	split As %Boolean = 0) As %Status
+ClassMethod OutputFormField(pField As %String = "Account", pCaption As %String = "", pValue As %String = "", split As %Boolean = 0) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputFormField")
 	Do ##class(Util).DebugTEST("pField = "_pField)
@@ -116,9 +112,7 @@ ClassMethod OutputFormField(
 	Quit $$$OK
 }
 
-ClassMethod OutputFormHead(
-	split As %Boolean = 0,
-	hiddenId As %String = "") As %Status
+ClassMethod OutputFormHead(split As %Boolean = 0, hiddenId As %String = "") As %Status
 {
 	Set q = """"
 	Set qClick = q_"goSplit()"_q
@@ -158,9 +152,7 @@ ClassMethod OutputFormSplit() As %Status
 	Quit $$$OK
 }
 
-ClassMethod OutputHiddenId(
-	pValue As %String = "",
-	split As %Boolean = 0) As %Status
+ClassMethod OutputHiddenId(pValue As %String = "", split As %Boolean = 0) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputHiddenId")
 	Do ##class(Util).DebugTEST("pValue = "_pValue)
@@ -216,10 +208,7 @@ ClassMethod OutputHiddenId(
 	Quit $$$OK
 }
 
-ClassMethod OutputTableData(
-	pWhere As %String = "",
-	pTrClick As %String = "window.location='Transact.csp?iAccount=#';",
-	pMaxRows = -1) As %Status
+ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "window.location='Transact.csp?iAccount=#';", pMaxRows = -1) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputTableData")
 	Do ##class(Util).DebugTEST("pWhere = "_pWhere)
@@ -258,13 +247,10 @@ ClassMethod OutputTableData(
 	Quit tSC
 }
 
-ClassMethod SubmitFormData(
-	ByRef pRequestData,
-	Output pAction,
-	Output pId) As %Status
+ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - SubmitFormData")
-	Do ##class(Util).DebugMerge("pRequestData = ",.pRequestData)
+	Do ##class(Util).DebugMerge("pRequestData",.pRequestData)
 	Set tSC = $$$OK
 	If ($Data(pRequestData("iAccount",1))) {
 		Set iAccount = pRequestData("iAccount",1)
@@ -329,15 +315,15 @@ ClassMethod SubmitFormData(
 			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Transact - SQLCODE = "_SQLCODE)
 		}
 		Set d("AmountDebit") = 0 + $Get(iAmountDebit) - oTransact.AmountDebit
-	Do ##class(Util).DebugMerge("dAmountDebit = ",d("AmountDebit"))
+	Do ##class(Util).DebugMerge("dAmountDebit",d("AmountDebit"))
 		If (0 '= d("AmountDebit")) {
 			&SQL(UPDATE Riches.Transact Set AmountDebit = :iAmountDebit WHERE ID = :iTransactId)
 			If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Transact - SQLCODE = "_SQLCODE)
 		}
-	Do ##class(Util).DebugMerge("dAccount = ",d("Account"))
+	Do ##class(Util).DebugMerge("dAccount",d("Account"))
 		If (0 = d("Account")) {
 			Set d("Balance") = 0 - d("AmountDebit") + d("AmountCredit")
-	Do ##class(Util).DebugMerge("dBalance = ",d("Balance"))
+	Do ##class(Util).DebugMerge("dBalance",d("Balance"))
 			If (0 '= d("Balance")) {
 				&SQL(UPDATE Riches.Account SET CurrBalance = CurrBalance + :d("Balance") WHERE ID = :iAccount)
 				If SQLCODE TROLLBACK  Quit $$$ERROR($$$GeneralError,"Cannot UPDATE Balance - SQLCODE = "_SQLCODE)
@@ -359,6 +345,7 @@ ClassMethod SubmitFormData(
 		TCOMMIT
 		Quit tSC
 	}  // If ($Data(pRequestData("iTransactId",1)))
+	Do ##class(Util).DebugMerge("iCheckNumber ",$Get(iCheckNumber))
 	&SQL(INSERT INTO Riches.Transact (Account,AmountCredit,AmountDebit,Category,Merchant,TranDate,TranTime,CheckNumber,Memo)
 		VALUES (:iAccount,:iAmountCredit,:iAmountDebit,:iCategory,:iMerchant,:iTranDate,:iTranTime,:iCheckNumber,:iMemo))
 	Do ##class(Util).DebugTEST("SQLCODE = "_SQLCODE)
