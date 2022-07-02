@@ -308,6 +308,10 @@ ClassMethod SubmitFormData(
 	If ($Data(pRequestData("iMemo",1))) {
 		Set iMemo = pRequestData("iMemo",1)
 	}
+	If ($Data(pRequestData("id",1))) {
+		Set tSC = $$$OK
+		Quit tSC
+	}
 	Do ##class(Util).DebugStatus(tSC)
 	If $$$ISERR(tSC) Quit tSC
 	TSTART
