@@ -5,8 +5,9 @@
 Set tDebugCount = $Get(^RichesDEBUG,0)
 // ^RichesDEBUG(0,1)
 // "0,""Date"",""Check"",""Merchant"",""Category"",""SubCategory"",""Memo"",""Credit"",""Debit"",""Bill Pay"",""Debit Card"",""Account"",""Balance"",""Status"""
-// ,TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status
-Set tHiddenColSelect = ",TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status"
+//                        ,TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status
+//Set tHiddenColSelect = ",TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status"
+Set tHiddenColSelect = ""
 Set tHeader = "Riches - Account"
 Merge pRequestData = %request.Data
 Set tSC = ##class(Riches.RequestData).LogRequest(.pRequestData,"Account.csp")
@@ -53,6 +54,7 @@ If ($Data(%request.Data("iAccount",1))) {
 }
 If ($Data(%request.Data("iTable",1))) {
 	Set iTable = %request.Data("iTable",1)
+	Set tHiddenColSelect = iTable
 }
 Set tOnLoadColumnCount = 13
 For ii = 1:1:tOnLoadColumnCount {
