@@ -12,8 +12,9 @@ I had been using Microsoft Money for a very long time. Last year, after Windows 
 ## Getting Started
 I wanted to import some data that I had entered into Excel. I exported a list of Categories into Categories.csv file (in data folder)
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Data_Categories_CSV.PNG)
-http://localhost:57700/irisapp/Account.csp
-Click the Browse... button and Open Categories.csv file. Click the Preview button to see a table grid with the data from the file.
+
+Point your browser at Account.csp: http://localhost:57700/irisapp/Account.csp
+Click the Choose File button to browse and Open Categories.csv file. Click the Preview button to see a table grid with the data from the file.
 
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account.PNG)
 
