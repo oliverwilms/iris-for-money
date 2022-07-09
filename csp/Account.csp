@@ -63,8 +63,14 @@ Set tColSel = tHiddenColSelect
 <script language="JavaScript">
 function goClickButton(id)
 {
-	var iTable = document.getElementById("iTable").value;
-	var iAccount = document.getElementById("iAccount").value;
+	var iTable = 'null';
+	var iAccount = 'null';
+	if (document.getElementById("iTable") != null) {
+		iTable = document.getElementById("iTable").value;
+	}
+	if (document.getElementById("iAccount") != null) {
+		iAccount = document.getElementById("iAccount").value;
+	}
 	document.location = "Account.csp?debug=" + id + "&iTable=" + iTable + "&iAccount=" + iAccount;
 }
 function goClickHeader(row)
