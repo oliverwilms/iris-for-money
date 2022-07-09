@@ -14,7 +14,9 @@ I wanted to import some data that I had entered into Excel. I exported a list of
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Data_Categories_CSV.PNG)
 
 Point your browser at Account.csp: http://localhost:57700/irisapp/Account.csp
+
 Click the Choose File button to browse and Open Categories.csv file. Click the Preview button to see a table grid with the data from the file.
+Select the table you want to insert data into from the dropdown selection.
 
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account.PNG)
 
