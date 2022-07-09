@@ -2,7 +2,7 @@
 I started developing this app for InterSystems Grand Prix Contest 2021.
 I decided to revisit it for InterSystems Full Stack Contest 2022. I focus on Transact.csp page where previously it only allowed to INSERT new data into Transact table.
 http://localhost:57700/irisapp/Transact.csp
-![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Transact.PNG)
+![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_transact.PNG)
 
 If you are prompted to login, enter _SYSTEM and SYS
 
