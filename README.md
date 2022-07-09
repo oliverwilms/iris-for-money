@@ -7,7 +7,7 @@ http://localhost:57700/irisapp/Transact.csp
 If you are prompted to login, enter _SYSTEM and SYS
 
 ## Inspiration
-I have been using Microsoft Money for a very long time. Last week, after Windows Update, it quit working for me. I quickly put data in multiple worksheets in Excel, but I wanted more control to manage my money. This is very much a work in progress. Please be patient with me as I make it work.
+I had been using Microsoft Money for a very long time. Last year, after Windows Update, it quit working for me. I quickly put data in multiple worksheets in Excel, but I miss some of the functionality offered by Microsoft Money. This remained an incomplete work much longer than I had anticipated. Please be patient with me as I continue my efforts to make it work.
 
 ## Getting Started
 I wanted to import some data that I had entered into Excel. I exported a list of Categories into Categories.csv file (in data folder)
