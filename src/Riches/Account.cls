@@ -34,6 +34,12 @@ Trigger Balance [ Event = UPDATE, Time = AFTER ]
 	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
 }
 
+ClassMethod GetColumnListCSV() As %String
+{
+	Set tColumnListCSV = ",Nickname,Type"
+	Quit tColumnListCSV
+}
+
 ClassMethod IdentifyAccountType(pValue As %String = "") As %String
 {
 	Set tAccountType = "Other"
