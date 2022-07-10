@@ -188,8 +188,8 @@ function postDebug(item, index) {
 		}
 	};
 	//xhttp.open("GET", "/restapi/debug", true, "_SYSTEM", "SYS");
-	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
-	//xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true, "_SYSTEM", "SYS");
+	//xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
+	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true, "_SYSTEM", "SYS");
 	xhttp.send();
 }
 function postSQL(query)
