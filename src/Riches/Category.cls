@@ -12,6 +12,12 @@ ClassMethod AddTestData(amount As %Integer)
 	Do ..Populate(amount)
 }
 
+ClassMethod GetColumnListCSV() As %String
+{
+	Set tColumnListCSV = ",Nickname,SortOrder,Type"
+	Quit tColumnListCSV
+}
+
 ClassMethod GetColumns(ByRef pColumns) As %String
 {
 	/*
