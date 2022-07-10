@@ -54,12 +54,14 @@ If ($Data(%request.Data("iAccount",1))) {
 }
 If ($Data(%request.Data("iTable",1))) {
 	Set iTable = %request.Data("iTable",1)
-	Set tHiddenColSelect = iTable
+	Set tHiddenColSelect = ##class(Riches.Util).GetColumnListCSV(iTable)
 }
+/*
 Set tOnLoadColumnCount = 13
 For ii = 1:1:tOnLoadColumnCount {
 	Set tColSel = $Get(tColSel) _ ","
 }
+*/
 Set tColSel = tHiddenColSelect
 </script>
 <script language="JavaScript">
