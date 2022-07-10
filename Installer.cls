@@ -9,7 +9,7 @@ XData setup
   <Default Name="RESTURL" Value="/restapi" />
   <Default Name="DBRESOURCE" Value="%DB_${NAMESPACE}" />
 
-  <!-- Resource Name="${DBRESOURCE}" Description="" Permission="RW" --/>
+  <!-- <Resource Name="${DBRESOURCE}" Description="" Permission="RW"/> -->
 
   <Namespace Name="${NAMESPACE}" Code="${NAMESPACE}" Data="${NAMESPACE}" Create="yes" Ensemble="no">
     <Configuration>
@@ -28,7 +28,7 @@ XData setup
   </If>
   <If Condition='(##class(Security.Applications).Exists("/restapi")=0)'>
     <Log Text="Creating web application /restapi" Level="0"/>
-    <!-- RunInstall Class="App.Installer" Method="CreateWebAppREST" --/>
+<!--    <RunInstall Class="App.Installer" Method="CreateWebAppREST"/> -->
   </If>
   <Invoke Class="App.Installer" Method="SetupREST" CheckStatus="1">
     <Arg Value="${NAMESPACE}"/>
