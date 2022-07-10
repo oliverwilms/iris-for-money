@@ -134,6 +134,8 @@ ClassMethod SetupREST(pNameSpace As %String, pUrl As %String, pResource As %Stri
   New $Namespace
   Set $Namespace = "%SYS"
   Set p("NameSpace") = pNameSpace
+  Set p("Enabled") = 1
+  Set p("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
   Set p("MatchRoles") = ":"_pResource
   Set p("DispatchClass") = pClass
   Quit ##class(Security.Applications).Create(pUrl, .p)
