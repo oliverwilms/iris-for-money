@@ -68,6 +68,16 @@ ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String, pV
 	Quit tSC
 }
 
+ClassMethod GetColumnListCSV(pClassname As %String = "") As %String
+{
+	If (pClassname = "") Set pClassname = "Riches.Category"
+	Try {
+		Set tColumnListCSV = $CLASSMETHOD(pClassname,"GetColumnListCSV")
+	} Catch {
+	}
+	Quit $Get(tColumnListCSV)
+}
+
 ClassMethod GetOptionsTableColumns(pClassname As %String = "", Output pOptions As %String) As %String
 {
 	/*
