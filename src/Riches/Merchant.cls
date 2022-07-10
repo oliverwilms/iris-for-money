@@ -9,6 +9,12 @@ Property DefaultSubCat As SubCategory;
 
 Property SortOrder As %String;
 
+ClassMethod GetColumnListCSV() As %String
+{
+	Set tColumnListCSV = ",Nickname,SortOrder"
+	Quit tColumnListCSV
+}
+
 ClassMethod GetColumns(ByRef pColumns) As %String
 {
 	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Nickname","Nickname")
