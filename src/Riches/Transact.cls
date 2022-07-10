@@ -37,6 +37,13 @@ Trigger Balance [ Event = INSERT, Time = AFTER ]
 	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
 }
 */
+
+ClassMethod GetColumnListCSV() As %String
+{
+	Set tColumnListCSV = ",TranDate,CheckNumber,Merchant,Category,SubCategory,Memo,AmountCredit,AmountDebit,,,Account,,Status"
+	Quit tColumnListCSV
+}
+
 ClassMethod GetColumns(ByRef pColumns) As %String
 {
 	Set pColumns($Increment(pColumns)) = ##class(Riches.Util).EncodeLogicalDisplay("Account","Account")
