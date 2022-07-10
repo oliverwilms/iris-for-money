@@ -201,7 +201,7 @@ function postSQL(query)
 		}
 	};
 	//var escape = query.replace(/#/g, '%23');  // fix #
-	xhttp.open("POST", "/restapi/sql/" + query, true);
+	xhttp.open("POST", "/restapi/sql/" + query, true,"_SYSTEM","SYS");
 	xhttp.send();
 }
 function processFile(id)
