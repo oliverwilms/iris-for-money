@@ -15,6 +15,7 @@ ClassMethod AddTestData(amount As %Integer)
 ClassMethod GetColumnListCSV() As %String
 {
 	Set tColumnListCSV = ",Nickname,SortOrder,Type"
+	Set tColumnListCSV = ",Nickname,SortOrder"
 	Quit tColumnListCSV
 }
 
