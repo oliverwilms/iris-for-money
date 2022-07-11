@@ -1,3 +1,6 @@
+[![Gitter](https://img.shields.io/badge/Available%20on-Intersystems%20Open%20Exchange-00b2a9.svg)](https://openexchange.intersystems.com/package/iris-for-money)
+ [![Quality Gate Status](https://community.objectscriptquality.com/api/project_badges/measure?project=intersystems_iris_community%2Firis-for-money&metric=alert_status)](https://community.objectscriptquality.com/dashboard?id=intersystems_iris_community%2Firis-for-money)
+ [![Reliability Rating](https://community.objectscriptquality.com/api/project_badges/measure?project=intersystems_iris_community%2Firis-for-money&metric=reliability_rating)](https://community.objectscriptquality.com/dashboard?id=intersystems_iris_community%2Firis-for-money)
 ## iris-for-money
 I started developing this app for InterSystems Grand Prix Contest 2021.
 I decided to revisit it for InterSystems Full Stack Contest 2022. I focus on Transact.csp page where previously it only allowed to INSERT new data into Transact table.
