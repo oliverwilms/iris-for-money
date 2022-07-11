@@ -188,7 +188,7 @@ ClassMethod OutputHiddenId(pValue As %String = "", split As %Boolean = 0) As %St
 	Set qText = q_"text"_q
 	Set qHide = q_"hidden"_q
 	Set qValue = q_pValue_q
-	If ($Get(tQuery) '= "") Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
+	//If ($Get(tQuery) '= "") Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
 	Set qDisplay = q_$Get(tDisplay,pValue)_q
 	If split {
 		Write "<table><tr>"
