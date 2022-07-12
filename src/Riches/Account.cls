@@ -1,4 +1,4 @@
-Class Riches.Account Extends %Persistent
+Class Riches.Account Extends (%Persistent, %pkg.isc.json.adaptor)
 {
 
 Property OpenDate As %Date;
