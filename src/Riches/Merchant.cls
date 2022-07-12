@@ -1,6 +1,8 @@
 Class Riches.Merchant Extends (%Persistent, %pkg.isc.json.adaptor)
 {
 
+Parameter %JSONINCLUDEID = 1;
+
 Property Nickname As %String;
 
 Property DefaultCat As Category;
