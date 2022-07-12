@@ -1,4 +1,4 @@
-Class Riches.SubCategory Extends %Persistent
+Class Riches.SubCategory Extends (%Persistent, %pkg.isc.json.adaptor)
 {
 
 Property Category As Category;
