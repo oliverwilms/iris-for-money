@@ -1,4 +1,4 @@
-Class Riches.Transact Extends %Persistent
+Class Riches.Transact Extends (%Persistent, %pkg.isc.json.adaptor)
 {
 
 Property Account As Account;
