@@ -1,4 +1,4 @@
-Class Riches.Merchant Extends %Persistent
+Class Riches.Merchant Extends (%Persistent, %pkg.isc.json.adaptor)
 {
 
 Property Nickname As %String;
