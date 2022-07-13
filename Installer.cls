@@ -5,16 +5,16 @@ XData setup
 {
 <Manifest>
   <Default Name="SourceDir" Value="#{$system.Process.CurrentDirectory()}src"/>
-  <Default Name="NAMESPACE" Value="IRISAPP" />
+  <Default Name="NAMESPACE" Value="USER" />
   <Default Name="RESTURL" Value="/restapi" />
   <Default Name="DBRESOURCE" Value="%DB_${NAMESPACE}" />
 
   <Resource Name="${DBRESOURCE}" Description="" Permission="RW"/>
 
-  <Namespace Name="${NAMESPACE}" Code="${NAMESPACE}" Data="${NAMESPACE}" Create="yes" Ensemble="no">
-    <Configuration>
+  <Namespace Name="${NAMESPACE}" Code="${NAMESPACE}" Data="${NAMESPACE}" Create="no" Ensemble="no">
+<!--    <Configuration>
       <Database Name="${NAMESPACE}" Dir="/voldata/irisdb/irisapp" Create="yes" MountRequired="true" Resource="%DB_IRISAPP" PublicPermissions="" MountAtStartup="true"/>
-    </Configuration>
+    </Configuration> -->
     <Import File="${SourceDir}" Flags="ck" Recurse="1"/>
   </Namespace>
 
