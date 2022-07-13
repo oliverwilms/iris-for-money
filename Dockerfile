@@ -19,8 +19,10 @@ COPY irissession.sh /
 SHELL ["/irissession.sh"]
 
 RUN \
+  zn "USER" \ 
   zpm "install swagger-ui" \ 
   zpm "install isc.rest" \ 
+  zn "%SYS" \ 
   do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
   set sc = ##class(App.Installer).setup() \
   zn "%SYS" \
