@@ -21,6 +21,7 @@ SHELL ["/irissession.sh"]
 RUN \
   zn "USER" \ 
   zpm "install swagger-ui" \ 
+  zpm "install isc.json -v" \ 
   zpm "install isc.rest -v" \ 
   zn "%SYS" \ 
   do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
