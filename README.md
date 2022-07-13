@@ -185,20 +185,9 @@ For delete request this REST API expects only the id of the record to delete. E.
 localhost:57700/riches/category/5
 ```
 
-## How to start coding
+## How to start
 
 http://x.x.x.x:57700/irisapp/Transact.csp
-
-This is a template, so you can use a template button on Github to create your own copy of this repository.
-The repository is ready to code in VSCode with ObjectScript plugin.
-Install [VSCode](https://code.visualstudio.com/) and [ObjectScript](https://marketplace.visualstudio.com/items?itemName=daimor.vscode-objectscript) plugin and open the folder in VSCode.
-Once you start IRIS container VSCode connects to it and you can edit, compile and debug ObjectScript code.
-Open /src/cls/PackageSample/ObjectScript.cls class and try to make changes - it will be compiled in running IRIS docker container.
-
-Feel free to delete PackageSample folder and place your ObjectScript classes in a form
-/src/cls/Package/Classname.cls
-
-The script in Installer.cls will import everything under /src and /csp into IRIS.
 
 ## Collaboration 
 Any collaboration is very welcome! Fork and send Pull requests!
