@@ -20,6 +20,7 @@ SHELL ["/irissession.sh"]
 
 RUN \
   zn "USER" \ 
+  zpm "version" \ 
   zpm "install swagger-ui" \ 
   zpm "install isc.json -v" \ 
   zpm "install isc.rest -v" \ 
