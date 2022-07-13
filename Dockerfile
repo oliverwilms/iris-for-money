@@ -19,13 +19,15 @@ COPY irissession.sh /
 SHELL ["/irissession.sh"]
 
 RUN \
+  zpm "install swagger-ui" \ 
+  zpm "install isc.rest" \ 
   do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
   set sc = ##class(App.Installer).setup() \
   zn "%SYS" \
   write "Create web application ..." \
   set webName = "/crud" \
   set webProperties("DispatchClass") = "Sample.PersonREST" \
-  set webProperties("NameSpace") = "IRISAPP" \
+  set webProperties("NameSpace") = "USER" \
   set webProperties("Enabled") = 1 \
   set webProperties("AutheEnabled") = 32 \
   set sc = ##class(Security.Applications).Create(webName, .webProperties) \
