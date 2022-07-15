@@ -22,10 +22,10 @@ RUN \
   zn "USER" \ 
   zpm "version" \ 
   zpm "install swagger-ui" \ 
-  zpm "install isc.json -v" \ 
+#  zpm "install isc.json -v" \ 
   zpm "install isc.rest -v" \ 
   zn "%SYS" \ 
-  do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
+  do $SYSTEM.OBJ.Load("/opt/irisapp/Installer.cls", "ck") \
   set sc = ##class(App.Installer).setup() \
   zn "%SYS" \
   write "Create web application ..." \
