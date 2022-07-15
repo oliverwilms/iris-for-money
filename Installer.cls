@@ -4,7 +4,8 @@ Class App.Installer
 XData setup
 {
 <Manifest>
-  <Default Name="SourceDir" Value="#{$system.Process.CurrentDirectory()}src"/>
+  <Default Name="ManagerDir" Value="#{$system.Process.CurrentDirectory()}src"/>
+  <Default Name="SourceDir" Value="/opt/irisapp/src"/>
   <Default Name="NAMESPACE" Value="USER" />
   <Default Name="RESTURL" Value="/restapi" />
   <Default Name="DBRESOURCE" Value="%DB_${NAMESPACE}" />
