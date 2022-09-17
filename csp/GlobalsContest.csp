@@ -169,7 +169,7 @@ If ($Data(%request.Data("debug",1))) {
 //		Set iAccount = objAccount.Nickname
 //	}
 //	Set objAccount = ""
-//	Do ##class(Riches.Util).OutputDebug($Get(iAccount),$Get(iTable,iDebug))
+	Do ##class(Riches.Util).OutputDebug($Get(iAccount),$Get(iTable,iDebug))
 }
 Write "<table>",!
 
