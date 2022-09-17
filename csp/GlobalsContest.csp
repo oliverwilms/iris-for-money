@@ -5,6 +5,7 @@
 Set tDebug = 1
 Set tPage = "GlobalsContest.csp"
 Do:tDebug ##class(Riches.Util).DebugTEST(tPage_" - head")
+Set tHiddenColSelect = ""
 Set tHeader = "iris-for-money Count"
 If ($Data(%request.Data("id",1))) {
 	Set id = %request.Data("id",1)
@@ -21,7 +22,7 @@ If ($Data(%request.Data("iAccount",1))) {
 }
 If ($Data(%request.Data("iTable",1))) {
 	Set iTable = %request.Data("iTable",1)
-	Set tHiddenColSelect = ##class(Riches.Util).GetColumnListCSV(iTable)
+	Set tColSel = ##class(Riches.Util).GetColumnListCSV(iTable)
 }
 
 If ($Data(%request.Data("iEndDate",1))) {
@@ -88,6 +89,21 @@ function goClickButton(id)
 	var iFilter = document.getElementById("iFilter").value;
 	var iStartDate = document.getElementById("iStartDate").value;
 	document.location = tPage + "?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+}
+function onchangeSel(id)  // id is this of <select> for column selection
+{
+	var arr = id.id.split("sel_");
+	var y = arr[1] - 1;  // which position changes
+	var x = document.getElementById("hidden_col_sel").value;
+	var arr = x.split(",");
+	var len = arr.length;
+	var x = document.getElementById(id.id).value;  // selected column
+	arr[y] = x;
+	y = arr[0];
+	for (var i = 1; i < len; i++) {
+		y += "," + arr[i];
+	}
+	document.getElementById("hidden_col_sel").value = y;  // comma delimited list of selected columns
 }
 function postDebug(item, index) {
 	var escape = item.replace(/\//g, '-');  // fix slashes in dates
@@ -159,6 +175,7 @@ Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into 
 </script>
 
 </form>
+<input type="text" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
 <label for="iStartDate">Start Date:</label>
 <input type="text" id="iStartDate" size="10" value="#($Get(iStartDate))#">
 <label for="iFilter">Filter:</label>
