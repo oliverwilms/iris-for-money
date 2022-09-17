@@ -24,7 +24,7 @@ RUN \
   zpm "install swagger-ui" \ 
 #  zpm "install isc.json -v" \ 
   zpm "install isc.rest -v" \ 
-  zpm "install iris-globals-contest -v" \ 
+#  zpm "install iris-globals-contest -v" \ 
   zn "%SYS" \ 
   do $SYSTEM.OBJ.Load("/opt/irisapp/Installer.cls", "ck") \
   set sc = ##class(App.Installer).setup() \
