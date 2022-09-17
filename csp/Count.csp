@@ -1,0 +1,118 @@
+<csp:class description="Displays counts of transactions per month">
+<html>
+<head>
+<script language="Cache" runat="Server">
+Set tDebug = 1
+Do:tDebug ##class(dc.iris.util).DebugTEST("Count.csp - head")
+Set tHeader = "iris-globals-contest"
+Set tTableCaption = "Summary Table"
+If ($Data(%request.Data("iEndDate",1))) {
+	Set iEndDate = %request.Data("iEndDate",1)
+}
+If ($Data(%request.Data("iFilter",1))) {
+	Set iFilter = %request.Data("iFilter",1)
+}
+If ($Data(%request.Data("iStartDate",1))) {
+	Set iStartDate = %request.Data("iStartDate",1)
+}
+Do:tDebug ##class(dc.iris.util).DebugTEST("iEndDate = "_$Get(iEndDate))
+Do:tDebug ##class(dc.iris.util).DebugTEST("iFilter = "_$Get(iFilter))
+Do:tDebug ##class(dc.iris.util).DebugTEST("iStartDate = "_$Get(iStartDate))
+</script>
+<script language="JavaScript">
+function goClickButton(id)
+{
+	if (id == 'MENU') {
+		document.location = "menu.csp";
+		return;
+	}
+	var iEndDate = document.getElementById("iEndDate").value;
+	var iFilter = id + document.getElementById("iFilter").value;
+	var iStartDate = document.getElementById("iStartDate").value;
+	document.location = "Count.csp?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+}
+function goClickCount1(id)
+{
+	//alert(id);
+	document.location = "Transact.csp?&iFilter=" + id;  // + "&iEndDate=" + id + "&iStartDate=" + id;
+	return;
+}
+function goClickCount2(id)
+{
+	//alert(id);
+	document.location = "Count.csp?&iFilter=" + id;  // + "&iEndDate=" + id + "&iStartDate=" + id;
+	return;
+}
+</script>
+<title>#(tHeader)#</title>
+</head>
+
+<body>
+<h1 id="header1">#(tHeader)#</h1>
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('PREV')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Previous</button>",!
+</script>
+<label for="iStartDate">Start Date:</label>
+<input type="text" id="iStartDate" size="10" value="#($Get(iStartDate))#">
+<label for="iFilter">Filter:</label>
+<input type="text" id="iFilter" size="20" value="#($Get(iFilter))#">
+<label for="iEndDate">End Date:</label>
+<input type="text" id="iEndDate" size="10" value="#($Get(iEndDate))#">
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('NEXT')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Next</button>",!
+Set qClick = q_"goClickButton('MENU')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
+</script>
+<table border=1>
+<caption>#(tTableCaption)#</caption>
+<script language="Cache" runat="Server">
+Set q = "'"
+Set tClassname = "dc.iris.count"
+Set tClassMethod = "OutputTableCount2"
+Set tClick = "goClickCount2"
+Set pWhere = ""
+If ($Get(iFilter) '= "") {
+	Set pWhere = pWhere_" AND iFilter = "_iFilter
+}
+If ($Get(iStartDate) '= "") {
+	//Set pWhere = pWhere_" AND TranDate >= "_q_iStartDate_q
+	Set pWhere = pWhere_" AND iStartDate >= "_q_iStartDate_q
+}
+If ($Get(iEndDate) '= "") {
+	//Set pWhere = pWhere_" AND TranDate <= "_q_iEndDate_q
+	Set pWhere = pWhere_" AND iEndDate <= "_q_iEndDate_q
+}
+If (pWhere '= "") {
+	Set pWhere = $Extract(pWhere,6,*)
+	Set tClassMethod = "OutputTableData"
+	Set tClick = "goClickCount1"
+}
+Set pTrClick = "javascript:"_tClick_"('#');"
+Set pMaxRows = -1
+Set tReturn = $CLASSMETHOD(tClassname,tClassMethod,pWhere,pTrClick,pMaxRows)
+Write "</table>",!
+Do ##class(dc.iris.count).Return2Dates(tReturn,.pStartDate,.pEndDate)
+</script>
+<script language="JavaScript">
+	var months = 'January,February,March,April,May,June,July,August,September,October,November,December';
+	var myArray = months.split(",");
+	var iFilter = '#(tReturn)#';
+	document.getElementById("iFilter").value = iFilter;
+	var iArray = iFilter.split("^");
+	var iMonth = iArray[2];
+	var iYear = iArray[1];
+	if (iMonth > 0) document.getElementById("header1").innerHTML = myArray[iMonth-1] + ' ' + iYear;
+	var iStartDate = '#(pStartDate)#';
+	var iEndDate = '#(pEndDate)#';
+	document.getElementById("iStartDate").value = iStartDate;
+	document.getElementById("iEndDate").value = iEndDate;
+</script>
+</body>
+</html>
