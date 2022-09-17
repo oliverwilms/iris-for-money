@@ -4,15 +4,15 @@
 <script language="Cache" runat="Server">
 Set tDebug = 1
 Set tPage = "GlobalsContest.csp"
-Do:tDebug ##class(dc.iris.util).DebugTEST(tPage_" - head")
-Set tHeader = "iris-globals-contest"
+Do:tDebug ##class(Riches.Util).DebugTEST(tPage_" - head")
+Set tHeader = "iris-for-money Count"
 If ($Data(%request.Data("id",1))) {
 	Set id = %request.Data("id",1)
 	If (id = "IMPORT") {
-		Set tSC = ##class(dc.iris.util).ImportCSV()
+		Set tSC = ##class(Riches.Util).ImportCSV()
 	}
 	If (id = "COUNT") {
-		Set tSC = ##class(dc.iris.count).Count()
+		Set tSC = ##class(Riches.Count).Count()
 	}
 }
 If ($Data(%request.Data("iEndDate",1))) {
@@ -43,9 +43,9 @@ If ($Get(iEndDate) = ""),($Get(tYear) '= "") {
 	Set tDateH = $ZDATEH(tDate)
 	Set iEndDate = $ZDATE(tDateH - 1) 
 }
-Do:tDebug ##class(dc.iris.util).DebugTEST("iEndDate = "_$Get(iEndDate))
-Do:tDebug ##class(dc.iris.util).DebugTEST("iFilter = "_$Get(iFilter))
-Do:tDebug ##class(dc.iris.util).DebugTEST("iStartDate = "_$Get(iStartDate))
+Do:tDebug ##class(Riches.Util).DebugTEST("iEndDate = "_$Get(iEndDate))
+Do:tDebug ##class(Riches.Util).DebugTEST("iFilter = "_$Get(iFilter))
+Do:tDebug ##class(Riches.Util).DebugTEST("iStartDate = "_$Get(iStartDate))
 </script>
 <script language="JavaScript">
 function goClickButton(id)
@@ -68,12 +68,59 @@ function goClickButton(id)
 	var iStartDate = document.getElementById("iStartDate").value;
 	document.location = tPage + "?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
 }
+function postDebug(item, index) {
+	var escape = item.replace(/\//g, '-');  // fix slashes in dates
+	//var escape = encodeURI(escape);
+	var escape = encodeURIComponent(escape);  // fix % and more
+	if (item == '') escape = 'NULL';
+	document.getElementById("div_debug").innerHTML += index + "," + escape + "<br>";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
+		if (this.readyState == 4 && this.status != 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
+	};
+	//xhttp.open("GET", "/restapi/debug", true, "_SYSTEM", "SYS");
+	//xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
+	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true, "_SYSTEM", "SYS");
+	xhttp.send();
+}
+function processFile(id)
+{
+	var delim = '\n';
+	var arr = id.split(delim);
+	arr.forEach(postDebug);
+
+	//window.location = 'Account.csp?debug='+id;
+	//document.getElementById("iframe_debug").src = 'Chooser.csp?iChoose=debug';
+	//document.getElementById("iframe_debug").src = '';
+
+}
+function showFile(input)
+{
+	var file = input.files[0];
+	var reader = new FileReader();
+	reader.onload = function() {
+		//document.getElementById('debug').value = reader.result;
+		processFile(reader.result);
+  	};
+	reader.onerror = function() {
+		document.getElementById('debug').value = reader.error;
+		alert(reader.error);
+	}
+	reader.readAsText(file);
+}
 </script>
 <title>#(tHeader)#</title>
 </head>
 
 <body>
 <h1>#(tHeader)#</h1>
+<label for="file-uploader">CSV file:</label>
+<input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
 <label for="iStartDate">Start Date:</label>
 <input type="text" id="iStartDate" size="10" value="#($Get(iStartDate))#">
 <label for="iFilter">Filter:</label>
@@ -125,5 +172,8 @@ If (pWhere '= "") {
 
 Write "</table>",!
 </script>
+
+<div id="div_debug" name="div_debug" style=""></div>
+
 </body>
 </html>
