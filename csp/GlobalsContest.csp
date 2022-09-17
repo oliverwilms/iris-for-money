@@ -3,7 +3,8 @@
 <head>
 <script language="Cache" runat="Server">
 Set tDebug = 1
-Do:tDebug ##class(dc.iris.util).DebugTEST("Transact.csp - head")
+Set tPage = "GlobalsContest.csp"
+Do:tDebug ##class(dc.iris.util).DebugTEST(tPage_" - head")
 Set tHeader = "iris-globals-contest"
 If ($Data(%request.Data("id",1))) {
 	Set id = %request.Data("id",1)
@@ -49,12 +50,13 @@ Do:tDebug ##class(dc.iris.util).DebugTEST("iStartDate = "_$Get(iStartDate))
 <script language="JavaScript">
 function goClickButton(id)
 {
+	var tPage = '#($Get(tPage,"Transact.csp"))#';
 	if (id == 'IMPORT') {
-		document.location = "Transact.csp?id=IMPORT";
+		document.location = tPage + "?id=IMPORT";
 		return;
 	}
 	if (id == 'COUNT') {
-		document.location = "Transact.csp?id=COUNT";
+		document.location = tPage + "?id=COUNT";
 		return;
 	}
 	if (id == 'MENU') {
@@ -64,7 +66,7 @@ function goClickButton(id)
 	var iEndDate = document.getElementById("iEndDate").value;
 	var iFilter = document.getElementById("iFilter").value;
 	var iStartDate = document.getElementById("iStartDate").value;
-	document.location = "Transact.csp?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+	document.location = tPage + "?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
 }
 </script>
 <title>#(tHeader)#</title>
