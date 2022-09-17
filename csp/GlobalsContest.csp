@@ -15,6 +15,15 @@ If ($Data(%request.Data("id",1))) {
 		Set tSC = ##class(Riches.Count).Count()
 	}
 }
+
+If ($Data(%request.Data("iAccount",1))) {
+	Set iAccount = %request.Data("iAccount",1)
+}
+If ($Data(%request.Data("iTable",1))) {
+	Set iTable = %request.Data("iTable",1)
+	Set tHiddenColSelect = ##class(Riches.Util).GetColumnListCSV(iTable)
+}
+
 If ($Data(%request.Data("iEndDate",1))) {
 	Set iEndDate = %request.Data("iEndDate",1)
 }
