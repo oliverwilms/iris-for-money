@@ -189,5 +189,13 @@ localhost:57700/riches/category/5
 
 http://x.x.x.x:57700/irisapp/Transact.csp
 
+## SQL
+
+```
+SELECT 
+T.ID, A.Nickname, AmountCredit, AmountDebit, C.Nickname, CheckNumber, Memo, M.Nickname, OtherSide, Status, SubCategory, TranDate, TranTime
+FROM Riches.Transact T, Riches.Account A, Riches.Category C, Riches.Merchant M WHERE T.Account=A.ID AND T.Category=C.ID AND T.Merchant=M.ID
+```
+
 ## Collaboration 
 Any collaboration is very welcome! Fork and send Pull requests!
