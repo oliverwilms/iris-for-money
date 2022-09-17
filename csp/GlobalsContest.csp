@@ -5,7 +5,7 @@
 Set tDebug = 1
 Set tPage = "GlobalsContest.csp"
 Do:tDebug ##class(Riches.Util).DebugTEST(tPage_" - head")
-Set tHiddenColSelect = ""
+//Set tHiddenColSelect = ""
 Set tHeader = "iris-for-money Count"
 If ($Data(%request.Data("id",1))) {
 	Set id = %request.Data("id",1)
@@ -89,6 +89,45 @@ function goClickButton(id)
 	var iFilter = document.getElementById("iFilter").value;
 	var iStartDate = document.getElementById("iStartDate").value;
 	document.location = tPage + "?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+}
+function goClickHeader(row)
+{
+	alert(row);
+	var count = '#($Get(tDebugCount,0))#';
+	var retVal = confirm("Do you want to import all rows?");
+	if (retVal == true) {
+		for (var row = 1; row < count; row++) {
+			goClickLine(row);
+		}
+	}
+}
+function goClickLine(row)
+{
+	var rowId = "tr_" + row;
+	var x = document.getElementById("hidden_col_sel").value;
+	var arr = x.split(",");
+	var len = arr.length;
+	var columns = "";
+	var escape = ""
+	var values = "";
+	for (var i = 0; i < len; i++) {
+		if (arr[i] != "") {
+			columns += "," + arr[i]
+			x = document.getElementById("div_" + row + "_" + (i+1)).innerHTML;
+			escape = x.replace(/#/g, '%23');  // fix # - end of query string marker
+			escape = escape.replace(/'/g, '%27');  // fix ' - single quote
+			escape = escape.replace(/\?/g, '.');  // replace q-mark with period
+			escape = escape.replace(/&/g, ' ');  // replace ampersand with space
+			values += ",'" + escape + "'";
+		}
+	}
+	var table = document.getElementById("iTable").value;
+	var col = columns.substring(1);  // skip leading comma
+	var val = values.substring(1);  // skip leading comma
+	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
+	//var escape = sql.replace(/#/g, '%23');  // fix #
+	postSQL(sql);
+	document.getElementById(rowId).style.display = "none";
 }
 function onchangeSel(id)  // id is this of <select> for column selection
 {
