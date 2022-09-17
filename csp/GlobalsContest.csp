@@ -1,0 +1,127 @@
+<csp:class description="Allows adhoc queries">
+<html>
+<head>
+<script language="Cache" runat="Server">
+Set tDebug = 1
+Do:tDebug ##class(dc.iris.util).DebugTEST("Transact.csp - head")
+Set tHeader = "iris-globals-contest"
+If ($Data(%request.Data("id",1))) {
+	Set id = %request.Data("id",1)
+	If (id = "IMPORT") {
+		Set tSC = ##class(dc.iris.util).ImportCSV()
+	}
+	If (id = "COUNT") {
+		Set tSC = ##class(dc.iris.count).Count()
+	}
+}
+If ($Data(%request.Data("iEndDate",1))) {
+	Set iEndDate = %request.Data("iEndDate",1)
+}
+If ($Data(%request.Data("iFilter",1))) {
+	Set iFilter = %request.Data("iFilter",1)
+	If ($Extract(iFilter,1,1) = "^") {
+		Set tYear = $Piece(iFilter,"^",2)
+		Set tMonth = $Piece(iFilter,"^",3)
+		Set iFilter = $Piece(iFilter,"^",4,*)
+	}
+}
+If ($Data(%request.Data("iStartDate",1))) {
+	Set iStartDate = %request.Data("iStartDate",1)
+}
+If ($Get(iStartDate) = ""),($Get(tYear) '= "") {
+	Set iStartDate = $Get(tMonth)_"/1/"_$Get(tYear)
+}
+If ($Get(iEndDate) = ""),($Get(tYear) '= "") {
+	If ($Get(tMonth) < 12) {
+		Set tMonth = tMonth + 1
+	} Else {
+		Set tMonth = 1
+		Set tYear = tYear + 1
+	}
+	Set tDate = $Get(tMonth)_"/1/"_$Get(tYear)
+	Set tDateH = $ZDATEH(tDate)
+	Set iEndDate = $ZDATE(tDateH - 1) 
+}
+Do:tDebug ##class(dc.iris.util).DebugTEST("iEndDate = "_$Get(iEndDate))
+Do:tDebug ##class(dc.iris.util).DebugTEST("iFilter = "_$Get(iFilter))
+Do:tDebug ##class(dc.iris.util).DebugTEST("iStartDate = "_$Get(iStartDate))
+</script>
+<script language="JavaScript">
+function goClickButton(id)
+{
+	if (id == 'IMPORT') {
+		document.location = "Transact.csp?id=IMPORT";
+		return;
+	}
+	if (id == 'COUNT') {
+		document.location = "Transact.csp?id=COUNT";
+		return;
+	}
+	if (id == 'MENU') {
+		document.location = "menu.csp";
+		return;
+	}
+	var iEndDate = document.getElementById("iEndDate").value;
+	var iFilter = document.getElementById("iFilter").value;
+	var iStartDate = document.getElementById("iStartDate").value;
+	document.location = "Transact.csp?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+}
+</script>
+<title>#(tHeader)#</title>
+</head>
+
+<body>
+<h1>#(tHeader)#</h1>
+<label for="iStartDate">Start Date:</label>
+<input type="text" id="iStartDate" size="10" value="#($Get(iStartDate))#">
+<label for="iFilter">Filter:</label>
+<input type="text" id="iFilter" size="20" value="#($Get(iFilter))#">
+<label for="iEndDate">End Date:</label>
+<input type="text" id="iEndDate" size="10" value="#($Get(iEndDate))#">
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('PREVIEW')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
+If $Data(^GLOBAL)=0 {
+	Set qClick = q_"goClickButton('IMPORT')"_q
+	Set qType = q_"button"_q
+	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
+} ElseIf $Data(^COUNT)=0 {
+	Set qClick = q_"goClickButton('COUNT')"_q
+	Set qType = q_"button"_q
+	Write "<button type=",qType," onclick=",qClick,">Count</button>",!
+} Else {
+	Set qClick = q_"goClickButton('MENU')"_q
+	Set qType = q_"button"_q
+	Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
+}
+</script>
+<table border=1>
+<caption>Transaction Table</caption>
+<script language="Cache" runat="Server">
+Set q = "'"
+Set tClassname = "dc.iris.transact"
+Set pWhere = ""
+If ($Get(iFilter) '= "") {
+	Set pWhere = pWhere_" AND iFilter = "_iFilter
+}
+If ($Get(iStartDate) '= "") {
+	//Set pWhere = pWhere_" AND TranDate >= "_q_iStartDate_q
+	Set pWhere = pWhere_" AND iStartDate >= "_q_iStartDate_q
+}
+If ($Get(iEndDate) '= "") {
+	//Set pWhere = pWhere_" AND TranDate <= "_q_iEndDate_q
+	Set pWhere = pWhere_" AND iEndDate <= "_q_iEndDate_q
+}
+If (pWhere '= "") {
+	Set pWhere = $Extract(pWhere,6,*)
+}
+	Set pTrClick = "javascript:tableClickHandler('#');"
+	Set pMaxRows = -1
+	Set tSC = $CLASSMETHOD(tClassname,"OutputTableData",pWhere,pTrClick,pMaxRows)
+
+Write "</table>",!
+</script>
+</body>
+</html>
