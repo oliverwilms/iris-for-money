@@ -150,7 +150,7 @@ If $Data(^GLOBAL)=0 {
 <caption>Transaction Table</caption>
 <script language="Cache" runat="Server">
 Set q = "'"
-Set tClassname = "dc.iris.transact"
+Set tClassname = "Riches.Transact"
 Set pWhere = ""
 If ($Get(iFilter) '= "") {
 	Set pWhere = pWhere_" AND iFilter = "_iFilter
