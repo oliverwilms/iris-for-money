@@ -125,6 +125,7 @@ function goClickLine(row)
 	var col = columns.substring(1);  // skip leading comma
 	var val = values.substring(1);  // skip leading comma
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
+	alert(sql);
 	//var escape = sql.replace(/#/g, '%23');  // fix #
 	postSQL(sql);
 	document.getElementById(rowId).style.display = "none";
@@ -143,6 +144,16 @@ function onchangeSel(id)  // id is this of <select> for column selection
 		y += "," + arr[i];
 	}
 	document.getElementById("hidden_col_sel").value = y;  // comma delimited list of selected columns
+}
+function onchangeTable(id)  // id is this.value - Riches.Transact
+{
+	if (document.getElementById("div_col_count") == null) {
+		var x = 0;
+	} else {
+		var x = document.getElementById("div_col_count").innerHTML;
+	}
+	//var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
+	//alert(id);
 }
 function onloadHandler()
 {
