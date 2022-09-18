@@ -22,7 +22,7 @@ If ($Data(%request.Data("iAccount",1))) {
 }
 If ($Data(%request.Data("iTable",1))) {
 	Set iTable = %request.Data("iTable",1)
-	Set tColSel = ##class(Riches.Util).GetColumnListCSV(iTable)
+	Set (tColSel,tHiddenColSelect) = ##class(Riches.Util).GetColumnListCSV(iTable)
 }
 
 If ($Data(%request.Data("iEndDate",1))) {
@@ -92,7 +92,7 @@ function goClickButton(id)
 }
 function goClickHeader(row)
 {
-	alert(row);
+	//alert(row);
 	var count = '#($Get(tDebugCount,0))#';
 	var retVal = confirm("Do you want to import all rows?");
 	if (retVal == true) {
@@ -144,6 +144,10 @@ function onchangeSel(id)  // id is this of <select> for column selection
 	}
 	document.getElementById("hidden_col_sel").value = y;  // comma delimited list of selected columns
 }
+function onloadHandler()
+{
+	document.getElementById("hidden_col_sel").value = '#($Get(tHiddenColSelect,""))#';
+}
 function postDebug(item, index) {
 	var escape = item.replace(/\//g, '-');  // fix slashes in dates
 	//var escape = encodeURI(escape);
@@ -162,6 +166,18 @@ function postDebug(item, index) {
 	//xhttp.open("GET", "/restapi/debug", true, "_SYSTEM", "SYS");
 	//xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true);
 	xhttp.open("POST", "/restapi/debug/" + escape + '/' + index, true, "_SYSTEM", "SYS");
+	xhttp.send();
+}
+function postSQL(query)
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("div_debug").innerHTML += this.responseText;
+		}
+	};
+	//var escape = query.replace(/#/g, '%23');  // fix #
+	xhttp.open("POST", "/restapi/sql/" + query, true,"_SYSTEM","SYS");
 	xhttp.send();
 }
 function processFile(id)
@@ -193,7 +209,7 @@ function showFile(input)
 <title>#(tHeader)#</title>
 </head>
 
-<body>
+<body onload="onloadHandler();">
 <h1>#(tHeader)#</h1>
 <form action="" method="post" enctype="multipart/form-data">
 <table border="1"><tr><td>
