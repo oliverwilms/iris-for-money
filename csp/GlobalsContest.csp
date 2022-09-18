@@ -254,7 +254,8 @@ Set q = """"
 Set qClick = q_"goClickButton('PREVIEW')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
-If $Data(^GLOBAL)=0 {
+Set tImport = 0  // $Data(^GLOBAL)
+If tImport {
 	Set qClick = q_"goClickButton('IMPORT')"_q
 	Set qType = q_"button"_q
 	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
