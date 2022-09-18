@@ -126,7 +126,7 @@ function goClickLine(row)
 	var col = columns.substring(1);  // skip leading comma
 	var val = values.substring(1);  // skip leading comma
 	var sql = "Insert into " + table + " (" + col + ") values (" + val + ")";
-	alert(sql);
+	//alert(sql);
 	//var escape = sql.replace(/#/g, '%23');  // fix #
 	postSQL(sql);
 	document.getElementById(rowId).style.display = "none";
