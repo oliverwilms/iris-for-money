@@ -92,9 +92,9 @@ ClassMethod DateParts(
 		Set pDate = $ZDate(pDate,dformat)
 	}
 	If (pDate ? 1.2N1"/"1.2N1"/"1.4N) {
-		Set pMonth = $Piece(tTranDate,"/",1)
-		Set pDay = $Piece(tTranDate,"/",2)
-		Set pYear = $Piece(tTranDate,"/",3)
+		Set pMonth = $Piece(pDate,"/",1)
+		Set pDay = $Piece(pDate,"/",2)
+		Set pYear = $Piece(pDate,"/",3)
 	}
 	Quit tSC
 }
