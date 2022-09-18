@@ -3,7 +3,7 @@
 <head>
 <script language="Cache" runat="Server">
 Set tDebug = 1
-Do:tDebug ##class(dc.iris.util).DebugTEST("Count.csp - head")
+Do:tDebug ##class(Riches.Util).DebugTEST("Count.csp - head")
 Set tHeader = "iris-globals-contest"
 Set tTableCaption = "Summary Table"
 If ($Data(%request.Data("iEndDate",1))) {
@@ -15,9 +15,9 @@ If ($Data(%request.Data("iFilter",1))) {
 If ($Data(%request.Data("iStartDate",1))) {
 	Set iStartDate = %request.Data("iStartDate",1)
 }
-Do:tDebug ##class(dc.iris.util).DebugTEST("iEndDate = "_$Get(iEndDate))
-Do:tDebug ##class(dc.iris.util).DebugTEST("iFilter = "_$Get(iFilter))
-Do:tDebug ##class(dc.iris.util).DebugTEST("iStartDate = "_$Get(iStartDate))
+Do:tDebug ##class(Riches.Util).DebugTEST("iEndDate = "_$Get(iEndDate))
+Do:tDebug ##class(Riches.Util).DebugTEST("iFilter = "_$Get(iFilter))
+Do:tDebug ##class(Riches.Util).DebugTEST("iStartDate = "_$Get(iStartDate))
 </script>
 <script language="JavaScript">
 function goClickButton(id)
@@ -74,7 +74,7 @@ Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
 <caption>#(tTableCaption)#</caption>
 <script language="Cache" runat="Server">
 Set q = "'"
-Set tClassname = "dc.iris.count"
+Set tClassname = "Riches.Count"
 Set tClassMethod = "OutputTableCount2"
 Set tClick = "goClickCount2"
 Set pWhere = ""
@@ -98,7 +98,7 @@ Set pTrClick = "javascript:"_tClick_"('#');"
 Set pMaxRows = -1
 Set tReturn = $CLASSMETHOD(tClassname,tClassMethod,pWhere,pTrClick,pMaxRows)
 Write "</table>",!
-Do ##class(dc.iris.count).Return2Dates(tReturn,.pStartDate,.pEndDate)
+Do ##class(Riches.Count).Return2Dates(tReturn,.pStartDate,.pEndDate)
 </script>
 <script language="JavaScript">
 	var months = 'January,February,March,April,May,June,July,August,September,October,November,December';
