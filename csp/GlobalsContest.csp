@@ -2,6 +2,7 @@
 <html>
 <head>
 <script language="Cache" runat="Server">
+Set tDebugCount = $Get(^RichesDEBUG,0)
 Set tDebug = 1
 Set tPage = "GlobalsContest.csp"
 Do:tDebug ##class(Riches.Util).DebugTEST(tPage_" - head")
