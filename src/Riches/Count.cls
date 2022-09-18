@@ -24,10 +24,7 @@ ClassMethod Count() As %Status
 	While tResult.%Next() {
 		Set (tYear, tMonth) = 0
 		Set tTranDate = tResult.TranDate
-		If (tTranDate ? 1.2N1"/"1.2N1"/"1.4N) {
-			Set tMonth = $Piece(tTranDate,"/",1)
-			Set tYear = $Piece(tTranDate,"/",3)
-		}
+		Do ..DateParts(tTranDate,.tYear,.tMonth)
 		Set tAccount = tResult.Account
 		Set tCategory = tResult.Category
 		If (tCategory = "") Set tCategory = 0
@@ -81,6 +78,25 @@ ClassMethod Count2() As %Status
 		}
 	}
 	Quit $$$OK
+}
+
+ClassMethod DateParts(
+	pDate As %String,
+	Output pYear As %Integer,
+	Output pMonth As %Integer,
+	Output pDay As %Integer) As %Status
+{
+	Set tSC = $$$OK
+	If (pDate ? 1.N) {
+		Set dformat = 1
+		Set pDate = $ZDate(pDate,dformat)
+	}
+	If (pDate ? 1.2N1"/"1.2N1"/"1.4N) {
+		Set pMonth = $Piece(tTranDate,"/",1)
+		Set pDay = $Piece(tTranDate,"/",2)
+		Set pYear = $Piece(tTranDate,"/",3)
+	}
+	Quit tSC
 }
 
 ClassMethod OutputTableCount2(
