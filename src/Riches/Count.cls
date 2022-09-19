@@ -80,11 +80,7 @@ ClassMethod Count2() As %Status
 	Quit $$$OK
 }
 
-ClassMethod DateParts(
-	pDate As %String,
-	Output pYear As %Integer,
-	Output pMonth As %Integer,
-	Output pDay As %Integer) As %Status
+ClassMethod DateParts(pDate As %String, Output pYear As %Integer, Output pMonth As %Integer, Output pDay As %Integer) As %Status
 {
 	Set tSC = $$$OK
 	If (pDate ? 1.N) {
@@ -99,10 +95,16 @@ ClassMethod DateParts(
 	Quit tSC
 }
 
-ClassMethod OutputTableCount2(
-	pWhere As %String = "",
-	pTrClick As %String = "",
-	pMaxRows = -1) As %String
+ClassMethod GetNickname(pTable As %String, pId As %String) As %String
+{
+	Set tNickname = ""
+	If $Get(pTable) = "" Set pTable = "Riches.Category"
+	Set tObject = $CLASSMETHOD(pTable,"%OpenId",$Get(pId))
+	If $Data(tObject),$IsObject(tObject) Set tNickname = tObject.Nickname
+	Quit tNickname
+}
+
+ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
 {
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableCount2")
@@ -192,10 +194,7 @@ ClassMethod OutputTableCount2(
 	Quit tReturn
 }
 
-ClassMethod OutputTableData(
-	pWhere As %String = "",
-	pTrClick As %String = "",
-	pMaxRows = -1) As %String
+ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
 {
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableData")
@@ -259,7 +258,8 @@ ClassMethod OutputTableData(
 		Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
 		Set tClick = $Replace(pTrClick,"#",tReturn)
 		Write !,"<tr onclick=""",tClick,""";>"
-		Write "<td>",tCategory,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+		Set tNickname = ..GetNickname("Riches.Category",tCategory)
+		Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
 		Set tSumCount = tSumCount + tCount
 		Set tSumCredit = tSumCredit + tCredit
 		Set tSumDebit = tSumDebit + tDebit
@@ -270,11 +270,7 @@ ClassMethod OutputTableData(
  	Quit tReturn
 }
 
-ClassMethod OutputTableFoot(
-	pColSpan As %String = "",
-	pCount As %String = "",
-	pCredit As %String = "",
-	pDebit As %String = "") As %Status
+ClassMethod OutputTableFoot(pColSpan As %String = "", pCount As %String = "", pCredit As %String = "", pDebit As %String = "") As %Status
 {
 	Set q = """"
 	Set qColSpan = q_pColSpan_q
@@ -307,10 +303,7 @@ ClassMethod OutputTableNada() As %Status
 	Quit $$$OK
 }
 
-ClassMethod Return2Dates(
-	pReturn As %String,
-	Output pStartDate As %String,
-	Output pEndDate As %String)
+ClassMethod Return2Dates(pReturn As %String, Output pStartDate As %String, Output pEndDate As %String)
 {
 	Set pReturn = $Get(pReturn)
 	Set tYear = $Piece(pReturn,"^",2)
