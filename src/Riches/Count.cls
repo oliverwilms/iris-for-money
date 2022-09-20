@@ -107,7 +107,21 @@ ClassMethod DateParts(
 		Set pDay = $Piece(pDate,"/",2)
 		Set pYear = $Piece(pDate,"/",3)
 	}
+	Set pYear = +$Get(pYear)
+	Set pMonth = +$Get(pMonth)  // Month beginning with zero messed up Subscripts order
+	Set pDay = +$Get(pDay)
 	Quit tSC
+}
+
+ClassMethod GetNickname(
+	pTable As %String,
+	pId As %String) As %String
+{
+	Set tNickname = ""
+	If $Get(pTable) = "" Set pTable = "Riches.Category"
+	Set tObject = $CLASSMETHOD(pTable,"%OpenId",$Get(pId))
+	If $Data(tObject),$IsObject(tObject) Set tNickname = tObject.Nickname
+	Quit tNickname
 }
 
 ClassMethod OutputTableCount2(
@@ -270,7 +284,8 @@ ClassMethod OutputTableData(
 		Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
 		Set tClick = $Replace(pTrClick,"#",tReturn)
 		Write !,"<tr onclick=""",tClick,""";>"
-		Write "<td>",tCategory,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+		Set tNickname = ..GetNickname("Riches.Category",tCategory)
+		Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
 		Set tSumCount = tSumCount + tCount
 		Set tSumCredit = tSumCredit + tCredit
 		Set tSumDebit = tSumDebit + tDebit
