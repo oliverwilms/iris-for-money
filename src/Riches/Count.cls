@@ -1,11 +1,14 @@
 Class Riches.Count
 {
 
-ClassMethod Count() As %Status
+ClassMethod Count(param As %String = "") As %Status
 {
 	Kill ^COUNT
 	Set tDebug = 0
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Count")
+	If ($Get(param) = "") Set param = "Category"
+	Do:tDebug ##class(Util).DebugTEST("param = "_param)
+	Set ^COUNT = param
 	Set tSC = $$$OK
 	Set tTable = "Riches.Transact"
 	Set tWHERE = ""
@@ -26,9 +29,17 @@ ClassMethod Count() As %Status
 		Set tTranDate = tResult.TranDate
 		Do ..DateParts(tTranDate,.tYear,.tMonth)
 		Set tAccount = tResult.Account
-		Set tCategory = tResult.Category
-		If (tCategory = "") Set tCategory = 0
-		If $Data(^TRANSLATE("Category",tCategory)) Set tCategory = $Get(^TRANSLATE("Category",tCategory))
+		If (param = "Account") {
+			Set tCategory = tResult.Account
+		}
+		If (param = "Category") {
+			Set tCategory = tResult.Category
+			If (tCategory = "") Set tCategory = 0
+			If $Data(^TRANSLATE("Category",tCategory)) Set tCategory = $Get(^TRANSLATE("Category",tCategory))
+		}
+		If (param = "Merchant") {
+			Set tCategory = tResult.Merchant
+		}
 		If (tCategory = "") Set tCategory = 0
 		Set tDebit = tResult.AmountDebit
 		Set tCredit = tResult.AmountCredit
@@ -80,7 +91,11 @@ ClassMethod Count2() As %Status
 	Quit $$$OK
 }
 
-ClassMethod DateParts(pDate As %String, Output pYear As %Integer, Output pMonth As %Integer, Output pDay As %Integer) As %Status
+ClassMethod DateParts(
+	pDate As %String,
+	Output pYear As %Integer,
+	Output pMonth As %Integer,
+	Output pDay As %Integer) As %Status
 {
 	Set tSC = $$$OK
 	If (pDate ? 1.N) {
@@ -92,27 +107,17 @@ ClassMethod DateParts(pDate As %String, Output pYear As %Integer, Output pMonth 
 		Set pDay = $Piece(pDate,"/",2)
 		Set pYear = $Piece(pDate,"/",3)
 	}
-	Set pYear = +$Get(pYear)
-	Set pMonth = +$Get(pMonth)  // Month beginning with zero messed up Subscripts order
-	Set pDay = +$Get(pDay)
 	Quit tSC
 }
 
-ClassMethod GetNickname(pTable As %String, pId As %String) As %String
-{
-	Set tNickname = ""
-	If $Get(pTable) = "" Set pTable = "Riches.Category"
-	Set tObject = $CLASSMETHOD(pTable,"%OpenId",$Get(pId))
-	If $Data(tObject),$IsObject(tObject) Set tNickname = tObject.Nickname
-	Quit tNickname
-}
-
-ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
+ClassMethod OutputTableCount2(
+	pWhere As %String = "",
+	pTrClick As %String = "",
+	pMaxRows = -1) As %String
 {
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableCount2")
 	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
-	Do:tDebug ##class(Util).DebugTEST("pTrClick = "_pTrClick)
 	If (pTrClick = "") Set pMaxRows = -1  // ?
 	Set tFilter = ""
 	Set tOrder = -1  // Show newest first
@@ -151,7 +156,6 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 		}
 	}
 	Set tReturn = "^"_tYear_"^"_tMonth
-	Do:tDebug ##class(Util).DebugTEST("tReturn = "_tReturn)
 	If (tYear = "") {
 		Do ..OutputTableNada()
  		Quit tReturn
@@ -166,13 +170,10 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 	}
 	Set tMonth = tMonth + 1
 	Set tMonth = $Order(^COUNT(tYear,tMonth),tOrder,tData)
-	Do:tDebug ##class(Util).DebugTEST("tMonth = "_tMonth)
 	If (tMonth = "") {
 		Set tYear = $Order(^COUNT(tYear),tOrder)
 		Set tMonth = $Order(^COUNT(tYear,tMonth),tOrder,tData)
 	}
-	Set tReturn = "^"_tYear_"^"_tMonth
-	Do:tDebug ##class(Util).DebugTEST("tReturn = "_tReturn)
 	Set pHead = "Month^Count^Debit^Credit"
 	Do ..OutputTableHead(pHead)
 	Set (tSumCount, tSumCredit, tSumDebit) = 0
@@ -191,7 +192,6 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 			Set tSumCredit = tSumCredit + tCredit
 			Set tSumDebit = tSumDebit + tDebit
 			Set tMonth = $Order(^COUNT(tYear,tMonth),tOrder,tData)
-			Do:tDebug ##class(Util).DebugTEST("tMonth = "_tMonth)
 			If (tMonth = "") { QUIT }
 		}
 		Set tYear = $Order(^COUNT(tYear),tOrder,tData)
@@ -203,7 +203,10 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 	Quit tReturn
 }
 
-ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
+ClassMethod OutputTableData(
+	pWhere As %String = "",
+	pTrClick As %String = "",
+	pMaxRows = -1) As %String
 {
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableData")
@@ -267,8 +270,7 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pM
 		Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
 		Set tClick = $Replace(pTrClick,"#",tReturn)
 		Write !,"<tr onclick=""",tClick,""";>"
-		Set tNickname = ..GetNickname("Riches.Category",tCategory)
-		Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+		Write "<td>",tCategory,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
 		Set tSumCount = tSumCount + tCount
 		Set tSumCredit = tSumCredit + tCredit
 		Set tSumDebit = tSumDebit + tDebit
@@ -279,7 +281,11 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pM
  	Quit tReturn
 }
 
-ClassMethod OutputTableFoot(pColSpan As %String = "", pCount As %String = "", pCredit As %String = "", pDebit As %String = "") As %Status
+ClassMethod OutputTableFoot(
+	pColSpan As %String = "",
+	pCount As %String = "",
+	pCredit As %String = "",
+	pDebit As %String = "") As %Status
 {
 	Set q = """"
 	Set qColSpan = q_pColSpan_q
@@ -312,19 +318,18 @@ ClassMethod OutputTableNada() As %Status
 	Quit $$$OK
 }
 
-ClassMethod Return2Dates(pReturn As %String, Output pStartDate As %String, Output pEndDate As %String)
+ClassMethod Return2Dates(
+	pReturn As %String,
+	Output pStartDate As %String,
+	Output pEndDate As %String)
 {
-	Set tDebug = 1
-	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Return2Dates")
 	Set pReturn = $Get(pReturn)
-	Do:tDebug ##class(Util).DebugTEST("pReturn = "_pReturn)
 	Set tYear = $Piece(pReturn,"^",2)
 	If (tYear = "") Set tYear = 1841
 	Set tMonth = $Piece(pReturn,"^",3)
 	If (tMonth = "") Set tMonth = 1
 	Set tDay = 1
 	Set pStartDate = tMonth_"/"_tDay_"/"_tYear
-	Do:tDebug ##class(Util).DebugTEST("pStartDate = "_pStartDate)
 	Set tMonth = tMonth + 1
 	If (tMonth > 12) {
 		Set tMonth = 1
@@ -333,7 +338,6 @@ ClassMethod Return2Dates(pReturn As %String, Output pStartDate As %String, Outpu
 	Set tDate = tMonth_"/"_tDay_"/"_tYear
 	Set tDateH = $ZDATEH(tDate)
 	Set pEndDate = $ZDATE(tDateH - 1)
-	Do:tDebug ##class(Util).DebugTEST("pEndDate = "_pEndDate)
 	Return
 }
 
