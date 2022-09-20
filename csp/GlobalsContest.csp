@@ -14,7 +14,10 @@ If ($Data(%request.Data("id",1))) {
 		Set tSC = ##class(Riches.Util).ImportCSV()
 	}
 	If (id = "COUNT") {
-		Set tSC = ##class(Riches.Count).Count()
+		If ($Data(%request.Data("iCount",1))) {
+			Set iCount = %request.Data("iCount",1)	
+		}
+		Set tSC = ##class(Riches.Count).Count($Get(iCount))
 	}
 }
 
@@ -146,13 +149,16 @@ function onchangeSel(id)  // id is this of <select> for column selection
 	}
 	document.getElementById("hidden_col_sel").value = y;  // comma delimited list of selected columns
 }
+function onchangeCount(id)  // id is this.value - Account, Category, or Merchant 
+{
+}
 function onchangeTable(id)  // id is this.value - Riches.Transact
 {
-	if (document.getElementById("div_col_count") == null) {
-		var x = 0;
-	} else {
-		var x = document.getElementById("div_col_count").innerHTML;
-	}
+	//if (document.getElementById("div_col_count") == null) {
+	//	var x = 0;
+	//} else {
+	//	var x = document.getElementById("div_col_count").innerHTML;
+	//}
 	//var x = document.getElementById("sel_"+2).innerHTML;  // <option ... </option>
 	//alert(id);
 }
@@ -227,20 +233,26 @@ function showFile(input)
 <table border="1"><tr><td>
 <label for="file-uploader">CSV file:</label>
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
-</td></tr></table>
+</td></tr>
+<tr><td>
 <script language="Cache" runat="Server">
 Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
-/*
-<label for="iTable">Insert into table:</label>
-
-<select name="iTable" id="iTable" onchange="onchangeTable(this.value)">
-  <option value="Riches.Category">Category</option>
-  <option value="Riches.Merchant">Merchant</option>
-  <option value="Riches.Transact">Transact</option>
-</select>
-*/
 </script>
 
+<label for="iCount">Count by:</label>
+
+<select name="iCount" id="iCount" onchange="onchangeCount(this.value)">
+  <option value="Account">Account</option>
+  <option value="Category">Category</option>
+  <option value="Merchant">Merchant</option>
+</select>
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('COUNT')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Count</button>",!
+</script>
+</td></tr></table>
 </form>
 <input type="text" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
 <label for="iStartDate">Start Date:</label>
@@ -262,11 +274,11 @@ If tImport {
 } ElseIf $Data(^COUNT)=0 {
 	Set qClick = q_"goClickButton('COUNT')"_q
 	Set qType = q_"button"_q
-	Write "<button type=",qType," onclick=",qClick,">Count</button>",!
+//	Write "<button type=",qType," onclick=",qClick,">Count</button>",!
 } Else {
 	Set qClick = q_"goClickButton('MENU')"_q
 	Set qType = q_"button"_q
-	Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
+//	Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
 }
 </script>
 <table border=1>
