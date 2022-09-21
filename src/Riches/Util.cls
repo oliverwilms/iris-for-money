@@ -136,11 +136,11 @@ ClassMethod ImportDebug(pAccount As %String = "", pTable As %String = "", pDebug
 	Do ..DebugTEST("pAccount = "_pAccount)
 	Do ..DebugTEST("pTable = "_pTable)
 	If ($Data(^RichesDEBUG) = 0) Quit $$$OK
+	Kill ^RichesImport
 	If (pDebug = "") {
 		//Set pTable = pDebug
 		Set pDebug = "PREVIEW"
 	}
-	Write "<table border=1>",!
 	If (pDebug = "PREVIEW") {
 		Set pp = ""
 		For {
@@ -154,7 +154,6 @@ ClassMethod ImportDebug(pAccount As %String = "", pTable As %String = "", pDebug
 			If $$$ISERR(tSC) Quit
 		}
 	}
-	Write "</table>",!
 	Quit $$$OK
 }
 
@@ -162,57 +161,31 @@ ClassMethod ImportDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 {
 	Do:pDebug ..DebugTEST("Riches.Util - ImportDebugLine")
 	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
-	Set q = """"
+	If (pId '= "") Set ^RichesImport(pId) = pDebugLine
+	If (pHeader = 0) Quit $$$OK
+	Kill ^RichesHeader, ^RichesColumn
+	Set tClassname = pTable
+	If (tClassname = "") Set tClassname = "Riches.Transact"
 	Set delim = ","
 	Set tLen = $Length(pDebugLine,delim)
-	For pp=1:1:tLen {
+	For pp=2:1:tLen {
 		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
-		If (pp = 1) {
-			Set tLineId = tDebugPiece  // Is tLineId same as pId ?
-			Write "<tr id=",q,"tr_",pId,q,">",!
-			Set qID = q_"div_"_pId_"_0"_q
-			Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
-			Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
-			If $$$ISERR(tSC) Quit
-			// Add a table cell for iAccount
-			Set tDebugPiece = $Get(pAccount)
+		Set tDebugPiece = ..UnquotedString(tDebugPiece)
+		If ($Get(tDebugPiece) '= "") {
+			Set ^RichesHeader(tDebugPiece) = pp
 		}
-		Set qID = q_"div_"_pId_"_"_pp_q
-		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
-		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
-		If $$$ISERR(tSC) Quit
 	}
-	Write "<th>",!
-	Set x = $Select((pHeader = 0):"goClickLine",1:"goClickHeader")
-	Set qClick = q_x_"("_tLineId_")"_q
-	Set qType = q_"button"_q
-	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
-	Write "</th>",!
-	Write "</tr>",!
-	If (pHeader = 0) Quit $$$OK
-	// Row of <select> for choosing table column to import to
-	Set tClassname = pTable
-	//Set tClassname = "Riches.Category"
-	Set q = """"
-	Set tSelect2 = "</select>"
-	Set onchange = "onchangeSel(this)"
-	Write "<tr>",!
-	For pp=1:1:tLen {
-		If (pp = 1) {
-			Set qID = q_"div_col_count"_q
-			Set qStyle = q_"display:none"_q
-			Set tDebugPiece = "<div id="_qID_" style="_qStyle_">"_tLen_"</div>"
-			Set tSC = ..OutputDebugPiece(tDebugPiece,0)
-			If $$$ISERR(tSC) Quit
-			// Add a <select> for iAccount
-		}
-		Set qName = q_"sel_"_pp_q
-		Set qID = q_"sel_"_pp_q
-		Set tSelect1 = "<select name="_qName_" id="_qID_"onchange="_q_onchange_q_">"
-		Set tDebugPiece = "<div>"_tSelect1_..GetOptionsTableColumns(tClassname)_tSelect2_"</div>"
-		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
-	}
-	Write "</tr>",!
+	Set ^RichesColumn("Account") = $Get(^RichesHeader("Account"))
+	Set ^RichesColumn("AmountCredit") = $Get(^RichesHeader("AmountCredit"),$Get(^RichesHeader("Credit")))
+	Set ^RichesColumn("AmountDebit") = $Get(^RichesHeader("AmountDebit"),$Get(^RichesHeader("Debit")))
+	Set ^RichesColumn("Category") = $Get(^RichesHeader("Category"))
+	Set ^RichesColumn("SubCategory") = $Get(^RichesHeader("SubCategory"))
+	Set ^RichesColumn("Merchant") = $Get(^RichesHeader("Merchant"))
+	Set ^RichesColumn("TranDate") = $Get(^RichesHeader("TranDate"),$Get(^RichesHeader("Date")))
+	Set ^RichesColumn("TranTime") = $Get(^RichesHeader("TranTime"),$Get(^RichesHeader("Time")))
+	Set ^RichesColumn("CheckNumber") = $Get(^RichesHeader("CheckNumber"),$Get(^RichesHeader("Check")))
+	Set ^RichesColumn("Memo") = $Get(^RichesHeader("Memo"))
+	Set ^RichesColumn("Status") = $Get(^RichesHeader("Status"))
 	Quit $$$OK
 }
 
@@ -367,6 +340,16 @@ ClassMethod SQLGrantAccess() As %Status
 	&sql(GRANT INSERT,SELECT,UPDATE ON Riches.Account,Riches.Category,Riches.Merchant,Riches.SubCategory,Riches.Transact TO UnknownUser)
 	if SQLCODE < 0 throw ##class(%Exception.SQL).CreateFromSQLCODE(%SQLCODE,"Grant roles")
 	Quit $$$OK
+}
+
+ClassMethod UnquotedString(pQuotedString As %String = "") As %String
+{
+	Set q = """"
+	Set tReturn = pQuotedString
+	If ($Extract(pQuotedString,1) = q),($Extract(pQuotedString,*) = q) {
+		Set tReturn = $Extract(pQuotedString,2,*-1)
+	}
+	Quit tReturn
 }
 
 }
