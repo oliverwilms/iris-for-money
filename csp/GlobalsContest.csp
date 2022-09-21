@@ -264,6 +264,8 @@ Set qClick = q_"goClickButton('COUNT')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Count</button>",!
 </script>
+</td><td>
+</td><td>
 <script language="Cache" runat="Server">
 Set q = """"
 Set qClick = q_"goClickButton('DISPLAY')"_q
