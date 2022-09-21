@@ -17,6 +17,9 @@ If ($Data(%request.Data("id",1))) {
 	If (id = "IMPORT") {
 		Set tSC = ##class(Riches.Util).ImportCSV()
 	}
+	If (id = "DEBUGIMPORT") {
+		Set tSC = ##class(Riches.Util).ImportDebug()
+	}
 	If (id = "COUNT") {
 		If ($Data(%request.Data("iCount",1))) {
 			Set iCount = %request.Data("iCount",1)	
@@ -71,6 +74,10 @@ function goClickButton(id)
 	var tPage = '#($Get(tPage,"Transact.csp"))#';
 	if (id == 'IMPORT') {
 		document.location = tPage + "?id=IMPORT";
+		return;
+	}
+	if (id == 'DEBUGIMPORT') {
+		document.location = tPage + "?id=DEBUGIMPORT";
 		return;
 	}
 	if (id == 'COUNT') {
@@ -247,11 +254,17 @@ function showFile(input)
 </td><td>
 <script language="Cache" runat="Server">
 Set q = """"
+Set qClick = q_"goClickButton('DEBUGIMPORT')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Import Debug</button>",!
+</script>
+</td></tr>
+<script language="Cache" runat="Server">
+Set q = """"
 Set qClick = q_"goClickButton('RESET')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Reset</button>",!
 </script>
-</td></tr>
 <tr><td>
 <script language="Cache" runat="Server">
 Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
