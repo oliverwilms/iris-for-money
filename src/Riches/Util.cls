@@ -130,6 +130,92 @@ ClassMethod GetOptionsTableNames(pSelected As %String = "", Output pOptions As %
 	Quit pOptions
 }
 
+ClassMethod ImportDebug(pAccount As %String = "", pTable As %String = "", pDebug As %String = "") As %Status
+{
+	Do ..DebugTEST("Riches.Util - ImportDebug")
+	Do ..DebugTEST("pAccount = "_pAccount)
+	Do ..DebugTEST("pTable = "_pTable)
+	If ($Data(^RichesDEBUG) = 0) Quit $$$OK
+	If (pDebug = "") {
+		//Set pTable = pDebug
+		Set pDebug = "PREVIEW"
+	}
+	Write "<table border=1>",!
+	If (pDebug = "PREVIEW") {
+		Set pp = ""
+		For {
+			Set pp = $Order(^RichesDEBUG(pp))
+			If (pp = "") Quit
+			Set qq = $Order(^RichesDEBUG(pp,""))
+			If (qq = "") Continue
+			Set tDebugLine = $Get(^RichesDEBUG(pp,qq))
+			Set pDebug = 0
+			Set tSC = ..ImportDebugLine(tDebugLine,(pp = 0),pp,pAccount,pTable,pDebug)
+			If $$$ISERR(tSC) Quit
+		}
+	}
+	Write "</table>",!
+	Quit $$$OK
+}
+
+ClassMethod ImportDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pAccount As %String = "", pTable As %String = "", pDebug As %String = 0) As %Status
+{
+	Do:pDebug ..DebugTEST("Riches.Util - ImportDebugLine")
+	Do:pDebug ..DebugTEST("pDebugLine = "_pDebugLine)
+	Set q = """"
+	Set delim = ","
+	Set tLen = $Length(pDebugLine,delim)
+	For pp=1:1:tLen {
+		Set tDebugPiece = $Piece(pDebugLine,delim,pp)
+		If (pp = 1) {
+			Set tLineId = tDebugPiece  // Is tLineId same as pId ?
+			Write "<tr id=",q,"tr_",pId,q,">",!
+			Set qID = q_"div_"_pId_"_0"_q
+			Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
+			Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
+			If $$$ISERR(tSC) Quit
+			// Add a table cell for iAccount
+			Set tDebugPiece = $Get(pAccount)
+		}
+		Set qID = q_"div_"_pId_"_"_pp_q
+		Set tDiv = "<div id="_qID_">"_tDebugPiece_"</div>"
+		Set tSC = ..OutputDebugPiece(tDiv,pHeader,pDebug)
+		If $$$ISERR(tSC) Quit
+	}
+	Write "<th>",!
+	Set x = $Select((pHeader = 0):"goClickLine",1:"goClickHeader")
+	Set qClick = q_x_"("_tLineId_")"_q
+	Set qType = q_"button"_q
+	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
+	Write "</th>",!
+	Write "</tr>",!
+	If (pHeader = 0) Quit $$$OK
+	// Row of <select> for choosing table column to import to
+	Set tClassname = pTable
+	//Set tClassname = "Riches.Category"
+	Set q = """"
+	Set tSelect2 = "</select>"
+	Set onchange = "onchangeSel(this)"
+	Write "<tr>",!
+	For pp=1:1:tLen {
+		If (pp = 1) {
+			Set qID = q_"div_col_count"_q
+			Set qStyle = q_"display:none"_q
+			Set tDebugPiece = "<div id="_qID_" style="_qStyle_">"_tLen_"</div>"
+			Set tSC = ..OutputDebugPiece(tDebugPiece,0)
+			If $$$ISERR(tSC) Quit
+			// Add a <select> for iAccount
+		}
+		Set qName = q_"sel_"_pp_q
+		Set qID = q_"sel_"_pp_q
+		Set tSelect1 = "<select name="_qName_" id="_qID_"onchange="_q_onchange_q_">"
+		Set tDebugPiece = "<div>"_tSelect1_..GetOptionsTableColumns(tClassname)_tSelect2_"</div>"
+		Set tSC = ..OutputDebugPiece(tDebugPiece,0)
+	}
+	Write "</tr>",!
+	Quit $$$OK
+}
+
 ClassMethod OutputDebug(pAccount As %String = "", pTable As %String = "", pDebug As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
