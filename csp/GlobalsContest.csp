@@ -2,6 +2,10 @@
 <html>
 <head>
 <script language="Cache" runat="Server">
+If ($Data(%request.Data("debug",1))) {
+	Set iDebug = %request.Data("debug",1)
+	If (iDebug = "RESET") Kill ^RichesDEBUG
+}
 Set tDebugCount = $Get(^RichesDEBUG,0)
 Set tDebug = 1
 Set tPage = "GlobalsContest.csp"
@@ -299,8 +303,8 @@ Write "<button type=",qType," onclick=",qClick,">Display</button>",!
 <caption>Transaction Table</caption>
 <script language="Cache" runat="Server">
 If ($Data(%request.Data("debug",1))) {
-	Set iDebug = %request.Data("debug",1)
-	If (iDebug = "RESET") Kill ^RichesDEBUG
+//	Set iDebug = %request.Data("debug",1)
+//	If (iDebug = "RESET") Kill ^RichesDEBUG
 //	Set objAccount = ##class(Riches.Account).%OpenId($Get(iAccount))
 //	If $IsObject(objAccount) {
 //		Set iAccount = objAccount.Nickname
