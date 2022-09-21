@@ -231,13 +231,13 @@ function showFile(input)
 <h1>#(tHeader)#</h1>
 <form action="" method="post" enctype="multipart/form-data">
 <table border="1"><tr><td>
+<script language="Cache" runat="Server">
+Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
+</script>
 <label for="file-uploader">CSV file:</label>
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
 </td></tr>
 <tr><td>
-<script language="Cache" runat="Server">
-Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
-</script>
 
 <label for="iCount">Count by:</label>
 
