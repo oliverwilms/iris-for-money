@@ -178,7 +178,8 @@ ClassMethod OutputTableCount2(
 		Do ..OutputTableNada()
  		Quit tReturn
 	}
-	If ($Data(^COUNT) = 0) {
+	// ^COUNT = "Category"
+	If ($Data(^COUNT) < 10) {
 		Do ..OutputTableNada()
 		Quit tReturn
 	}
