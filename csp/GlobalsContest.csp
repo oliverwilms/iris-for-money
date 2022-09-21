@@ -108,7 +108,6 @@ function goClickHeader(row)
 			goClickLine(row);
 		}
 	}
-	document.location = "Count.csp";
 }
 function goClickLine(row)
 {
