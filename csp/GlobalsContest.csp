@@ -85,6 +85,10 @@ function goClickButton(id)
 		document.location = tPage + "?id=COUNT";
 		return;
 	}
+	if (id == 'DISPLAY') {
+		document.location = "Count.csp";
+		return;
+	}
 	if (id == 'MENU') {
 		document.location = "menu.csp";
 		return;
@@ -259,6 +263,12 @@ Set q = """"
 Set qClick = q_"goClickButton('COUNT')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Count</button>",!
+</script>
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('DISPLAY')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Display</button>",!
 </script>
 </td></tr></table>
 </form>
