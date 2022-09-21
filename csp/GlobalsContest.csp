@@ -65,18 +65,6 @@ Do:tDebug ##class(Riches.Util).DebugTEST("iStartDate = "_$Get(iStartDate))
 function goClickButton(id)
 {
 	var tPage = '#($Get(tPage,"Transact.csp"))#';
-	if (id == 'PREVIEW') {
-		var iTable = 'null';
-		var iAccount = 'null';
-		if (document.getElementById("iTable") != null) {
-			iTable = document.getElementById("iTable").value;
-		}
-		if (document.getElementById("iAccount") != null) {
-			iAccount = document.getElementById("iAccount").value;
-		}
-		document.location = tPage + "?debug=" + id + "&iTable=" + iTable + "&iAccount=" + iAccount;	
-		return;
-	}
 	if (id == 'IMPORT') {
 		document.location = tPage + "?id=IMPORT";
 		return;
@@ -91,6 +79,22 @@ function goClickButton(id)
 	}
 	if (id == 'MENU') {
 		document.location = "menu.csp";
+		return;
+	}
+	var iTable = 'null';
+	var iAccount = 'null';
+	if (document.getElementById("iTable") != null) {
+		iTable = document.getElementById("iTable").value;
+	}
+	if (document.getElementById("iAccount") != null) {
+		iAccount = document.getElementById("iAccount").value;
+	}
+	if (id == 'PREVIEW') {
+		document.location = tPage + "?debug=" + id + "&iTable=" + iTable + "&iAccount=" + iAccount;	
+		return;
+	}
+	if (id == 'RESET') {
+		document.location = tPage + "?debug=" + id + "&iTable=" + iTable + "&iAccount=" + iAccount;	
 		return;
 	}
 	var iEndDate = document.getElementById("iEndDate").value;
@@ -235,6 +239,16 @@ function showFile(input)
 <h1>#(tHeader)#</h1>
 <form action="" method="post" enctype="multipart/form-data">
 <table border="1"><tr><td>
+^RichesDEBUG = #($Get(tDebugCount,0))#
+</td><td>
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('RESET')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Reset</button>",!
+</script>
+</td></tr>
+<tr><td>
 <script language="Cache" runat="Server">
 Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
 </script>
