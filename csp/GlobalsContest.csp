@@ -234,8 +234,16 @@ function showFile(input)
 <script language="Cache" runat="Server">
 Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
 </script>
+</td><td>
 <label for="file-uploader">CSV file:</label>
 <input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
+</td><td>
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('PREVIEW')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
+</script>
 </td></tr>
 <tr><td>
 
@@ -261,26 +269,6 @@ Write "<button type=",qType," onclick=",qClick,">Count</button>",!
 <input type="text" id="iFilter" size="20" value="#($Get(iFilter))#">
 <label for="iEndDate">End Date:</label>
 <input type="text" id="iEndDate" size="10" value="#($Get(iEndDate))#">
-<script language="Cache" runat="Server">
-Set q = """"
-Set qClick = q_"goClickButton('PREVIEW')"_q
-Set qType = q_"button"_q
-Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
-Set tImport = 0  // $Data(^GLOBAL)
-If tImport {
-	Set qClick = q_"goClickButton('IMPORT')"_q
-	Set qType = q_"button"_q
-	Write "<button type=",qType," onclick=",qClick,">Import</button>",!
-} ElseIf $Data(^COUNT)=0 {
-	Set qClick = q_"goClickButton('COUNT')"_q
-	Set qType = q_"button"_q
-//	Write "<button type=",qType," onclick=",qClick,">Count</button>",!
-} Else {
-	Set qClick = q_"goClickButton('MENU')"_q
-	Set qType = q_"button"_q
-//	Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
-}
-</script>
 <table border=1>
 <caption>Transaction Table</caption>
 <script language="Cache" runat="Server">
