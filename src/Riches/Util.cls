@@ -261,7 +261,7 @@ ClassMethod InsertSQL(pQuery As %String = "", pDebug As %String = 0) As %Status
 		// Success/Failure information is reported in the result object as %SQLCODE, %Message, %ROWCOUNT, and/or %ROWID.
 		Set rset = tStatement.%Execute()
 		If (0 '= rset.%SQLCODE) {
-			
+			Set pDebug = 1	
 		}
 	}
 	Try {
