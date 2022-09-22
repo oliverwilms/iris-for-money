@@ -306,7 +306,7 @@ Write "<button type=",qType," onclick=",qClick,">Display</button>",!
 </script>
 </td></tr></table>
 </form>
-<input type="text" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
+<input type="hidden" id="hidden_col_sel" size="100" value="#($Get(tColSel))#">
 <label for="iStartDate">Start Date:</label>
 <input type="text" id="iStartDate" size="10" value="#($Get(iStartDate))#">
 <label for="iFilter">Filter:</label>
