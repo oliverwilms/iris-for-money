@@ -189,6 +189,92 @@ ClassMethod ImportDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Quit $$$OK
 }
 
+ClassMethod ImportRichesImport() As %Status
+{
+	Do ..DebugTEST("Riches.Util - ImportRichesImport")
+	Set tSC = $$$OK
+	If ($Get(pDebug) = "") {
+		//Set pTable = pDebug
+		Set pDebug = "PREVIEW"
+	}
+	If (pDebug = "PREVIEW") {
+		Set pp = ""
+		For {
+			Set pp = $Order(^RichesImport(pp))
+			If (pp = "") { Quit }
+			If (pp = 0) { Continue }  // Skip Header line
+			If (pp = -1) { Continue }  // ???
+			Set tDebugLine = $Get(^RichesImport(pp))
+			//Set pDebug = 0
+			Set tSC = ..ImportRichesImportLine(tDebugLine)
+			If $$$ISERR(tSC) Quit
+		}
+	}
+	Quit tSC
+}
+
+ClassMethod ImportRichesImportLine(pLine As %String = "", pTable As %String = "", pDebug As %String = 1) As %Status
+{
+	Do:pDebug ..DebugTEST("Riches.Util - ImportRichesImportLine")
+	Do:pDebug ..DebugTEST("pLine = "_pLine)
+	If (pTable = "") Set pTable = "Riches.Transact"
+	Set delim = ","  // Fails if Memo contains comma
+	Set q = """"
+	Set delim = delim_q
+	Set tInsert = "Insert into "_pTable
+	Set tColumns = ""
+	Set tValues = ""
+	Set cc = ""
+	For {
+		Set cc = $Order(^RichesColumn(cc),1,pp)
+		If (cc = "") { Quit }
+		If (+$Get(pp) < 1) { Continue }
+		Set tColumns = tColumns_","_cc
+		Set x = q_$Piece(pLine,delim,pp)
+		Set x = $Replace(x,",","~")  // Replace comma with tilde
+		Set x = ..UnquotedString(x)
+		If ($Length(x) > 50) Set x = $Extract(x,1,50)
+		Set tValues = tValues_","_x
+	}
+
+	Set tInsert = tInsert_" ("_$Extract(tColumns,2,*)_") values ("_$Extract(tValues,2,*)_")"
+	Set tSC = ..InsertSQL(tInsert)
+	Quit tSC
+}
+
+/// Insert into Riches.Transact (Account,TranDate,Merchant,Category,AmountDebit,AmountCredit) values ('Chase Better Banking Checking','1-3-2021','Aldi','Groceries','51.41','')
+/// %Message = Field 'Riches.Transact.AmountCredit' (value <EMPTY STRING>) failed validation
+/// 				Field 'Riches.Transact.TranDate' (value '1-3-2021') failed validation
+ClassMethod InsertSQL(pQuery As %String = "", pDebug As %String = 0) As %Status
+{
+	Set tSC = ##class(Riches.REST).TestQuery(pQuery,.tTestQuery)
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set tSC = tStatement.%Prepare(tTestQuery)
+	If $$$ISERR(tSC) {
+		Set pDebug = 1
+		Do ..DebugStatus(tSC)
+		Write "%Prepare failed:"
+		Do $System.Status.DisplayError(tSC) // QUIT
+	} Else {
+		#Dim rset As %SQL.StatementResult
+		// Execute the current statement and return the result. The result of the execute is always the return value.
+		// Success/Failure information is reported in the result object as %SQLCODE, %Message, %ROWCOUNT, and/or %ROWID.
+		Set rset = tStatement.%Execute()
+		If (0 '= rset.%SQLCODE) {
+			
+		}
+	}
+	Try {
+		Do:pDebug ..DebugTEST("Riches.Util - InsertSQL")
+		Do:pDebug ..DebugTEST("pQuery = "_pQuery)
+		Do:pDebug ..DebugTEST("TestQuery = "_tTestQuery)
+		Do:pDebug ..DebugTEST("%SQLCODE = "_rset.%SQLCODE)
+		Do:pDebug ..DebugTEST("%Message = "_rset.%Message)
+		Do:pDebug ..DebugTEST("%ROWID = "_rset.%ROWID)
+	} Catch { }
+	Quit tSC
+}
+
 ClassMethod OutputDebug(pAccount As %String = "", pTable As %String = "", pDebug As %String = "") As %Status
 {
 	Do ..DebugTEST("Riches.Util - OutputDebug")
