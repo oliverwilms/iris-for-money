@@ -35,7 +35,7 @@ function goClickCount1(id)
 {
 	//alert(id);
 	//document.location = "Transact.csp?&iFilter=" + id;  // + "&iEndDate=" + id + "&iStartDate=" + id;
-	document.location = "GlobalsContest.csp.csp?&iFilter=" + id;
+	document.location = "GlobalsContest.csp?iFilter=" + id;
 	return;
 }
 function goClickCount2(id)
