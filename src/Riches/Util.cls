@@ -154,7 +154,8 @@ ClassMethod ImportDebug(pAccount As %String = "", pTable As %String = "", pDebug
 			If $$$ISERR(tSC) Quit
 		}
 	}
-	Quit $$$OK
+	Set tSC = ..ImportRichesImport()
+	Quit tSC
 }
 
 ClassMethod ImportDebugLine(pDebugLine As %String = "", pHeader As %String = 0, pId As %String = "", pAccount As %String = "", pTable As %String = "", pDebug As %String = 0) As %Status
