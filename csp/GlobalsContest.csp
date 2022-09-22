@@ -258,13 +258,14 @@ Set qClick = q_"goClickButton('DEBUGIMPORT')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Import Debug</button>",!
 </script>
-</td></tr>
+</td><td>
 <script language="Cache" runat="Server">
 Set q = """"
 Set qClick = q_"goClickButton('RESET')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Reset</button>",!
 </script>
+</td></tr>
 <tr><td>
 <script language="Cache" runat="Server">
 Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
