@@ -37,6 +37,31 @@ Trigger Balance [ Event = INSERT, Time = AFTER ]
 	SET tSC = ##class(Riches.Account).UpdateBalance(aa,cr,db)
 }
 */
+ClassMethod FilterWhere(pWhere As %String = "") As %String
+{
+	Set tReturn = pWhere
+	If ($Extract(tReturn,1,7) = "iFilter") {
+		Set tReturn = $Replace(tReturn,"iFilter","Category")
+	}
+	If (tReturn [ "iStartDate") {
+		Set tReturn = $Replace(tReturn,"iStartDate","TranDate")
+	}
+	If (tReturn [ "iEndDate") {
+		Set tReturn = $Replace(tReturn,"iEndDate","TranDate")
+	}
+	Set delim = " "
+	Set pp = $Length(tReturn,delim)
+	For ii = 1:1:pp {
+		Set test = $Piece(tReturn,delim,ii)
+		If (test = "TranDate") {
+			Set x = $Piece(tReturn,delim,ii + 2)
+			Set tDate = ##class(Riches.Util).UnquotedString(x)
+			Set tDateH = $ZDATEH(tDate)
+			Set tReturn = $Replace(tReturn,tDate,tDateH)
+		}
+	}
+	Quit tReturn
+}
 
 ClassMethod GetColumnListCSV() As %String
 {
@@ -222,6 +247,49 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "windo
 	Set tQuote = """"
 	Set tSC = $$$OK
 	Set tWHERE = ""
+	Set pWhere = ..FilterWhere(pWhere)
+	If (pWhere '= "") Set tWHERE = " WHERE "_pWhere
+	Set tQuery = "SELECT * FROM Riches.Transact"_tWHERE
+	Do ##class(Util).DebugTEST("tQuery = "_tQuery)
+	Set tStatement = ##class(%SQL.Statement).%New()
+	Set tSC = tStatement.%Prepare(.tQuery)  // Create a cached query
+	If $$$ISERR(tSC) { Quit tSC }
+	#dim tResult As %SQL.StatementResult
+	Set tResult = tStatement.%Execute()
+	IF (tResult.%SQLCODE=0) { /*WRITE !,"Created a query",!*/ }
+	ELSEIF (tResult.%SQLCODE=-361) { /*WRITE !,"Query exists: ",tResult.%Message*/ }
+	ELSE { /*WRITE !,"CREATE QUERY error: ",tResult.%SQLCODE," ",tResult.%Message*/ QUIT tSC}
+	Write !,"<tr><th>Date</th><th>Time</th><th>Check</th><th>Merchant</th><th>Category</th><th>Debit</th><th>Credit</th></tr>"
+ 	While tResult.%Next() {
+	 	//Set tValue = ##class(Util).EncodeLogicalDisplay(tResult.ID,tResult.Nickname)
+		Set tValue = tResult.ID
+		Write !,"<tr onclick=",tQuote,$Replace(pTrClick,"#",tValue),tQuote,">"
+		Write !,"<td>",$ZDATE(tResult.TranDate),"</td>"
+		Write !,"<td>",$ZTIME(tResult.TranTime),"</td>"
+		Write !,"<td>",tResult.CheckNumber,"</td>"
+		Set tQuery = "SELECT Nickname FROM Riches.Merchant WHERE ID = "_tResult.Merchant
+		Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
+		Write !,"<td>",tDisplay,"</td>"
+		Set tQuery = "SELECT Nickname FROM Riches.Category WHERE ID = "_tResult.Category
+		Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
+		Write !,"<td>",tDisplay,"</td>"
+		Write !,"<td>",tResult.AmountDebit,"</td>"
+		Write !,"<td>",tResult.AmountCredit,"</td>"
+		Write !,"</tr>"
+	}
+	Quit tSC
+}
+
+ClassMethod OutputTableFilter(pWhere As %String = "", pTrClick As %String = "window.location='Transact.csp?iAccount=#';", pMaxRows = -1) As %Status
+{
+	Do ##class(Util).DebugTEST("Riches.Transact - OutputTableFilter")
+	Do ##class(Util).DebugTEST("pWhere = "_pWhere)
+	Set tQuote = """"
+	Set tSC = $$$OK
+	Set tWHERE = ""
+	If ($Extract(pWhere,1,7) = "iFilter") {
+		Set pWhere = $Replace(pWhere,"iFilter","Category")
+	}
 	If (pWhere '= "") Set tWHERE = " WHERE "_pWhere
 	Set tQuery = "SELECT * FROM Riches.Transact"_tWHERE
 	Do ##class(Util).DebugTEST("tQuery = "_tQuery)
