@@ -240,7 +240,7 @@ ClassMethod OutputHiddenId(pValue As %String = "", split As %Boolean = 0) As %St
 	Quit $$$OK
 }
 
-ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "window.location='Transact.csp?iAccount=#';", pMaxRows = -1) As %Status
+ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "window.location='Transact.csp?iAccount=#';", pAccFlg = 0) As %Status
 {
 	Do ##class(Util).DebugTEST("Riches.Transact - OutputTableData")
 	Do ##class(Util).DebugTEST("pWhere = "_pWhere)
@@ -259,13 +259,20 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "windo
 	IF (tResult.%SQLCODE=0) { /*WRITE !,"Created a query",!*/ }
 	ELSEIF (tResult.%SQLCODE=-361) { /*WRITE !,"Query exists: ",tResult.%Message*/ }
 	ELSE { /*WRITE !,"CREATE QUERY error: ",tResult.%SQLCODE," ",tResult.%Message*/ QUIT tSC}
-	Write !,"<tr><th>Date</th><th>Time</th><th>Check</th><th>Merchant</th><th>Category</th><th>Debit</th><th>Credit</th></tr>"
+	Write !,"<tr><th>Date</th><th>Time</th>"
+	If pAccFlg Write !,"<th>Account</th>"
+	Write !,"<th>Check</th><th>Merchant</th><th>Category</th><th>Debit</th><th>Credit</th></tr>"
  	While tResult.%Next() {
 	 	//Set tValue = ##class(Util).EncodeLogicalDisplay(tResult.ID,tResult.Nickname)
 		Set tValue = tResult.ID
 		Write !,"<tr onclick=",tQuote,$Replace(pTrClick,"#",tValue),tQuote,">"
 		Write !,"<td>",$ZDATE(tResult.TranDate),"</td>"
 		Write !,"<td>",$ZTIME(tResult.TranTime),"</td>"
+		If pAccFlg {
+			Set tQuery = "SELECT Nickname FROM Riches.Account WHERE ID = "_tResult.Account
+			Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
+			Write !,"<td>",tDisplay,"</td>"	
+		}
 		Write !,"<td>",tResult.CheckNumber,"</td>"
 		Set tQuery = "SELECT Nickname FROM Riches.Merchant WHERE ID = "_tResult.Merchant
 		Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
@@ -280,47 +287,6 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "windo
 	Quit tSC
 }
 
-ClassMethod OutputTableFilter(pWhere As %String = "", pTrClick As %String = "window.location='Transact.csp?iAccount=#';", pMaxRows = -1) As %Status
-{
-	Do ##class(Util).DebugTEST("Riches.Transact - OutputTableFilter")
-	Do ##class(Util).DebugTEST("pWhere = "_pWhere)
-	Set tQuote = """"
-	Set tSC = $$$OK
-	Set tWHERE = ""
-	If ($Extract(pWhere,1,7) = "iFilter") {
-		Set pWhere = $Replace(pWhere,"iFilter","Category")
-	}
-	If (pWhere '= "") Set tWHERE = " WHERE "_pWhere
-	Set tQuery = "SELECT * FROM Riches.Transact"_tWHERE
-	Do ##class(Util).DebugTEST("tQuery = "_tQuery)
-	Set tStatement = ##class(%SQL.Statement).%New()
-	Set tSC = tStatement.%Prepare(.tQuery)  // Create a cached query
-	If $$$ISERR(tSC) { Quit tSC }
-	#dim tResult As %SQL.StatementResult
-	Set tResult = tStatement.%Execute()
-	IF (tResult.%SQLCODE=0) { /*WRITE !,"Created a query",!*/ }
-	ELSEIF (tResult.%SQLCODE=-361) { /*WRITE !,"Query exists: ",tResult.%Message*/ }
-	ELSE { /*WRITE !,"CREATE QUERY error: ",tResult.%SQLCODE," ",tResult.%Message*/ QUIT tSC}
-	Write !,"<tr><th>Date</th><th>Time</th><th>Check</th><th>Merchant</th><th>Category</th><th>Debit</th><th>Credit</th></tr>"
- 	While tResult.%Next() {
-	 	//Set tValue = ##class(Util).EncodeLogicalDisplay(tResult.ID,tResult.Nickname)
-		Set tValue = tResult.ID
-		Write !,"<tr onclick=",tQuote,$Replace(pTrClick,"#",tValue),tQuote,">"
-		Write !,"<td>",$ZDATE(tResult.TranDate),"</td>"
-		Write !,"<td>",$ZTIME(tResult.TranTime),"</td>"
-		Write !,"<td>",tResult.CheckNumber,"</td>"
-		Set tQuery = "SELECT Nickname FROM Riches.Merchant WHERE ID = "_tResult.Merchant
-		Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
-		Write !,"<td>",tDisplay,"</td>"
-		Set tQuery = "SELECT Nickname FROM Riches.Category WHERE ID = "_tResult.Category
-		Set tSC = ##class(Util).ExecuteQueryOneValue(tQuery,.tDisplay)
-		Write !,"<td>",tDisplay,"</td>"
-		Write !,"<td>",tResult.AmountDebit,"</td>"
-		Write !,"<td>",tResult.AmountCredit,"</td>"
-		Write !,"</tr>"
-	}
-	Quit tSC
-}
 
 ClassMethod SubmitFormData(ByRef pRequestData, Output pAction, Output pId) As %Status
 {
