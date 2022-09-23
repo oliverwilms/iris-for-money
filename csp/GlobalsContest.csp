@@ -348,8 +348,8 @@ If (pWhere '= "") {
 	Set pWhere = $Extract(pWhere,6,*)
 }
 	Set pTrClick = "javascript:tableClickHandler('#');"
-	Set pMaxRows = -1
-	Set tSC = $CLASSMETHOD(tClassname,"OutputTableData",pWhere,pTrClick,pMaxRows)
+	Set pAccFlg = 1
+	Set tSC = $CLASSMETHOD(tClassname,"OutputTableData",pWhere,pTrClick,pAccFlg)
 
 Write "</table>",!
 
