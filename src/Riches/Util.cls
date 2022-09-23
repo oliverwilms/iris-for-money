@@ -436,6 +436,11 @@ ClassMethod UnquotedString(pQuotedString As %String = "") As %String
 	If ($Extract(pQuotedString,1) = q),($Extract(pQuotedString,*) = q) {
 		Set tReturn = $Extract(pQuotedString,2,*-1)
 	}
+	Set q = "'"
+	Set tReturn = pQuotedString
+	If ($Extract(pQuotedString,1) = q),($Extract(pQuotedString,*) = q) {
+		Set tReturn = $Extract(pQuotedString,2,*-1)
+	}
 	Quit tReturn
 }
 
