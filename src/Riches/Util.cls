@@ -222,6 +222,7 @@ ClassMethod ImportRichesImportLine(pLine As %String = "", pTable As %String = ""
 	Do:pDebug ..DebugTEST("Riches.Util - ImportRichesImportLine")
 	Do:pDebug ..DebugTEST("pLine = "_pLine)
 	If (pTable = "") Set pTable = "Riches.Transact"
+	Set pLine = ##class(Translate).TranslateImportLine(pLine,pTable,pDebug)
 	Set delim = ","  // Fails if Memo contains comma
 	Set q = """"
 	Set delim = delim_q
