@@ -33,22 +33,33 @@ ClassMethod TranslateImportLine(pLine As %String = "", pTable As %String = "", p
 		Set tValues(cc) = x
 	}
 	Set tReturn = pLine
-	Set tAccount = $Get(tValues("Account"))
-	If (tAccount '= ""),($Get(^TRANSLATE("Credit-Debit",tAccount)) = "Credit is Debit") {
+	Set x = $Get(tValues("Account"))
+	Set tAccount = ##class(Util).UnquotedString(x)
+	Do:pDebug ##class(Util).DebugTEST("tAccount = "_tAccount)
+	Set tCreditDebit = ""
+	If (tAccount '= "") Set tCreditDebit = ($Get(^TRANSLATE("Credit-Debit",tAccount)))
+	Do:pDebug ##class(Util).DebugTEST("tCreditDebit = "_tCreditDebit)
+	If (tCreditDebit = "Credit is Debit") {
 		Set pDebug = 1
 		Set tCredit = $Get(tValues("AmountDebit"),$Get(tValues("Debit")))
+		Do:pDebug ##class(Util).DebugTEST("tCredit = "_tCredit)
 		Set tDebit = $Get(tValues("AmountCredit"),$Get(tValues("Credit")))
+		Do:pDebug ##class(Util).DebugTEST("tDebit = "_tDebit)
 		Set pp = $Get(^RichesColumn("AmountCredit"),$Get(^RichesColumn("Credit")))
-		Set $Piece(tReturn,delim,pp) = tCredit
+		Do:pDebug ##class(Util).DebugTEST("pp = "_pp)
+		Set $Piece(tReturn,delim,pp) = $Extract(tCredit,2,*)
 		Set pp = $Get(^RichesColumn("AmountDebit"),$Get(^RichesColumn("Debit")))
-		Set $Piece(tReturn,delim,pp) = tDebit
+		Do:pDebug ##class(Util).DebugTEST("pp = "_pp)
+		Set $Piece(tReturn,delim,pp) = $Extract(tDebit,2,*)
 	}
-	Set tCategory = $Get(tValues("Category"))
+	Set x = $Get(tValues("Category"))
+	Set tCategory = ##class(Util).UnquotedString(x)
+	Do:pDebug ##class(Util).DebugTEST("tCategory = "_tCategory)
 	If (tCategory '= ""),($Get(^TRANSLATE("Category",tCategory)) '= "") {
 		Set pDebug = 1
 		Set tCategory = $Get(^TRANSLATE("Category",tCategory))
 		Set pp = $Get(^RichesColumn("Category"))
-		Set $Piece(tReturn,delim,pp) = tCategory
+		Set $Piece(tReturn,delim,pp) = tCategory_q
 	}
 	Do:pDebug ##class(Util).DebugTEST("Riches.Translate - TranslateImportLine")
 	Do:pDebug ##class(Util).DebugTEST("pLine = "_pLine)
