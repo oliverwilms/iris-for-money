@@ -187,6 +187,9 @@ ClassMethod ImportDebugLine(pDebugLine As %String = "", pHeader As %String = 0, 
 	Set ^RichesColumn("CheckNumber") = $Get(^RichesHeader("CheckNumber"),$Get(^RichesHeader("Check")))
 	Set ^RichesColumn("Memo") = $Get(^RichesHeader("Memo"))
 	Set ^RichesColumn("Status") = $Get(^RichesHeader("Status"))
+	Try {
+		Set tSC = ##class(Riches.Translate).Setup()
+	} Catch {}
 	Quit $$$OK
 }
 
