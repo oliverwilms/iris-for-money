@@ -5,7 +5,16 @@ ClassMethod Setup() As %Status
 {
 	Set ^TRANSLATE("Account","Original") = "Translated"
 	Set ^TRANSLATE("Category","Restaurant") = "Restaurants"
+	Set ^TRANSLATE("Credit-Debit","DiscoverBASD") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","DscvrRose") = "Credit is Debit"
 	Set ^TRANSLATE("Credit-Debit","Hhonors") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","Lowes") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","Marriott") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","OldNavy") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","RedCard") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","Sapphire") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","Southwest") = "Credit is Debit"
+	Set ^TRANSLATE("Credit-Debit","WfActiveCash") = "Credit is Debit"
 	Quit $$$OK
 }
 
