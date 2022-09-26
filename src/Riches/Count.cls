@@ -1,7 +1,7 @@
 Class Riches.Count
 {
 
-Parameter OUT = "W";
+Parameter OUT = "X";
 
 ClassMethod Count(param As %String = "") As %Status
 {
@@ -266,6 +266,9 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pM
  	Set (tSumCount, tSumCredit, tSumDebit) = 0
  	Write !,"<tbody>"
 	Set tCategory = ""
+	Set node = $NAME(^SORT(tYear,tMonth))
+	Kill @node
+	//Set tRow = 0
 	For {
 		Set tCategory = $Order(^COUNT(tYear,tMonth,tCategory),1,tData)
 		If (tCategory = "") { QUIT }
@@ -274,13 +277,16 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pM
 		Set tDebit = $Piece(tData,"^",3)
 		Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
 		Set tClick = $Replace(pTrClick,"#",tReturn)
-		If ..#OUT = "W" Write !,"<tr onclick=""",tClick,""";>"
+		If ..#OUT [ "W" Write !,"<tr onclick=""",tClick,""";>"
 		Set tNickname = ..GetNickname("Riches.Category",tCategory)
-		If ..#OUT = "W" Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+		Set tSort = 0 - $ZABS(tCredit - tDebit)
+		If ..#OUT [ "W" Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+		If ..#OUT [ "X" Set @node@(tSort,tCategory,tNickname) = tData
 		Set tSumCount = tSumCount + tCount
 		Set tSumCredit = tSumCredit + tCredit
 		Set tSumDebit = tSumDebit + tDebit
 	}
+	Set tSC = ..OutputTableNode(tYear,tMonth,pTrClick)
 	Write !,"</tbody>"
  	Do ..OutputTableFoot(1,tSumCount,tSumCredit,tSumDebit)
  	Set tReturn = "^"_tYear_"^"_tMonth
@@ -317,6 +323,36 @@ ClassMethod OutputTableHead(pHead As %String = "") As %Status
 ClassMethod OutputTableNada() As %Status
 {
 	Write !,"<tr><td>Nothing to show here</td></tr>"
+	Quit $$$OK
+}
+
+ClassMethod OutputTableNode(pYear As %String = "", pMonth As %String = "", pTrClick As %String = "") As %String
+{
+	Set tYear = pYear
+	Set tMonth = pMonth
+	Set node = $NAME(^SORT(tYear,tMonth))
+	Set tSort = ""
+	For {
+		Set tSort = $Order(@node@(tSort))
+		If (tSort = "") { QUIT }
+		Set tCategory = ""
+		For {
+			Set tCategory = $Order(@node@(tSort,tCategory))
+			If (tCategory = "") { QUIT }
+			Set tNickname = ""
+			For {
+				Set tNickname = $Order(@node@(tSort,tCategory,tNickname),1,tData)
+				If (tNickname = "") { QUIT }
+				Set tCount = $Piece(tData,"^",1)
+				Set tCredit = $Piece(tData,"^",2)
+				Set tDebit = $Piece(tData,"^",3)
+				Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
+				Set tClick = $Replace(pTrClick,"#",tReturn)
+				Write !,"<tr onclick=""",tClick,""";>"
+				Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+			}
+		}
+	}
 	Quit $$$OK
 }
 
