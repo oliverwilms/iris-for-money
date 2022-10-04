@@ -5,7 +5,7 @@
 <table cellpadding=5 border=1>
 <tr><th align=left><B>Page</B></th><th align=left><B>Description</B></th><th align=left>&nbsp;</th></tr>
 <tr>
-<td><A HREF='GlobalContest.csp'><b>Global Contest</b></A></td>
+<td><A HREF='GlobalsContest.csp'><b>Global Contest</b></A></td>
 </tr> 
 </table>
 </body>
