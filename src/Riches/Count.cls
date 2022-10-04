@@ -194,10 +194,7 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 			Set tCount = $Piece(tData,"^",1)
 			Set tCredit = $Piece(tData,"^",2)
 			Set tDebit = $Piece(tData,"^",3)
-			Set tDifference = tCredit - tDebit
-			Write !,"<tr onclick=""",tClick,""";>"
-			Write "<td>",tCategory,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td>"
-			Write "<td>",tDifference,"</td></tr>"
+			Set tSC = ..OutputTableRow(tClick,tCategory,tData)
 			Set tSumCount = tSumCount + tCount
 			Set tSumCredit = tSumCredit + tCredit
 			Set tSumDebit = tSumDebit + tDebit
@@ -353,18 +350,30 @@ ClassMethod OutputTableNode(pYear As %String = "", pMonth As %String = "", pTrCl
 			For {
 				Set tNickname = $Order(@node@(tSort,tCategory,tNickname),1,tData)
 				If (tNickname = "") { QUIT }
-				Set tCount = $Piece(tData,"^",1)
-				Set tCredit = $Piece(tData,"^",2)
-				Set tDebit = $Piece(tData,"^",3)
-				Set tDifference = tCredit - tDebit
 				Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
 				Set tClick = $Replace(pTrClick,"#",tReturn)
-				Write !,"<tr onclick=""",tClick,""";>"
-				Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td>"
-				Write "<td>",tDifference,"</td></tr>"
+				Set tSC = ..OutputTableRow(tClick,tNickname,tData)
 			}
 		}
 	}
+	Quit $$$OK
+}
+
+ClassMethod OutputTableRow(pTrClick As %String, pCategory As %String, pData As %String) As %Status
+{
+	Set pTrClick = $Get(pTrClick)
+	Set pCategory = $Get(pCategory)
+	Set pData = $Get(pData)
+	Set tCount = $Piece(pData,"^",1)
+	Set tCredit = $Piece(pData,"^",2)
+	Set tDebit = $Piece(pData,"^",3)
+	Set tDifference = tCredit - tDebit
+	Set tCreditJ = $JUSTIFY(tCredit,0,2)
+	Set tDebitJ = $JUSTIFY(tDebit,0,2)
+	Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
+	Write !,"<tr onclick=""",pTrClick,""";>"
+	Write "<td>",pCategory,"</td><td>",tCount,"</td><td>",tDebitJ,"</td><td>",tCreditJ,"</td>"
+	Write "<td>",tDifferenceJ,"</td></tr>"
 	Quit $$$OK
 }
 
