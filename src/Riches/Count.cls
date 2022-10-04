@@ -182,7 +182,7 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 		Set tYear = $Order(^COUNT(tYear),tOrder)
 		Set tMonth = $Order(^COUNT(tYear,tMonth),tOrder,tData)
 	}
-	Set pHead = "Month^Count^Debit^Credit"
+	Set pHead = "Month^Count^Debit^Credit^Difference"
 	Do ..OutputTableHead(pHead)
 	Set (tSumCount, tSumCredit, tSumDebit) = 0
 	Write !,"<tbody>"
@@ -194,8 +194,10 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 			Set tCount = $Piece(tData,"^",1)
 			Set tCredit = $Piece(tData,"^",2)
 			Set tDebit = $Piece(tData,"^",3)
+			Set tDifference = tCredit - tDebit
 			Write !,"<tr onclick=""",tClick,""";>"
-			Write "<td>",tCategory,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+			Write "<td>",tCategory,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td>"
+			Write "<td>",tDifference,"</td></tr>"
 			Set tSumCount = tSumCount + tCount
 			Set tSumCredit = tSumCredit + tCredit
 			Set tSumDebit = tSumDebit + tDebit
@@ -207,7 +209,8 @@ ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", 
 		Set tMonth = $Order(^COUNT(tYear,tMonth),tOrder,tData)
 	}
 	Write !,"</tbody>"
-	Do ..OutputTableFoot(1,tSumCount,tSumCredit,tSumDebit)
+	Set tDifference = tSumCredit - tSumDebit
+	Do ..OutputTableFoot(1,tSumCount,tSumCredit,tSumDebit,tDifference)
 	Quit tReturn
 }
 
@@ -288,13 +291,19 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pM
 	}
 	Set tSC = ..OutputTableNode(tYear,tMonth,pTrClick)
 	Write !,"</tbody>"
- 	Do ..OutputTableFoot(1,tSumCount,tSumCredit,tSumDebit)
+	Set tDifference = tSumCredit - tSumDebit
+	Do ..OutputTableFoot(1,tSumCount,tSumCredit,tSumDebit,tDifference)
  	Set tReturn = "^"_tYear_"^"_tMonth
  	Quit tReturn
 }
 
-ClassMethod OutputTableFoot(pColSpan As %String = "", pCount As %String = "", pCredit As %String = "", pDebit As %String = "") As %Status
+ClassMethod OutputTableFoot(pColSpan As %String, pCount As %String, pCredit As %String, pDebit As %String, pDifference As %String) As %Status
 {
+	Set pColSpan = $Get(pColSpan)
+	Set pCount = $Get(pCount)
+	Set pCredit = $Get(pCredit)
+	Set pDebit = $Get(pDebit)
+	Set pDifference = $Get(pDifference)
 	Set q = """"
 	Set qColSpan = q_pColSpan_q
 	Write !,"<tfoot>"
@@ -302,6 +311,7 @@ ClassMethod OutputTableFoot(pColSpan As %String = "", pCount As %String = "", pC
 	Write !,"<td>",pCount,"</td>"
 	Write !,"<td>",pDebit,"</td>"
 	Write !,"<td>",pCredit,"</td>"
+	Write !,"<td>",pDifference,"</td>"
 	Write !,"</tr>"
 	Write !,"</tfoot>"
 	Quit $$$OK
@@ -309,7 +319,7 @@ ClassMethod OutputTableFoot(pColSpan As %String = "", pCount As %String = "", pC
 
 ClassMethod OutputTableHead(pHead As %String = "") As %Status
 {
-	If (pHead = "") Set pHead = "Category^Count^Debit^Credit"
+	If (pHead = "") Set pHead = "Category^Count^Debit^Credit^Difference"
 	Write !,"<thead>"
 	Write !,"<tr>"
 	For ii = 1:1:$Length(pHead,"^") {
@@ -346,10 +356,12 @@ ClassMethod OutputTableNode(pYear As %String = "", pMonth As %String = "", pTrCl
 				Set tCount = $Piece(tData,"^",1)
 				Set tCredit = $Piece(tData,"^",2)
 				Set tDebit = $Piece(tData,"^",3)
+				Set tDifference = tCredit - tDebit
 				Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
 				Set tClick = $Replace(pTrClick,"#",tReturn)
 				Write !,"<tr onclick=""",tClick,""";>"
-				Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td></tr>"
+				Write "<td>",tNickname,"</td><td>",tCount,"</td><td>",tDebit,"</td><td>",tCredit,"</td>"
+				Write "<td>",tDifference,"</td></tr>"
 			}
 		}
 	}
