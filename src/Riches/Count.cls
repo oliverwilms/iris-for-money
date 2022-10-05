@@ -305,10 +305,10 @@ ClassMethod OutputTableFoot(pColSpan As %String, pCount As %String, pCredit As %
 	Set qColSpan = q_pColSpan_q
 	Write !,"<tfoot>"
 	Write !,"<tr><td colspan=",qColSpan,">Sum</td>"
-	Write !,"<td>",pCount,"</td>"
-	Write !,"<td>",pDebit,"</td>"
-	Write !,"<td>",pCredit,"</td>"
-	Write !,"<td>",pDifference,"</td>"
+	Do ##class(Util).OutputTableDataRight(pCount)
+	Do ##class(Util).OutputTableDataRight(pDebit)
+	Do ##class(Util).OutputTableDataRight(pCredit)
+	Do ##class(Util).OutputTableDataRight(pDifference)
 	Write !,"</tr>"
 	Write !,"</tfoot>"
 	Quit $$$OK
@@ -372,8 +372,12 @@ ClassMethod OutputTableRow(pTrClick As %String, pCategory As %String, pData As %
 	Set tDebitJ = $JUSTIFY(tDebit,0,2)
 	Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
 	Write !,"<tr onclick=""",pTrClick,""";>"
-	Write "<td>",pCategory,"</td><td>",tCount,"</td><td>",tDebitJ,"</td><td>",tCreditJ,"</td>"
-	Write "<td>",tDifferenceJ,"</td></tr>"
+	Write "<td>",pCategory,"</td>"
+	Do ##class(Util).OutputTableDataRight(tCount)
+	Do ##class(Util).OutputTableDataRight(tDebitJ)
+	Do ##class(Util).OutputTableDataRight(tCreditJ)
+	Do ##class(Util).OutputTableDataRight(tDifferenceJ)
+	Write "</tr>"
 	Quit $$$OK
 }
 
