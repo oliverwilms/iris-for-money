@@ -420,6 +420,15 @@ ClassMethod OutputSelectTable(pName As %String = "iTable", pID As %String = "iTa
 	Quit $$$OK
 }
 
+ClassMethod OutputTableDataRight(pValue As %String = "") As %Status
+{
+	Set q = """"
+	Set tStyle = "text-align:right"
+	Set qStyle = q_tStyle_q
+	Write "<td style="_qStyle_">"_$Get(pValue)_"</td>"
+	Quit $$$OK
+}
+
 ClassMethod QuoteJSLogicalDisplay(pLogical As %String = "", pDisplay As %String = "") As %String
 {
 	Set tLogicalDisplay = ..EncodeLogicalDisplay(pLogical,pDisplay)
