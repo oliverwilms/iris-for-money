@@ -551,9 +551,8 @@ ClassMethod OutputTableRowAverage(param As %String, pCategory As %String, pData 
 
 	Write !,"<tr onclick=""",pTrClick,""";>"
 	Write "<td>",tNickname,"</td>"
-	Set pData = $Get(pData)
-	Set tDataJ = $JUSTIFY(pData,0,2)
-	Set pData = ""
+	Set tCount = 0
+	Set tData = ""
 	Set yy = tFromYY - 1
 	For {
 		Set yy = $Order(^COUNT(yy))
@@ -564,15 +563,18 @@ ClassMethod OutputTableRowAverage(param As %String, pCategory As %String, pData 
 			Set mm = $Order(^COUNT(yy,mm))
 			If (mm = "") { Quit }
 			If (yy = tToYY),(mm > tToMM) { Quit }
-			Set pData = $Get(^COUNT(yy,mm,pCategory))
-			Set tCredit = $Piece(pData,"^",2)
-			Set tDebit = $Piece(pData,"^",3)
+			Set tData = $Get(^COUNT(yy,mm,pCategory))
+			Set tCredit = $Piece(tData,"^",2)
+			Set tDebit = $Piece(tData,"^",3)
 			Set tDifference = tCredit - tDebit
 			Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
 			Do ##class(Util).OutputTableDataRight(tDifferenceJ)
+			Set tCount = tCount + 1
 		}
 	}
-	Do ##class(Util).OutputTableDataRight(tDataJ)
+	If (tCount > 0) Set tAverage = $Get(pData) / tCount
+	Set tAverageJ = $JUSTIFY($Get(tAverage),0,2)
+	Do ##class(Util).OutputTableDataRight(tAverageJ)
 	Write "</tr>"
 	Quit $$$OK
 }
