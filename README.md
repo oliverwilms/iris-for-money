@@ -39,6 +39,10 @@ Again I go to http://localhost:57700/irisapp/Account.csp. This time I create a r
 
 ![screenshot](https://github.com/oliverwilms/bilder/blob/main/Riches_Account_New.PNG)
 
+## Globals Contest
+
+Begin at GlobalsContest.csp. Open a file. Upon opening a file its contents are loaded into ^RichesDEBUG global. Wait a while before refreshing the page. You can see the number of lines loaded into ^RichesDEBUG. Click Import Debug button to import data from ^RichesDEBUG global into Transactions table. Transaction data will appear on the screen. Click Count button to count Transaction data into ^COUNT global by months. Click Display button to see the data ...
+
 ## Data Model
 /riches web app is another way to manage persistent data in Riches.Category class. It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
