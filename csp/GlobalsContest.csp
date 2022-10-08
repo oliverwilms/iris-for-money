@@ -7,7 +7,7 @@ If ($Data(%request.Data("debug",1))) {
 	If (iDebug = "RESET") Kill ^RichesDEBUG
 }
 Set tDebugCount = $Get(^RichesDEBUG,0)
-Set tDebug = 1
+Set tDebug = 0
 Set tPage = "GlobalsContest.csp"
 Do:tDebug ##class(Riches.Util).DebugTEST(tPage_" - head")
 //Set tHiddenColSelect = ""
@@ -270,7 +270,9 @@ Write "<button type=",qType," onclick=",qClick,">Reset</button>",!
 </td></tr>
 <tr><td>
 <script language="Cache" runat="Server">
-Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
+Try {
+	Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into table:",$Get(iTable))
+} Catch {}
 </script>
 </td><td>
 <label for="file-uploader">CSV file:</label>
@@ -278,9 +280,10 @@ Set tSC = ##class(Riches.Util).OutputSelectTable("iTable","iTable","Insert into 
 </td><td>
 <script language="Cache" runat="Server">
 Set q = """"
-Set qClick = q_"goClickButton('PREVIEW')"_q
+//Set qClick = q_"goClickButton('PREVIEW')"_q
+Set qClick = q_"goClickButton('MENU')"_q
 Set qType = q_"button"_q
-Write "<button type=",qType," onclick=",qClick,">Preview</button>",!
+Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
 </script>
 </td></tr>
 <tr><td>
@@ -349,8 +352,9 @@ If (pWhere '= "") {
 }
 	Set pTrClick = "javascript:tableClickHandler('#');"
 	Set pAccFlg = 1
+Try {
 	Set tSC = $CLASSMETHOD(tClassname,"OutputTableData",pWhere,pTrClick,pAccFlg)
-
+} Catch {}
 Write "</table>",!
 
 </script>
