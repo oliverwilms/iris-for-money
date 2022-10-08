@@ -3,6 +3,43 @@ Class Riches.Count
 
 Parameter OUT = "X";
 
+ClassMethod Average(param As %String) As %Status
+{
+	Kill ^AVERAGE
+	Set delim = "^"
+	Set tDebug = 1
+	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Average")
+	Set tFromYY = 2021
+	Set tFromMM = 10
+	Set tToYY = 2022
+	Set tToMM = 9
+	Set yy = tFromYY - 1
+	For {
+		Set yy = $Order(^COUNT(yy))
+		If (yy = "") { Quit }
+		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
+		For {
+			Set mm = $Order(^COUNT(yy,mm))
+			If (mm = "") { Quit }
+			Set cc = ""
+			For {
+				Set cc = $Order(^COUNT(yy,mm,cc))
+				If (cc = "") { Quit }
+				Set data = $Get(^COUNT(yy,mm,cc))
+				Set diff = $Piece(data,delim,2) - $Piece(data,delim,3)
+				Set aver = $Get(^AVERAGE(cc))
+				Set ^AVERAGE(cc) = aver + diff
+			}
+		}
+	}
+	Set param = delim
+	Set $Piece(param,delim,2) = tFromMM
+	Set $Piece(param,delim,3) = tFromYY
+	Set $Piece(param,delim,4) = tToMM
+	Set $Piece(param,delim,5) = tToYY
+	Quit $$$OK
+}
+
 ClassMethod Count(param As %String = "") As %Status
 {
 	Kill ^COUNT
@@ -118,6 +155,90 @@ ClassMethod GetNickname(pTable As %String, pId As %String) As %String
 	Set tObject = $CLASSMETHOD(pTable,"%OpenId",$Get(pId))
 	If $Data(tObject),$IsObject(tObject) Set tNickname = tObject.Nickname
 	Quit tNickname
+}
+
+ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
+{
+	Set tDebug = 1
+	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableAverage")
+	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
+	If (pTrClick = "") Set pMaxRows = -1  // ?
+	Set tFilter = ""
+	Set tOrder = -1  // Show newest first
+	Set (tYear, tMonth) = ""
+	// iFilter = NEXT^2022^12
+	If (pWhere [ "iFilter") {
+		Set tFilter = $Piece(pWhere," AND ",1,1)
+		Set tFilter = $Piece(tFilter,"iFilter = ",2)
+		Set tYear = $Piece(tFilter,"^",2)
+		Set tMonth = $Piece(tFilter,"^",3)
+		Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
+		Set pWhere = $Piece(pWhere," AND ",2,*)
+	}
+	If (tMonth = "") Set tYear = ""
+	If (tYear = "") {
+		Set tDate = $ZDATE($HOROLOG)
+		Set tYear = $Piece(tDate,"/",3)
+		Set tMonth = +$Piece(tDate,"/",1)  // Drop leading zero
+	}
+	If ($Extract(tFilter,1,4) = "NEXT") {
+		Set tMonth = $Order(^COUNT(tYear,tMonth),1)
+		If (tMonth = "") {
+			Set tYear = $Order(^COUNT(tYear),1)
+			If (tYear '= "") {
+				Set tMonth = $Order(^COUNT(tYear,tMonth),1)
+			}
+		}
+	}
+	If ($Extract(tFilter,1,4) = "PREV") {
+		Set tMonth = $Order(^COUNT(tYear,tMonth),-1)
+		If (tMonth = "") {
+			Set tYear = $Order(^COUNT(tYear),-1)
+			If (tYear '= "") {
+				Set tMonth = $Order(^COUNT(tYear,tMonth),-1)
+			}
+		}
+	}
+	Set tReturn = "^"_tYear_"^"_tMonth
+	If (tYear = "") {
+		Do ..OutputTableNada()
+ 		Quit tReturn
+	}
+	Do ..Average(.param)
+	Set tHead = "Category^1^2^3^4^5^6^7^8^9^10^11^12^Average"
+	Do ..OutputTableHead(tHead)
+ 	Set (tSumData) = 0
+ 	Write !,"<tbody>"
+	Set tCategory = ""
+	//Set node = $NAME(^SORT(tYear,tMonth))
+	Set node = $NAME(^SORT)
+	Kill @node
+	//Set tRow = 0
+	For {
+		Set tCategory = $Order(^AVERAGE(tCategory),1,tData)
+		If (tCategory = "") { QUIT }
+	//	Set tCount = $Piece(tData,"^",1)
+	//	Set tCredit = $Piece(tData,"^",2)
+	//	Set tDebit = $Piece(tData,"^",3)
+		Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
+		Set tClick = $Replace(pTrClick,"#",tReturn)
+		If ..#OUT [ "W" Write !,"<tr onclick=""",tClick,""";>"
+		Set tNickname = ..GetNickname("Riches.Category",tCategory)
+		Set tSort = 0 - $ZABS(tData)
+		If ..#OUT [ "W" Write "<td>",tNickname,"</td><td>",tData,"</td><td>",tData,"</td><td>",tData,"</td></tr>"
+		If ..#OUT [ "X" Set @node@(tSort,tCategory,tNickname) = tData
+		Set tSumData = tSumData + tData
+	//	Set tSumCount = tSumCount + tCount
+	//	Set tSumCredit = tSumCredit + tCredit
+	//	Set tSumDebit = tSumDebit + tDebit
+	}
+	Set tSC = ..OutputTableNodeAverage(param)
+	Write !,"</tbody>"
+	//Set tDifference = tSumCredit - tSumDebit
+	Do ..OutputTableFoot(1,tSumData,tSumData,tSumData,tSumData)
+ 	Set tReturn = "^"_tYear_"^"_tMonth
+ 	Quit tReturn
+	Quit $$$OK
 }
 
 ClassMethod OutputTableCount2(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
@@ -359,6 +480,40 @@ ClassMethod OutputTableNode(pYear As %String = "", pMonth As %String = "", pTrCl
 	Quit $$$OK
 }
 
+ClassMethod OutputTableNodeAverage(param As %String = "", pTrClick As %String = "") As %String
+{
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
+
+	//Set tYear = pYear
+	//Set tMonth = pMonth
+	//Set node = $NAME(^SORT(tYear,tMonth))
+	Set node = $NAME(^SORT)
+	Set tSort = ""
+	For {
+		Set tSort = $Order(@node@(tSort))
+		If (tSort = "") { QUIT }
+		Set tCategory = ""
+		For {
+			Set tCategory = $Order(@node@(tSort,tCategory))
+			If (tCategory = "") { QUIT }
+			Set tNickname = ""
+			For {
+				Set tNickname = $Order(@node@(tSort,tCategory,tNickname),1,tData)
+				If (tNickname = "") { QUIT }
+				//Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
+				Set tClick = $Replace(pTrClick,"#","tReturn")
+				Set tSC = ..OutputTableRowAverage(param,tCategory,tData)
+			}
+		}
+	}
+	Quit $$$OK
+}
+
 ClassMethod OutputTableRow(pTrClick As %String, pCategory As %String, pData As %String) As %Status
 {
 	Set pTrClick = $Get(pTrClick)
@@ -377,6 +532,47 @@ ClassMethod OutputTableRow(pTrClick As %String, pCategory As %String, pData As %
 	Do ##class(Util).OutputTableDataRight(tDebitJ)
 	Do ##class(Util).OutputTableDataRight(tCreditJ)
 	Do ##class(Util).OutputTableDataRight(tDifferenceJ)
+	Write "</tr>"
+	Quit $$$OK
+}
+
+ClassMethod OutputTableRowAverage(param As %String, pCategory As %String, pData As %String) As %Status
+{
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
+	
+	Set pTrClick = $Get(pTrClick)
+	Set pCategory = $Get(pCategory)
+	Set tNickname = ..GetNickname("Riches.Category",pCategory)
+
+	Write !,"<tr onclick=""",pTrClick,""";>"
+	Write "<td>",tNickname,"</td>"
+	Set pData = $Get(pData)
+	Set tDataJ = $JUSTIFY(pData,0,2)
+	Set pData = ""
+	Set yy = tFromYY - 1
+	For {
+		Set yy = $Order(^COUNT(yy))
+		If (yy = "") { Quit }
+		If (yy > tToYY) { Quit }
+		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
+		For {
+			Set mm = $Order(^COUNT(yy,mm))
+			If (mm = "") { Quit }
+			If (yy = tToYY),(mm > tToMM) { Quit }
+			Set pData = $Get(^COUNT(yy,mm,pCategory))
+			Set tCredit = $Piece(pData,"^",2)
+			Set tDebit = $Piece(pData,"^",3)
+			Set tDifference = tCredit - tDebit
+			Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
+			Do ##class(Util).OutputTableDataRight(tDifferenceJ)
+		}
+	}
+	Do ##class(Util).OutputTableDataRight(tDataJ)
 	Write "</tr>"
 	Quit $$$OK
 }
