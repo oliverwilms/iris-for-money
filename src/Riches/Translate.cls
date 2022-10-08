@@ -4,6 +4,7 @@ Class Riches.Translate
 ClassMethod Setup() As %Status
 {
 	Set ^TRANSLATE("Account","Original") = "Translated"
+	Set ^TRANSLATE("Category","Gift") = "Gifts"
 	Set ^TRANSLATE("Category","Haircut") = "Personal Care"
 	Set ^TRANSLATE("Category","Restaurant") = "Restaurants"
 	Set ^TRANSLATE("Credit-Debit","Amazon") = "Credit is Debit"
