@@ -235,7 +235,7 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	Set tSC = ..OutputTableNodeAverage(param)
 	Write !,"</tbody>"
 	//Set tDifference = tSumCredit - tSumDebit
-	Do ..OutputTableFoot(1,tSumData,tSumData,tSumData,tSumData)
+	Do ..OutputTableFootAverage(param,tSumData)
  	Set tReturn = "^"_tYear_"^"_tMonth
  	Quit tReturn
 	Quit $$$OK
@@ -435,6 +435,25 @@ ClassMethod OutputTableFoot(pColSpan As %String, pCount As %String, pCredit As %
 	Quit $$$OK
 }
 
+ClassMethod OutputTableFootAverage(param As %String, pData As %String) As %Status
+{
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
+	Set pColSpan = $Get(pColSpan,1)
+	Set q = """"
+	Set qColSpan = q_pColSpan_q
+	Write !,"<tfoot>"
+	Write !,"<tr><td colspan=",qColSpan,">Sum</td>"
+	Do ..OutputTdsPeriodAverage(param,"",pData)
+	Write "</tr>"
+	Write !,"</tfoot>"
+	Quit $$$OK
+}
+
 ClassMethod OutputTableHead(pHead As %String = "") As %Status
 {
 	If (pHead = "") Set pHead = "Category^Count^Debit^Credit^Difference"
@@ -514,6 +533,42 @@ ClassMethod OutputTableNodeAverage(param As %String = "", pTrClick As %String = 
 	Quit $$$OK
 }
 
+ClassMethod OutputTdsPeriodAverage(param As %String = "", pCategory As %String = "", pData As %String) As %Status
+{
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
+	Set tCount = 0
+	Set tData = ""
+	Set yy = tFromYY - 1
+	For {
+		Set yy = $Order(^COUNT(yy))
+		If (yy = "") { Quit }
+		If (yy > tToYY) { Quit }
+		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
+		For {
+			Set mm = $Order(^COUNT(yy,mm))
+			If (mm = "") { Quit }
+			If (yy = tToYY),(mm > tToMM) { Quit }
+			If (pCategory = "") Set tData = $Get(^COUNT(yy,mm))
+			If (pCategory '= "") Set tData = $Get(^COUNT(yy,mm,pCategory))
+			Set tCredit = $Piece(tData,"^",2)
+			Set tDebit = $Piece(tData,"^",3)
+			Set tDifference = tCredit - tDebit
+			Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
+			Do ##class(Util).OutputTableDataRight(tDifferenceJ)
+			Set tCount = tCount + 1
+		}
+	}
+	If (tCount > 0) Set tAverage = $Get(pData) / tCount
+	Set tAverageJ = $JUSTIFY($Get(tAverage),0,2)
+	Do ##class(Util).OutputTableDataRight(tAverageJ)
+	Quit $$$OK
+}
+
 ClassMethod OutputTableRow(pTrClick As %String, pCategory As %String, pData As %String) As %Status
 {
 	Set pTrClick = $Get(pTrClick)
@@ -551,30 +606,7 @@ ClassMethod OutputTableRowAverage(param As %String, pCategory As %String, pData 
 
 	Write !,"<tr onclick=""",pTrClick,""";>"
 	Write "<td>",tNickname,"</td>"
-	Set tCount = 0
-	Set tData = ""
-	Set yy = tFromYY - 1
-	For {
-		Set yy = $Order(^COUNT(yy))
-		If (yy = "") { Quit }
-		If (yy > tToYY) { Quit }
-		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
-		For {
-			Set mm = $Order(^COUNT(yy,mm))
-			If (mm = "") { Quit }
-			If (yy = tToYY),(mm > tToMM) { Quit }
-			Set tData = $Get(^COUNT(yy,mm,pCategory))
-			Set tCredit = $Piece(tData,"^",2)
-			Set tDebit = $Piece(tData,"^",3)
-			Set tDifference = tCredit - tDebit
-			Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
-			Do ##class(Util).OutputTableDataRight(tDifferenceJ)
-			Set tCount = tCount + 1
-		}
-	}
-	If (tCount > 0) Set tAverage = $Get(pData) / tCount
-	Set tAverageJ = $JUSTIFY($Get(tAverage),0,2)
-	Do ##class(Util).OutputTableDataRight(tAverageJ)
+	Do ..OutputTdsPeriodAverage(param,pCategory,pData)
 	Write "</tr>"
 	Quit $$$OK
 }
