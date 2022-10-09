@@ -83,7 +83,7 @@ Set tClassMethod = "OutputTableAverage"
 Set tClick = "goClickCount2"
 Set pWhere = ""
 If ($Get(iFilter) '= "") {
-	//Set pWhere = pWhere_" AND iFilter = "_iFilter
+	Set pWhere = pWhere_" AND iFilter = "_iFilter
 }
 If ($Get(iStartDate) '= "") {
 	//Set pWhere = pWhere_" AND TranDate >= "_q_iStartDate_q
