@@ -78,6 +78,11 @@ ClassMethod GetColumnListCSV(pClassname As %String = "") As %String
 	Quit $Get(tColumnListCSV)
 }
 
+ClassMethod GetLink(param As %String = "") As %String
+{
+	Set tLink = "GlobalsContest.csp?iFilter="_param
+}
+
 ClassMethod GetOptionsTableColumns(pClassname As %String = "", Output pOptions As %String) As %String
 {
 	/*
@@ -420,12 +425,16 @@ ClassMethod OutputSelectTable(pName As %String = "iTable", pID As %String = "iTa
 	Quit $$$OK
 }
 
-ClassMethod OutputTableDataRight(pValue As %String = "") As %Status
+ClassMethod OutputTableDataRight(pValue As %String = "", pClick As %String = "") As %Status
 {
 	Set q = """"
+	If (pClick '= "") {
+		Set qClick = q_pClick_q
+		Set tClick = " onclick="_qClick
+	}
 	Set tStyle = "text-align:right"
 	Set qStyle = q_tStyle_q
-	Write "<td style="_qStyle_">"_$Get(pValue)_"</td>"
+	Write "<td style="_qStyle_$Get(tClick)_">"_$Get(pValue)_"</td>"
 	Quit $$$OK
 }
 
