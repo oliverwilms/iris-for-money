@@ -85,7 +85,7 @@ function goClickButton(id)
 		return;
 	}
 	if (id == 'DISPLAY') {
-		document.location = "Count.csp";
+		document.location = "Average.csp";
 		return;
 	}
 	if (id == 'MENU') {
