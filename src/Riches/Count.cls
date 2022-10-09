@@ -148,6 +148,13 @@ ClassMethod DateParts(pDate As %String, Output pYear As %Integer, Output pMonth 
 	Quit tSC
 }
 
+ClassMethod GetLink(pYear As %String = "", pMonth As %String = "", pCategory As %String = "") As %String
+{
+	Set delim = "^"
+	Set tFilter = delim_pYear_delim_pMonth_delim_pCategory
+	Set tLink = "GlobalsContest.csp?iFilter="_tFilter
+}
+
 ClassMethod GetNickname(pTable As %String, pId As %String) As %String
 {
 	Set tNickname = ""
@@ -525,7 +532,7 @@ ClassMethod OutputTableNodeAverage(param As %String = "", pTrClick As %String = 
 				Set tNickname = $Order(@node@(tSort,tCategory,tNickname),1,tData)
 				If (tNickname = "") { QUIT }
 				//Set tReturn = "^"_tYear_"^"_tMonth_"^"_tCategory
-				Set tClick = $Replace(pTrClick,"#","tReturn")
+				//Set tClick = $Replace(pTrClick,"#","tReturn")
 				Set tSC = ..OutputTableRowAverage(param,tCategory,tData)
 			}
 		}
@@ -554,12 +561,17 @@ ClassMethod OutputTdsPeriodAverage(param As %String = "", pCategory As %String =
 			If (mm = "") { Quit }
 			If (yy = tToYY),(mm > tToMM) { Quit }
 			If (pCategory = "") Set tData = $Get(^COUNT(yy,mm))
-			If (pCategory '= "") Set tData = $Get(^COUNT(yy,mm,pCategory))
+			If (pCategory '= "") {
+				Set tData = $Get(^COUNT(yy,mm,pCategory))
+				Set tFilter = delim_yy_delim_mm_delim_pCategory
+				Set tClick = "javascript:goClickCount1('"_tFilter_"')"
+			}
 			Set tCredit = $Piece(tData,"^",2)
 			Set tDebit = $Piece(tData,"^",3)
 			Set tDifference = tCredit - tDebit
 			Set tDifferenceJ = $JUSTIFY(tDifference,0,2)
-			Do ##class(Util).OutputTableDataRight(tDifferenceJ)
+			
+			Do ##class(Util).OutputTableDataRight(tDifferenceJ,$Get(tClick))
 			Set tCount = tCount + 1
 		}
 	}
