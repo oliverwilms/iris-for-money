@@ -148,11 +148,41 @@ ClassMethod DateParts(pDate As %String, Output pYear As %Integer, Output pMonth 
 	Quit tSC
 }
 
+ClassMethod GetHeader(param As %String = "") As %String
+{
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
+	Set delim = "^"
+	//Set tHead = "Category^1^2^3^4^5^6^7^8^9^10^11^12^Average"
+	Set tHead = "Category"_delim
+	Set yy = tFromYY - 1
+	For {
+		Set yy = $Order(^COUNT(yy))
+		If (yy = "") { Quit }
+		If (yy > tToYY) { Quit }
+		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
+		For {
+			Set mm = $Order(^COUNT(yy,mm))
+			If (mm = "") { Quit }
+			If (yy = tToYY),(mm > tToMM) { Quit }
+			Set tData = mm_"/"_yy
+			Set tHead = tHead_tData_delim
+		}
+	}
+	Set tHead = tHead_"Average"
+	Quit tHead
+}
+
 ClassMethod GetLink(pYear As %String = "", pMonth As %String = "", pCategory As %String = "") As %String
 {
 	Set delim = "^"
 	Set tFilter = delim_pYear_delim_pMonth_delim_pCategory
 	Set tLink = "GlobalsContest.csp?iFilter="_tFilter
+	Quit tLink
 }
 
 ClassMethod GetNickname(pTable As %String, pId As %String) As %String
@@ -212,7 +242,7 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
  		Quit tReturn
 	}
 	Do ..Average(.param)
-	Set tHead = "Category^1^2^3^4^5^6^7^8^9^10^11^12^Average"
+	Set tHead = ..GetHeader($Get(param))
 	Do ..OutputTableHead(tHead)
  	Set (tSumData) = 0
  	Write !,"<tbody>"
@@ -243,8 +273,8 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	Write !,"</tbody>"
 	//Set tDifference = tSumCredit - tSumDebit
 	Do ..OutputTableFootAverage(param,tSumData)
- 	Set tReturn = "^"_tYear_"^"_tMonth
- 	Quit tReturn
+ 	//Set tReturn = "^"_tYear_"^"_tMonth
+ 	//Quit tReturn
 	Quit $$$OK
 }
 
