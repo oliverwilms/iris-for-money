@@ -199,7 +199,11 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableAverage")
 	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
+	If (pWhere = "") Quit ..OutputTableCount2(pWhere,pTrClick,pMaxRows)
+	
 	If (pTrClick = "") Set pMaxRows = -1  // ?
+
+	
 	Set tFilter = ""
 	Set tOrder = -1  // Show newest first
 	Set (tYear, tMonth) = ""
