@@ -150,31 +150,7 @@ ClassMethod DateParts(pDate As %String, Output pYear As %Integer, Output pMonth 
 
 ClassMethod GetHeader(param As %String = "") As %String
 {
-	Set delim = $Extract(param)
-	If (delim = "") Set delim = "^"
-	Set tFromMM = $Piece(param,delim,2)
-	Set tFromYY = $Piece(param,delim,3)
-	Set tToMM = $Piece(param,delim,4)
-	Set tToYY = $Piece(param,delim,5)
-	Set delim = "^"
-	//Set tHead = "Category^1^2^3^4^5^6^7^8^9^10^11^12^Average"
-	Set tHead = "Category"_delim
-	Set yy = tFromYY - 1
-	For {
-		Set yy = $Order(^COUNT(yy))
-		If (yy = "") { Quit }
-		If (yy > tToYY) { Quit }
-		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
-		For {
-			Set mm = $Order(^COUNT(yy,mm))
-			If (mm = "") { Quit }
-			If (yy = tToYY),(mm > tToMM) { Quit }
-			Set tData = mm_"/"_yy
-			Set tHead = tHead_tData_delim
-		}
-	}
-	Set tHead = tHead_"Average"
-	Quit tHead
+	Quit $Get(tHead)
 }
 
 ClassMethod GetLink(pYear As %String = "", pMonth As %String = "", pCategory As %String = "") As %String
@@ -249,8 +225,7 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
  		Quit tReturn
 	}
 	Do ..Average(.param)
-	Set tHead = ..GetHeader($Get(param))
-	Do ..OutputTableHead(tHead)
+	Do ..OutputTableHeadAverage($Get(param))
  	Set (tSumData) = 0
  	Write !,"<tbody>"
 	Set tCategory = ""
@@ -506,6 +481,47 @@ ClassMethod OutputTableHead(pHead As %String = "") As %Status
 	For ii = 1:1:$Length(pHead,"^") {
 		Write !,"<th>",$Piece(pHead,"^",ii),"</th>"
 	}
+	Write !,"</tr>"
+	Write !,"</thead>"
+	Quit $$$OK
+}
+
+ClassMethod OutputTableHeadAverage(param As %String = "") As %Status
+{
+	//Set tHead = ..GetHeader($Get(param))
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
+	Set delim = "^"
+	Write !,"<thead>"
+	Write !,"<tr>"
+	Set tData = "Category"
+	//Set tHead = "Category^1^2^3^4^5^6^7^8^9^10^11^12^Average"
+	Set tHead = "Category"_delim
+	Write !,"<th>",tData,"</th>"
+	Set yy = tFromYY - 1
+	For {
+		Set yy = $Order(^COUNT(yy))
+		If (yy = "") { Quit }
+		If (yy > tToYY) { Quit }
+		Set mm = $Select((yy = tFromYY):(tFromMM - 1),1:0)
+		For {
+			Set mm = $Order(^COUNT(yy,mm))
+			If (mm = "") { Quit }
+			If (yy = tToYY),(mm > tToMM) { Quit }
+			Set tData = mm_"/"_yy
+			Set tHead = tHead_tData_delim
+			Set tFilter = delim_yy_delim_mm
+			Set tClick = "javascript:goClickCount2('"_tFilter_"')"
+			Write !,"<th onclick="_tClick_">",tData,"</th>"
+		}
+	}
+	Set tData = "Average"
+	Set tHead = tHead_"Average"
+	Write !,"<th>",tData,"</th>"
 	Write !,"</tr>"
 	Write !,"</thead>"
 	Quit $$$OK
