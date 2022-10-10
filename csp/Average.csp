@@ -2,10 +2,13 @@
 <html>
 <head>
 <script language="Cache" runat="Server">
-Set tDebug = 0
+Set tDebug = 1
 Do:tDebug ##class(Riches.Util).DebugTEST("Average.csp - head")
 Set tHeader = "Average Multi Month"
 Set tTableCaption = "Summary Table"
+If ($Data(%request.Data("iAverage",1))) {
+	Set iAverage = %request.Data("iAverage",1)
+}
 If ($Data(%request.Data("iEndDate",1))) {
 	Set iEndDate = %request.Data("iEndDate",1)
 }
@@ -15,6 +18,7 @@ If ($Data(%request.Data("iFilter",1))) {
 If ($Data(%request.Data("iStartDate",1))) {
 	Set iStartDate = %request.Data("iStartDate",1)
 }
+Do:tDebug ##class(Riches.Util).DebugTEST("iAverage = "_$Get(iAverage))
 Do:tDebug ##class(Riches.Util).DebugTEST("iEndDate = "_$Get(iEndDate))
 Do:tDebug ##class(Riches.Util).DebugTEST("iFilter = "_$Get(iFilter))
 Do:tDebug ##class(Riches.Util).DebugTEST("iStartDate = "_$Get(iStartDate))
@@ -26,10 +30,12 @@ function goClickButton(id)
 		document.location = "menu.csp";
 		return;
 	}
+	var iAverage = document.getElementById("iAverage").value;
 	var iEndDate = document.getElementById("iEndDate").value;
 	var iFilter = id + document.getElementById("iFilter").value;
 	var iStartDate = document.getElementById("iStartDate").value;
-	document.location = "Average.csp?&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+	var params = "iAverage=" + iAverage + "&iFilter=" + iFilter + "&iEndDate=" + iEndDate + "&iStartDate=" + iStartDate;
+	document.location = "Average.csp?" + params
 }
 function goClickCount1(id)
 {
@@ -58,7 +64,8 @@ Write "<button type=",qType," onclick=",qClick,">Previous</button>",!
 </script>
 <label for="iStartDate">Start Date:</label>
 <input type="text" id="iStartDate" size="10" value="#($Get(iStartDate))#">
-<label for="iFilter">Number of Months:</label>
+<label for="iAverage">Months to Average:</label>
+<input type="text" id="iAverage" size="3" value="#($Get(iAverage))#">
 <input type="text" id="iFilter" size="10" value="#($Get(iFilter))#">
 <label for="iEndDate">End Date:</label>
 <input type="text" id="iEndDate" size="10" value="#($Get(iEndDate))#">
@@ -82,6 +89,9 @@ Set tClassname = "Riches.Count"
 Set tClassMethod = "OutputTableAverage"
 Set tClick = "goClickCount2"
 Set pWhere = ""
+If ($Get(iAverage) '= "") {
+	Set pWhere = pWhere_" AND iAverage = "_iAverage
+}
 If ($Get(iFilter) '= "") {
 	Set pWhere = pWhere_" AND iFilter = "_iFilter
 }
@@ -111,6 +121,8 @@ Try {
 <script language="JavaScript">
 	var months = 'January,February,March,April,May,June,July,August,September,October,November,December';
 	var myArray = months.split(",");
+	var iAverage= '#($Get(iAverage))#';
+	document.getElementById("iAverage").value = iAverage;
 	var iFilter = '#($Get(tReturn))#';
 	document.getElementById("iFilter").value = iFilter;
 	var iArray = iFilter.split("^");
