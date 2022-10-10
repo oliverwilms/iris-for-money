@@ -200,6 +200,9 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableAverage")
 	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
 	If (pWhere = "") Quit ..OutputTableCount2(pWhere,pTrClick,pMaxRows)
+	Set tAverage = (pWhere [ "iAverage")
+	If (tAverage = 0) Quit ..OutputTableData(pWhere,pTrClick,pMaxRows)
+	
 	
 	If (pTrClick = "") Set pMaxRows = -1  // ?
 
