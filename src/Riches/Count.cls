@@ -3,16 +3,21 @@ Class Riches.Count
 
 Parameter OUT = "X";
 
-ClassMethod Average(param As %String) As %Status
+ClassMethod Average(param As %String = "") As %Status
 {
 	Kill ^AVERAGE
-	Set delim = "^"
+	Set delim = $Extract(param)
+	If (delim = "") Set delim = "^"
+	Set tFromMM = $Piece(param,delim,2)
+	Set tFromYY = $Piece(param,delim,3)
+	Set tToMM = $Piece(param,delim,4)
+	Set tToYY = $Piece(param,delim,5)
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Average")
-	Set tFromYY = 2021
-	Set tFromMM = 10
-	Set tToYY = 2022
-	Set tToMM = 9
+	If (tFromYY = "") Set tFromYY = 2021
+	If (tFromMM = "") Set tFromMM = 10
+	If (tToMM = "") Set tToYY = 2022
+	If (tToYY = "") Set tToMM = 9
 	Set yy = tFromYY - 1
 	For {
 		Set yy = $Order(^COUNT(yy))
@@ -38,6 +43,94 @@ ClassMethod Average(param As %String) As %Status
 	Set $Piece(param,delim,4) = tToMM
 	Set $Piece(param,delim,5) = tToYY
 	Quit $$$OK
+}
+
+ClassMethod AverageParam(pWhere As %String = "") As %String
+{
+	// pWhere = iAverage = 12 AND iFilter = PREV|A|^10^2021^9^2022 AND iStartDate >= '2021/1/10' AND iEndDate <= '12/31/10'
+	If (pWhere [ "iAverage") {
+		Set tAverage = $Piece(pWhere," AND ",1,1)
+		Set tAverage = $Piece(tAverage,"iAverage = ",2)
+		Set pWhere = $Piece(pWhere," AND ",2,*)
+	}
+	Set tFilter = ""
+	Set tOrder = -1  // Show newest first
+	Set (tToYY, tToMM) = ""
+	// iFilter = PREV|A|^10^2021^9^2022
+	If (pWhere [ "iFilter") {
+		Set tFilter = $Piece(pWhere," AND ",1,1)
+		Set tFilter = $Piece(tFilter,"iFilter = ",2)
+		If (tFilter [ "|A|") {
+			Set param = $Piece(tFilter,"|A|",2,*)
+		}
+	//	Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
+		Set pWhere = $Piece(pWhere," AND ",2,*)
+	}
+	If ($Get(param) '= "") {
+		Set delim = $Extract(param)
+		If (delim = "") Set delim = "^"
+		Set tFromMM = $Piece(param,delim,2)
+		Set tFromYY = $Piece(param,delim,3)
+		Set tToMM = $Piece(param,delim,4)
+		Set tToYY = $Piece(param,delim,5)
+	}
+	If (tToMM = "") Set tToYY = ""
+	If (tToYY = "") {
+		Set tDate = $ZDATE($HOROLOG)
+		Set tToYY = $Piece(tDate,"/",3)
+		Set tToMM = +$Piece(tDate,"/",1)  // Drop leading zero
+		Set tToDD = 1
+		Set $Piece(tDate,"/",2) = tToDD
+		Set tDateH = $ZDATEH(tDate)
+		Set tDate = $ZDATE(tDateH - 1)
+		Set tToYY = $Piece(tDate,"/",3)
+		Set tToMM = +$Piece(tDate,"/",1)  // Drop leading zero
+	}
+	If ($Extract(tFilter,1,4) = "NEXT") {
+		Set tToMM = $Order(^COUNT(tToYY,tToMM),1)
+		If (tToMM = "") {
+			Set tToYY = $Order(^COUNT(tToYY),1)
+			If (tToYY '= "") {
+				Set tToMM = $Order(^COUNT(tToYY,tToMM),1)
+			}
+		}
+		Set tFromMM = $Order(^COUNT(tFromYY,tFromMM),1)
+		If (tFromMM = "") {
+			Set tFromYY = $Order(^COUNT(tFromYY),1)
+			If (tFromYY '= "") {
+				Set tFromMM = $Order(^COUNT(tFromYY,tFromMM),1)
+			}
+		}
+	}
+	If ($Extract(tFilter,1,4) = "PREV") {
+		Set tToMM = $Order(^COUNT(tToYY,tToMM),-1)
+		If (tToMM = "") {
+			Set tToYY = $Order(^COUNT(tToYY),-1)
+			If (tToYY '= "") {
+				Set tToMM = $Order(^COUNT(tToYY,tToMM),-1)
+			}
+		}
+		Set tFromMM = $Order(^COUNT(tFromYY,tFromMM),-1)
+		If (tFromMM = "") {
+			Set tFromYY = $Order(^COUNT(tFromYY),-1)
+			If (tFromYY '= "") {
+				Set tFromMM = $Order(^COUNT(tFromYY,tFromMM),-1)
+			}
+		}
+	}
+	//Set tReturn = "^"_tYear_"^"_tMonth
+	If (tToYY = "") {
+	//	Do ..OutputTableNada()
+ 	//	Quit tReturn
+	}
+	Set delim = $Get(delim,"^")
+	Set tFromMM = $Get(tFromMM)
+	Set tFromYY = $Get(tFromYY)
+	Set tToMM = $Get(tToMM)
+	Set tToYY = $Get(tToYY)
+	Set param = delim_tFromMM_delim_tFromYY_delim_tToMM_delim_tToYY
+	Do ..Average(.param)
+	Quit $Get(param)
 }
 
 ClassMethod Count(param As %String = "") As %Status
@@ -178,22 +271,27 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	If (pWhere = "") Quit ..OutputTableCount2(pWhere,pTrClick,pMaxRows)
 	Set tAverage = (pWhere [ "iAverage")
 	If (tAverage = 0) Quit ..OutputTableData(pWhere,pTrClick,pMaxRows)
-	
-	
 	If (pTrClick = "") Set pMaxRows = -1  // ?
-
-	
+	// pWhere = iAverage = 12 AND iFilter = PREV|A|^10^2021^9^2022 AND iStartDate >= '2021/1/10' AND iEndDate <= '12/31/10'
+	If (pWhere [ "iAverage") {
+		Set tAverage = $Piece(pWhere," AND ",1,1)
+		Set tAverage = $Piece(tAverage,"iAverage = ",2)
+	//	Set pWhere = $Piece(pWhere," AND ",2,*)
+	}
 	Set tFilter = ""
 	Set tOrder = -1  // Show newest first
 	Set (tYear, tMonth) = ""
 	// iFilter = NEXT^2022^12
+	// iFilter = PREV|A|^10^2021^9^2022
 	If (pWhere [ "iFilter") {
 		Set tFilter = $Piece(pWhere," AND ",1,1)
 		Set tFilter = $Piece(tFilter,"iFilter = ",2)
-		Set tYear = $Piece(tFilter,"^",2)
-		Set tMonth = $Piece(tFilter,"^",3)
-		Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
-		Set pWhere = $Piece(pWhere," AND ",2,*)
+		If (tFilter [ "|A|") {
+			Set param = $Piece(tFilter,"|A|",2,*)
+		}
+	//	Set tMonth = $Piece(tFilter,"^",3)
+	//	Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
+	//	Set pWhere = $Piece(pWhere," AND ",2,*)
 	}
 	If (tMonth = "") Set tYear = ""
 	If (tYear = "") {
@@ -224,7 +322,8 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 		Do ..OutputTableNada()
  		Quit tReturn
 	}
-	Do ..Average(.param)
+	//Do ..Average(.param)
+	Set param = ..AverageParam(pWhere)
 	Do ..OutputTableHeadAverage($Get(param))
  	Set (tSumData) = 0
  	Write !,"<tbody>"
@@ -255,8 +354,8 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	Write !,"</tbody>"
 	//Set tDifference = tSumCredit - tSumDebit
 	Do ..OutputTableFootAverage(param,tSumData)
- 	//Set tReturn = "^"_tYear_"^"_tMonth
- 	//Quit tReturn
+ 	Set tReturn = ..Param2Return(param)
+ 	Quit tReturn
 	Quit $$$OK
 }
 
@@ -674,6 +773,14 @@ ClassMethod OutputTableRowAverage(param As %String, pCategory As %String, pData 
 	Do ..OutputTdsPeriodAverage(param,pCategory,pData)
 	Write "</tr>"
 	Quit $$$OK
+}
+
+ClassMethod Param2Return(param As %String = "") As %String
+{
+	Set delim = $Extract(param)
+	Set dd = $Select((delim="^"):"|",1:"^")
+	Set pReturn = dd_"A"_dd_param
+	Quit pReturn
 }
 
 ClassMethod Return2Dates(pReturn As %String, Output pStartDate As %String, Output pEndDate As %String)
