@@ -128,6 +128,7 @@ Try {
 	var iArray = iFilter.split("^");
 	var iMonth = iArray[2];
 	var iYear = iArray[1];
+	if (iMonth > 12) iMonth = 0;
 	if (iMonth > 0) document.getElementById("header1").innerHTML = myArray[iMonth-1] + ' ' + iYear;
 	var iStartDate = '#($Get(pStartDate))#';
 	var iEndDate = '#($Get(pEndDate))#';
