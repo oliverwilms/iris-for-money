@@ -13,11 +13,11 @@ ClassMethod Average(param As %String = "") As %Status
 	Set tToMM = $Piece(param,delim,4)
 	Set tToYY = $Piece(param,delim,5)
 	Set tDebug = 1
-	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Average")
+	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Average("_param_")")
 	If (tFromYY = "") Set tFromYY = 2021
 	If (tFromMM = "") Set tFromMM = 10
-	If (tToMM = "") Set tToYY = 2022
-	If (tToYY = "") Set tToMM = 9
+	//If (tToMM = "") Set tToYY = 2022
+	//If (tToYY = "") Set tToMM = 9
 	Set yy = tFromYY - 1
 	For {
 		Set yy = $Order(^COUNT(yy))
@@ -36,6 +36,12 @@ ClassMethod Average(param As %String = "") As %Status
 				Set ^AVERAGE(cc) = aver + diff
 			}
 		}
+	}
+	If (tToYY = "") {
+		Set tToYY = $Order(^COUNT(tToYY),-1)
+	}
+	If (tToMM = "") {
+		Set tToMM = $Order(^COUNT(tToYY,tToMM),-1)
 	}
 	Set param = delim
 	Set $Piece(param,delim,2) = tFromMM
