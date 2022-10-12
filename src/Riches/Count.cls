@@ -468,10 +468,13 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "", pM
 		Set pWhere = $Piece(pWhere," AND ",2,*)
 	}
 	If (tMonth = "") Set tYear = ""
-	If (tYear = "") {
+	If (tYear = ""),($Extract(tFilter,1,4) '= "NEXT") {
 		Set tDate = $ZDATE($HOROLOG)
 		Set tYear = $Piece(tDate,"/",3)
 		Set tMonth = +$Piece(tDate,"/",1)  // Drop leading zero
+	}
+	If (tYear = "") {
+		Set (tYear,tMonth) = 0
 	}
 	If ($Extract(tFilter,1,4) = "NEXT") {
 		Set tMonth = $Order(^COUNT(tYear,tMonth),1)
