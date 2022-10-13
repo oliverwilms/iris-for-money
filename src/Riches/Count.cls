@@ -14,8 +14,8 @@ ClassMethod Average(param As %String = "") As %Status
 	Set tToYY = $Piece(param,delim,5)
 	Set tDebug = 1
 	Do:tDebug ##class(Util).DebugTEST("Riches.Count - Average("_param_")")
-	If (tFromYY = "") Set tFromYY = 2021
-	If (tFromMM = "") Set tFromMM = 10
+	If (tFromYY = "") Set tFromYY = $Order(^COUNT(tFromYY))  // 2021
+	If (tFromMM = "") Set tFromMM = $Order(^COUNT(tFromYY,tFromMM))  // 10
 	//If (tToMM = "") Set tToYY = 2022
 	//If (tToYY = "") Set tToMM = 9
 	Set yy = tFromYY - 1
@@ -53,6 +53,9 @@ ClassMethod Average(param As %String = "") As %Status
 
 ClassMethod AverageParam(pWhere As %String = "") As %String
 {
+	Set tDebug = 1
+	Do:tDebug ##class(Util).DebugTEST("Riches.Count - AverageParam")
+	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
 	// pWhere = iAverage = 12 AND iFilter = PREV|A|^10^2021^9^2022 AND iStartDate >= '2021/1/10' AND iEndDate <= '12/31/10'
 	If (pWhere [ "iAverage") {
 		Set tAverage = $Piece(pWhere," AND ",1,1)
@@ -135,7 +138,7 @@ ClassMethod AverageParam(pWhere As %String = "") As %String
 	Set tToMM = $Get(tToMM)
 	Set tToYY = $Get(tToYY)
 	Set param = delim_tFromMM_delim_tFromYY_delim_tToMM_delim_tToYY
-	Do ..Average(.param)
+	//Do ..Average(.param)
 	Quit $Get(param)
 }
 
@@ -269,15 +272,17 @@ ClassMethod GetNickname(pTable As %String, pId As %String) As %String
 	Quit tNickname
 }
 
-ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
+ClassMethod GetParam(pWhere As %String = "") As %String
 {
 	Set tDebug = 1
-	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableAverage")
+	Do:tDebug ##class(Util).DebugTEST("Riches.Count - GetParam")
 	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
-	If (pWhere = "") Quit ..OutputTableCount2(pWhere,pTrClick,pMaxRows)
-	Set tAverage = (pWhere [ "iAverage")
-	If (tAverage = 0) Quit ..OutputTableData(pWhere,pTrClick,pMaxRows)
-	If (pTrClick = "") Set pMaxRows = -1  // ?
+	//If (pWhere = "") Quit ..OutputTableCount2(pWhere,pTrClick,pMaxRows)
+	//Set tAverage = (pWhere [ "iAverage")
+	//If (tAverage = 0) Quit ..OutputTableData(pWhere,pTrClick,pMaxRows)
+	//If (pTrClick = "") Set pMaxRows = -1  // ?
+	// pWhere = iAverage = 12 AND iFilter = DISPLAY^2022^10 AND iStartDate >= '10/1/2022' AND iEndDate <= '10/31/2022'
+	
 	// pWhere = iAverage = 12 AND iFilter = PREV|A|^10^2021^9^2022 AND iStartDate >= '2021/1/10' AND iEndDate <= '12/31/10'
 	If (pWhere [ "iAverage") {
 		Set tAverage = $Piece(pWhere," AND ",1,1)
@@ -292,8 +297,107 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 	If (pWhere [ "iFilter") {
 		Set tFilter = $Piece(pWhere," AND ",1,1)
 		Set tFilter = $Piece(tFilter,"iFilter = ",2)
+		If (tFilter '[ "|A|") {
+			Set tYear = $Piece(tFilter,"^",2)
+			Set tMonth = $Piece(tFilter,"^",3)
+		}
 		If (tFilter [ "|A|") {
 			Set param = $Piece(tFilter,"|A|",2,*)
+			Quit param
+		}
+	//	Set tMonth = $Piece(tFilter,"^",3)
+	//	Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
+	//	Set pWhere = $Piece(pWhere," AND ",2,*)
+	}
+	If (tMonth = "") Set tYear = ""
+	If (tYear = "") {
+		Set tDate = $ZDATE($HOROLOG)
+		Set tCurrYear = $Piece(tDate,"/",3)
+		Set tCurrMonth = +$Piece(tDate,"/",1)  // Drop leading zero
+	}
+	If ($Extract(tFilter,1,4) = "NEXT") {
+		Set tMonth = $Order(^COUNT(tYear,tMonth),1)
+		If (tMonth = "") {
+			Set tYear = $Order(^COUNT(tYear),1)
+			If (tYear '= "") {
+				Set tMonth = $Order(^COUNT(tYear,tMonth),1)
+			}
+		}
+	}
+	If ($Extract(tFilter,1,4) = "PREV") {
+		Set tMonth = $Order(^COUNT(tYear,tMonth),-1)
+		If (tMonth = "") {
+			Set tYear = $Order(^COUNT(tYear),-1)
+			If (tYear '= "") {
+				Set tMonth = $Order(^COUNT(tYear,tMonth),-1)
+			}
+		}
+	}
+	//Set tReturn = "^"_tYear_"^"_tMonth
+	If (tYear = "") {
+	//	Do ..OutputTableNada()
+ 	//	Quit tReturn
+	}
+	Set tToYY = tCurrYear
+	Set tToMM = $Order(^COUNT(tCurrYear,tCurrMonth),-1)
+	If (tToMM = "") {
+		Set tToYY = $Order(^COUNT(tCurrYear),-1)
+		If (tToYY '= "") Set tToMM = $Order(^COUNT(tToYY,tToMM),-1)
+	}
+	Set tCount = $Get(tAverage) - 1
+	If (tToYY = "") Set tCount = 0
+	If (tToMM = "") Set tCount = 0
+	Set tFromMM = tToMM
+	Set tFromYY = tToYY
+	For {
+		If (tCount < 1) { Quit }
+		Set tFromMM = $Order(^COUNT(tFromYY,tFromMM),-1)
+		If (tFromMM = "") {
+			Set tFromYY = $Order(^COUNT(tFromYY),-1)
+			If (tFromYY '= "") Set tFromMM = $Order(^COUNT(tFromYY,tFromMM),-1)
+		}
+		If (tFromMM = "") { Quit }
+		Set tCount = tCount - 1
+	}
+	Set delim = "^"
+	Set param = delim_tFromMM_delim_tFromYY_delim_tToMM_delim_tToYY
+ 	Quit param
+}
+
+ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "", pMaxRows = -1) As %String
+{
+	Set tDebug = 1
+	Do:tDebug ##class(Util).DebugTEST("Riches.Count - OutputTableAverage")
+	Do:tDebug ##class(Util).DebugTEST("pWhere = "_pWhere)
+	If (pWhere = "") Quit ..OutputTableCount2(pWhere,pTrClick,pMaxRows)
+	Set tAverage = (pWhere [ "iAverage")
+	If (tAverage = 0) Quit ..OutputTableData(pWhere,pTrClick,pMaxRows)
+	If (pTrClick = "") Set pMaxRows = -1  // ?
+	// pWhere = iAverage = 12 AND iFilter = DISPLAY^2022^10 AND iStartDate >= '10/1/2022' AND iEndDate <= '10/31/2022'
+	
+	// pWhere = iAverage = 12 AND iFilter = PREV|A|^10^2021^9^2022 AND iStartDate >= '2021/1/10' AND iEndDate <= '12/31/10'
+	If (pWhere [ "iAverage") {
+		Set tAverage = $Piece(pWhere," AND ",1,1)
+		Set tAverage = $Piece(tAverage,"iAverage = ",2)
+	//	Set pWhere = $Piece(pWhere," AND ",2,*)
+	}
+	Set tFilter = ""
+	Set tOrder = -1  // Show newest first
+	Set (tYear, tMonth) = ""
+	// iFilter = NEXT^2022^12
+	// iFilter = PREV|A|^10^2021^9^2022
+	If (pWhere [ "iFilter") {
+	//	Set tFilter = $Piece(pWhere," AND ",1,1)
+		Set tFilter = $Piece(pWhere,"iFilter = ",2)
+		Set tFilter = $Piece(tFilter," AND ",1,1)
+		Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
+		If (tFilter '[ "|A|") {
+			Set tYear = $Piece(tFilter,"^",2)
+			Set tMonth = $Piece(tFilter,"^",3)
+			Set param = ..GetParam(pWhere)
+		}
+		If (tFilter [ "|A|") {
+			//Set param = $Piece(tFilter,"|A|",2,*)
 		}
 	//	Set tMonth = $Piece(tFilter,"^",3)
 	//	Do:tDebug ##class(Util).DebugTEST("tFilter = "_tFilter)
@@ -328,8 +432,10 @@ ClassMethod OutputTableAverage(pWhere As %String = "", pTrClick As %String = "",
 		Do ..OutputTableNada()
  		Quit tReturn
 	}
-	//Do ..Average(.param)
-	Set param = ..AverageParam(pWhere)
+	If ($Get(param) = "") Set param = ..AverageParam(pWhere)
+	Do:tDebug ##class(Util).DebugTEST("param = "_param)
+	Do ..Average(param)
+	//Set param = ..AverageParam(pWhere)
 	Do ..OutputTableHeadAverage($Get(param))
  	Set (tSumData) = 0
  	Write !,"<tbody>"
