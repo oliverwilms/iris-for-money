@@ -249,7 +249,8 @@ ClassMethod OutputTableData(pWhere As %String = "", pTrClick As %String = "windo
 	Set tWHERE = ""
 	Set pWhere = ..FilterWhere(pWhere)
 	If (pWhere '= "") Set tWHERE = " WHERE "_pWhere
-	Set tQuery = "SELECT * FROM Riches.Transact"_tWHERE
+	Set tOrder = " ORDER BY TranDate ASC, TranTime ASC"
+	Set tQuery = "SELECT * FROM Riches.Transact"_tWHERE_tOrder
 	Do ##class(Util).DebugTEST("tQuery = "_tQuery)
 	Set tStatement = ##class(%SQL.Statement).%New()
 	Set tSC = tStatement.%Prepare(.tQuery)  // Create a cached query
