@@ -252,6 +252,9 @@ function showFile(input)
 <h1>#(tHeader)#</h1>
 <form action="" method="post" enctype="multipart/form-data">
 <table border="1"><tr><td>
+<label for="file-uploader">CSV file:</label>
+<input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
+</td><td>
 ^RichesDEBUG = #($Get(tDebugCount,0))#
 </td><td>
 <script language="Cache" runat="Server">
@@ -267,7 +270,15 @@ Set qClick = q_"goClickButton('RESET')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Reset</button>",!
 </script>
+</td><td>
+<script language="Cache" runat="Server">
+Set q = """"
+Set qClick = q_"goClickButton('MENU')"_q
+Set qType = q_"button"_q
+Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
+</script>
 </td></tr>
+<!-- ================================================================================================ -->
 <tr><td>
 <script language="Cache" runat="Server">
 Try {
@@ -275,19 +286,6 @@ Try {
 } Catch {}
 </script>
 </td><td>
-<label for="file-uploader">CSV file:</label>
-<input type="file" name="file-uploader" id="file-uploader" onchange="showFile(this)"><br>
-</td><td>
-<script language="Cache" runat="Server">
-Set q = """"
-//Set qClick = q_"goClickButton('PREVIEW')"_q
-Set qClick = q_"goClickButton('MENU')"_q
-Set qType = q_"button"_q
-Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
-</script>
-</td></tr>
-<tr><td>
-
 <label for="iCount">Count by:</label>
 
 <select name="iCount" id="iCount" onchange="onchangeCount(this.value)">
@@ -295,13 +293,13 @@ Write "<button type=",qType," onclick=",qClick,">Menu</button>",!
   <option value="Category">Category</option>
   <option value="Merchant">Merchant</option>
 </select>
+</td><td>
 <script language="Cache" runat="Server">
 Set q = """"
 Set qClick = q_"goClickButton('COUNT')"_q
 Set qType = q_"button"_q
 Write "<button type=",qType," onclick=",qClick,">Count</button>",!
 </script>
-</td><td>
 </td><td>
 <script language="Cache" runat="Server">
 Set q = """"
